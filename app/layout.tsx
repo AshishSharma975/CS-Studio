@@ -3,7 +3,7 @@ import { Geist, Geist_Mono, Cinzel } from "next/font/google";
 import { ThemeProvider } from "@/shared/components/providers";
 import "./globals.css";
 import { LenisScroll } from "@/shared/components/anims";
-// import { Header } from "../shared/components/layout/Header";
+import { Header } from "../shared/components/layout/Header";
 // import { SocialSidebar } from "../shared/components/layout/SocialSidebar";
 // import { Footer } from "../shared/components/layout/Footer";
 import { siteConfig } from "@/config/site-config";
@@ -82,7 +82,7 @@ export default function RootLayout({
         >
           <div className="min-h-screen flex flex-col">
             <LenisScroll />
-            {/* <Header /> */}
+            <Header />
             {/* <SocialSidebar /> */}
             <main className="flex-1">{children}</main>
             {/* <Footer /> */}
