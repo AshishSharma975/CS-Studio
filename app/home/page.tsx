@@ -1,9 +1,11 @@
 import React from "react"
+import { GlobalCanvas } from "@/features/home/components/GlobalCanvas/GlobalCanvas"
 
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <div className="min-h-screen">
+    <div className="relative h-screen">
+      <GlobalCanvas />
     </div>
   );
 }

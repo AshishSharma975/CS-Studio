@@ -1,7 +1,5 @@
-
 "use client";
 
-import { a } from "framer-motion/client";
 import {
   FaFacebook,
   FaTiktok,
@@ -62,7 +60,7 @@ export const SocialSidebar = () => {
                 <div className="w-px h-16 bg-neutral-800"></div>
             </aside>
 
-            <nav className="fixed bottom-0 left-0 right-0 z-50 flex md:hidden items-center justify-center gap-6 py-3 bg-[#050505]/90 backdrop:blur-sm border-t border-neutral-900"
+            <nav className="fixed bottom-0 left-0 right-0 z-50 flex md:hidden items-center justify-center gap-6 py-3 bg-[#050505]/90 backdrop-blur-sm border-t border-neutral-900"
             aria-label="Social Links">
                 {SOCIALS.map(({ href, label, Icon }) => {
                     return (
