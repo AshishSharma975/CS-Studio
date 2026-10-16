@@ -4,7 +4,7 @@ import { ThemeProvider } from "@/shared/components/providers";
 import "./globals.css";
 import { LenisScroll } from "@/shared/components/anims";
 import { Header } from "../shared/components/layout/Header";
-// import { SocialSidebar } from "../shared/components/layout/SocialSidebar";
+import { SocialSidebar } from "../shared/components/layout/SocialSidebar";
 // import { Footer } from "../shared/components/layout/Footer";
 import { siteConfig } from "@/config/site-config";
 import { Analytics } from "@vercel/analytics/next";
@@ -83,7 +83,7 @@ export default function RootLayout({
           <div className="min-h-screen flex flex-col">
             <LenisScroll />
             <Header />
-            {/* <SocialSidebar /> */}
+            <SocialSidebar />
             <main className="flex-1">{children}</main>
             {/* <Footer /> */}
             <Analytics />

@@ -19,7 +19,7 @@ export const Header = () => {
           <header className="fixed top-0 left-0 w-full z-50 px-8 lg:px-16 py-8 flex justify-between items-center mix-blend-difference text-white pointer-events-none">
             <Link
               href="/"
-              className="font-serif text-3xl font-bold italic tracking-widest pointer-events-auto"
+              className="font-serif text-3xl font-bold italic tracking-widest pointer-events-auto transition-transform hover:scale-105 duration-300"
             >
               CS.
             </Link>
@@ -29,7 +29,7 @@ export const Header = () => {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className="text-neutral-400 hover:text-white transition-colors"
+                  className="relative text-neutral-400 hover:text-white transition-colors duration-300 py-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[1px] after:bg-white hover:after:w-full after:transition-all after:duration-300"
                 >
                   {item.name}
                 </Link>
@@ -37,13 +37,36 @@ export const Header = () => {
             </nav>
 
             <div className="md:hidden pointer-events-auto">
-              <button 
+              <motion.button 
+                whileTap={{ scale: 0.9 }}
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="text-white p-2" 
+                className="text-white p-2 flex items-center justify-center" 
                 aria-label="Toggle Menu"
               >
-                {isMenuOpen ? <IconX size={24} /> : <IconMenu2 size={24} />}
-              </button>
+                <AnimatePresence mode="wait">
+                  {isMenuOpen ? (
+                    <motion.div
+                      key="close"
+                      initial={{ rotate: -90, opacity: 0 }}
+                      animate={{ rotate: 0, opacity: 1 }}
+                      exit={{ rotate: 90, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <IconX size={24} />
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="menu"
+                      initial={{ rotate: 90, opacity: 0 }}
+                      animate={{ rotate: 0, opacity: 1 }}
+                      exit={{ rotate: -90, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <IconMenu2 size={24} />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.button>
             </div>
           </header>
 
@@ -58,26 +81,41 @@ export const Header = () => {
               >
                 <div className="flex flex-col items-center gap-8">
                   {navLinks.map((link, i) => (
-                    <motion.div
-                      key={link.name}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: i * 0.1 }}
-                    >
-                      <Link
-                        href={link.href}
-                        onClick={() => setIsMenuOpen(false)}
-                        className="font-cinzel text-4xl text-neutral-400 hover:text-white transition-colors uppercase tracking-[0.2em]"
+                    <div key={link.name} className="overflow-hidden">
+                      <motion.div
+                        initial={{ y: "120%", opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        exit={{ y: "120%", opacity: 0 }}
+                        transition={{ 
+                          duration: 0.5, 
+                          delay: 0.15 + i * 0.1, 
+                          ease: [0.33, 1, 0.68, 1] 
+                        }}
                       >
-                        {link.name}
-                      </Link>
-                    </motion.div>
+                        <Link
+                          href={link.href}
+                          onClick={() => setIsMenuOpen(false)}
+                          className="group flex items-baseline font-cinzel text-4xl text-neutral-400 hover:text-white transition-all duration-300 uppercase tracking-[0.2em] hover:translate-x-2"
+                        >
+                          <span className="text-xs font-mono text-neutral-600 group-hover:text-neutral-300 transition-colors mr-3 tracking-normal select-none">
+                            0{i + 1}
+                          </span>
+                          <span>{link.name}</span>
+                        </Link>
+                      </motion.div>
+                    </div>
                   ))}
                 </div>
 
-                <div className="absolute bottom-12 left-1/2 -translate-x-1/2 text-neutral-800 font-serif italic text-4xl opacity-20 pointer-events-none select-none whitespace-nowrap">
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 0.2, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ delay: 0.45, duration: 0.8 }}
+                  className="absolute bottom-12 left-1/2 -translate-x-1/2 text-neutral-800 font-serif italic text-4xl pointer-events-none select-none whitespace-nowrap"
+                >
                   "Gaze into the abyss"
-                </div>
+                </motion.div>
               </motion.div>
             )}
           </AnimatePresence>
