@@ -33,7 +33,7 @@ export function GlobalCanvas() {
         return () => window.removeEventListener("resize", handleResize);
     }, []);
 
-    if (!mounted || isMobile) return null;
+    if (!mounted) return null;
 
     return (
         <div className="fixed inset-0 z-0">
@@ -44,7 +44,8 @@ export function GlobalCanvas() {
             >
                 <Canvas
                     camera={{ position: [0, 0, 8], fov: 35 }}
-                    gl={{ antialias: false }}
+                    gl={{ antialias: false, powerPreference: "high-performance" }}
+                    dpr={[1, 1.5]}
                     onCreated={({ gl }) => {
                         gl.setClearColor(new THREE.Color("#050505"), 1);
 

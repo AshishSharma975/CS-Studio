@@ -105,11 +105,13 @@ export function useGothicRingAnimation(
 
     const p = scrollProgressRef.current;
 
+    const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+
     let targetX = RING_STAGES.HERO.X;
     let targetY =
-      RING_STAGES.HERO.Y + Math.sin(state.clock.elapsedTime * 0.8) * 0.05;
+      (isMobile ? -0.4 : RING_STAGES.HERO.Y) + Math.sin(state.clock.elapsedTime * 0.8) * 0.05;
     let targetZ = RING_STAGES.HERO.Z;
-    let targetScale = RING_STAGES.HERO.SCALE;
+    let targetScale = isMobile ? 0.28 : RING_STAGES.HERO.SCALE;
 
     let targetRotX =
       RING_STAGES.HERO.ROT_X + Math.sin(state.clock.elapsedTime * 0.5) * 0.1;
@@ -118,7 +120,6 @@ export function useGothicRingAnimation(
     let targetRotZ = RING_STAGES.HERO.ROT_Z;
 
     if (p <= SCROLL_MARKERS.HERO_END) {
-      const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
       let localP = mapRange(p, 0, SCROLL_MARKERS.HERO_END, 0, 1);
       localP = THREE.MathUtils.clamp(localP, 0, 1);
       const smoothP = THREE.MathUtils.smoothstep(localP, 0, 1);
