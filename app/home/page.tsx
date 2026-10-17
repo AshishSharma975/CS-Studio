@@ -1,6 +1,7 @@
 import React from "react"
 import { GlobalCanvas } from "@/features/home/components/GlobalCanvas/GlobalCanvas"
 import Hero from "@/features/home/components/Hero/Hero"
+import About from "@/features/home/components/About/About"
 
 export default function HomePage() {
   return (
@@ -8,7 +9,8 @@ export default function HomePage() {
       <GlobalCanvas />
       <div className="relative z-10 w-full">
         <Hero />
+        <About />
       </div>
     </div>
   );
-}
+} 
