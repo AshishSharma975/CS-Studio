@@ -73,11 +73,8 @@ export default function About() {
   return (
     <section
       ref={containerRef}
-      className="relative z-10 flex min-h-screen w-full items-center overflow-hidden bg-[#050505] py-20 text-white selection:bg-red-900"
+      className="relative z-10 flex min-h-screen w-full items-center overflow-hidden py-20 text-white selection:bg-red-900"
     >
-      {/* Background gradient */}
-      <div className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-b from-transparent via-[#050505]/60 to-[#050505]" />
-
       {/* Noise texture with feathered edges */}
       <div
         className="pointer-events-none absolute inset-0 z-0 opacity-[0.04]"
@@ -141,7 +138,7 @@ export default function About() {
               The Architect of Nightmares
             </p>
 
-            <h2 className="text-3xl font-light leading-tight tracking-wide text-neutral-100 sm:text-4xl lg:text-5xl">
+            <h2 className="font-serif text-4xl font-normal leading-tight tracking-wide text-neutral-100 sm:text-5xl lg:text-6xl">
               The Architect of Nightmares
             </h2>
 
@@ -201,7 +198,7 @@ export default function About() {
             </p>
 
             <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.3em] text-neutral-600">
-              Independent Digital Artist
+              Independent Digital Artist.
             </p>
           </div>
         </div>

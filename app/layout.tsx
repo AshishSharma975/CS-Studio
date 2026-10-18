@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Cinzel } from "next/font/google";
+import { Geist, Geist_Mono, Cinzel, Instrument_Serif } from "next/font/google";
 import { ThemeProvider } from "@/shared/components/providers";
 import "./globals.css";
 import { LenisScroll } from "@/shared/components/anims";
@@ -21,6 +21,13 @@ const geistMono = Geist_Mono({
 
 const cinzel = Cinzel({
   variable: "--font-cinzel",
+  subsets: ["latin"],
+});
+
+const instrumentSerif = Instrument_Serif({
+  variable: "--font-instrument-serif",
+  weight: "400",
+  style: ["normal", "italic"],
   subsets: ["latin"],
 });
 
@@ -72,7 +79,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${cinzel.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${cinzel.variable} ${instrumentSerif.variable} font-sans antialiased`}
       >
         <ThemeProvider
           attribute="class"

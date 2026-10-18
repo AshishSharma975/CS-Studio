@@ -8,9 +8,11 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-mono: var(--font-geist-mono);
   --font-cinzel: var(--font-cinzel);
+  --font-serif: var(--font-instrument-serif), Georgia, serif;
+  --font-instrument: var(--font-instrument-serif), Georgia, serif;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -23,9 +25,14 @@
 body {
   background: #050505;
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 .font-cinzel {
   font-family: var(--font-cinzel);
+}
+
+.font-serif,
+.font-instrument {
+  font-family: var(--font-instrument-serif), Georgia, serif;
 }

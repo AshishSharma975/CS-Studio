@@ -16,20 +16,23 @@ const mapRange = (
 export const RING_STAGES = {
   HERO: {
     X: 0,
-    Y: -0.6,
+    Y: -0.45,
     Z: 0,
-    SCALE: 0.4,
+    SCALE: 0.36,
     ROT_X: 0,
     ROT_Y: Math.PI,
     ROT_Z: 0,
+    OPACITY: 1.0,
   },
   ABOUT: {
-    X: -1.8,
-    Y: -0.2,
+    X: -0.85,
+    Y: -1.35,
     Z: 0,
-    SCALE: 0.8,
-    ROT_X: 0,
+    SCALE: 0.52,
+    ROT_X: 0.04,
     ROT_Y: 0,
+    ROT_Z: 0,
+    OPACITY: 0.48,
   },
   GALLERY_BASE: {
     Y: 2,
@@ -81,19 +84,15 @@ export const SCROLL_MARKERS = {
 export function useGothicRingAnimation(
   gothicCompRef: React.RefObject<THREE.Group<THREE.Object3DEventMap> | null>,
 ) {
-  const scrollProgressRef = useRef(0);
+  const scrollYRef = useRef(0);
 
   useEffect(() => {
     const updateScroll = () => {
-      const maxScroll =
-        document.documentElement.scrollHeight - window.innerHeight;
-      scrollProgressRef.current =
-        maxScroll > 0
-          ? Math.min(Math.max(window.scrollY / maxScroll, 0), 1)
-          : 0;
+      scrollYRef.current = window.scrollY || window.pageYOffset || 0;
     };
     window.addEventListener("scroll", updateScroll, { passive: true });
     window.addEventListener("resize", updateScroll);
+    updateScroll();
     return () => {
       window.removeEventListener("scroll", updateScroll);
       window.removeEventListener("resize", updateScroll);
@@ -103,135 +102,108 @@ export function useGothicRingAnimation(
   useFrame((state) => {
     if (!gothicCompRef.current) return;
 
-    const p = scrollProgressRef.current;
+    const scrollY = scrollYRef.current;
+    const width = typeof window !== "undefined" ? window.innerWidth : 1200;
+    const isMobile = width < 768;
+    const isTablet = width >= 768 && width < 1024;
+    const vh = typeof window !== "undefined" ? window.innerHeight || 1 : 1;
 
-    const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+    // Idle breathing floating effect
+    const idleY = Math.sin(state.clock.elapsedTime * 0.8) * 0.04;
+    const idleRotX = Math.sin(state.clock.elapsedTime * 0.5) * 0.06;
 
-    let targetX = RING_STAGES.HERO.X;
-    let targetY =
-      (isMobile ? -0.4 : RING_STAGES.HERO.Y) + Math.sin(state.clock.elapsedTime * 0.8) * 0.05;
+    // Responsive stage targets (well-balanced scale for all screen sizes)
+    const heroX = RING_STAGES.HERO.X;
+    const heroY = (isMobile ? -0.3 : isTablet ? -0.38 : RING_STAGES.HERO.Y) + idleY;
+    const heroScale = isMobile ? 0.25 : isTablet ? 0.30 : RING_STAGES.HERO.SCALE;
+    const heroRotX = RING_STAGES.HERO.ROT_X + idleRotX;
+    const heroRotY = RING_STAGES.HERO.ROT_Y;
+    const heroRotZ = RING_STAGES.HERO.ROT_Z;
+    const heroOpacity = RING_STAGES.HERO.OPACITY;
+
+    // In About: prominent yet subtle background presence behind photo & text
+    const aboutX = isMobile ? 0 : isTablet ? -0.65 : RING_STAGES.ABOUT.X;
+    const aboutY = (isMobile ? -0.7 : isTablet ? -1.15 : RING_STAGES.ABOUT.Y) + idleY;
+    const aboutScale = isMobile ? 0.36 : isTablet ? 0.44 : RING_STAGES.ABOUT.SCALE;
+    const aboutRotX = RING_STAGES.ABOUT.ROT_X + idleRotX;
+    const aboutRotY = RING_STAGES.ABOUT.ROT_Y;
+    const aboutRotZ = RING_STAGES.ABOUT.ROT_Z;
+    const aboutOpacity = RING_STAGES.ABOUT.OPACITY;
+
+    let targetX = heroX;
+    let targetY = heroY;
     let targetZ = RING_STAGES.HERO.Z;
-    let targetScale = isMobile ? 0.28 : RING_STAGES.HERO.SCALE;
+    let targetScale = heroScale;
+    let targetRotX = heroRotX;
+    let targetRotY = heroRotY;
+    let targetRotZ = heroRotZ;
+    let targetOpacity = heroOpacity;
 
-    let targetRotX =
-      RING_STAGES.HERO.ROT_X + Math.sin(state.clock.elapsedTime * 0.5) * 0.1;
+    // Smooth transition from Hero down to About (scrollY: 0 -> vh)
+    if (scrollY <= vh) {
+      const p = THREE.MathUtils.clamp(scrollY / vh, 0, 1);
+      const smoothP = THREE.MathUtils.smoothstep(p, 0, 1);
 
-    let targetRotY = RING_STAGES.HERO.ROT_Y;
-    let targetRotZ = RING_STAGES.HERO.ROT_Z;
-
-    if (p <= SCROLL_MARKERS.HERO_END) {
-      let localP = mapRange(p, 0, SCROLL_MARKERS.HERO_END, 0, 1);
-      localP = THREE.MathUtils.clamp(localP, 0, 1);
-      const smoothP = THREE.MathUtils.smoothstep(localP, 0, 1);
-
-      targetX = THREE.MathUtils.lerp(
-        RING_STAGES.HERO.X,
-        isMobile ? 0 : RING_STAGES.ABOUT.X,
-        smoothP,
-      );
-      targetY = THREE.MathUtils.lerp(
-        RING_STAGES.HERO.Y,
-        isMobile ? 1.5 : RING_STAGES.ABOUT.Y,
-        smoothP,
-      );
-      targetScale = THREE.MathUtils.lerp(
-        isMobile ? 0.25 : RING_STAGES.HERO.SCALE,
-        isMobile ? 0.5 : RING_STAGES.ABOUT.SCALE,
-        smoothP,
-      );
-    } else if (p <= SCROLL_MARKERS.ABOUT_END) {
-      const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
-      let localP = mapRange(
-        p,
-        SCROLL_MARKERS.HERO_END,
-        SCROLL_MARKERS.HERO_END + 0.1,
-        0,
-        1,
-      );
-      localP = THREE.MathUtils.clamp(localP, 0, 1);
-      const smoothP = THREE.MathUtils.smoothstep(localP, 0, 1);
-
-      targetX = THREE.MathUtils.lerp(
-        isMobile ? 0 : RING_STAGES.ABOUT.X,
-        0,
-        smoothP,
-      );
-      targetY = THREE.MathUtils.lerp(
-        isMobile ? 1.5 : RING_STAGES.ABOUT.Y,
-        4,
-        smoothP,
-      );
-      targetZ = THREE.MathUtils.lerp(RING_STAGES.ABOUT.Z, -2, smoothP);
-      targetScale = THREE.MathUtils.lerp(
-        isMobile ? 0.5 : RING_STAGES.ABOUT.SCALE,
-        isMobile ? 0.2 : 0,
-        smoothP,
-      );
-    } else if (p <= SCROLL_MARKERS.GALLERY_ROW_3_END) {
-      const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
-      targetScale = isMobile ? 0.2 : 0;
-      targetX = 0;
-      targetY = isMobile ? -1 : 4;
-      targetZ = isMobile ? -8 : -2;
+      targetX = THREE.MathUtils.lerp(heroX, aboutX, smoothP);
+      targetY = THREE.MathUtils.lerp(heroY, aboutY, smoothP);
+      targetScale = THREE.MathUtils.lerp(heroScale, aboutScale, smoothP);
+      targetRotX = THREE.MathUtils.lerp(heroRotX, aboutRotX, smoothP);
+      targetRotY = THREE.MathUtils.lerp(heroRotY, aboutRotY, smoothP);
+      targetRotZ = THREE.MathUtils.lerp(heroRotZ, aboutRotZ, smoothP);
+      targetOpacity = THREE.MathUtils.lerp(heroOpacity, aboutOpacity, smoothP);
     } else {
-      let localP = mapRange(
-        p,
-        SCROLL_MARKERS.GALLERY_ROW_3_END - 0.05,
-        1.0,
-        0,
-        1,
-      );
-      localP = THREE.MathUtils.clamp(localP, 0, 1);
-      const smoothP = THREE.MathUtils.smoothstep(localP, 0, 1);
-
-      const startRotY = Math.PI / 4 + Math.PI * 4;
-
-      targetX = THREE.MathUtils.lerp(0, RING_STAGES.PACT.X, smoothP);
-      targetY = THREE.MathUtils.lerp(4, RING_STAGES.PACT.Y, smoothP);
-      targetZ = THREE.MathUtils.lerp(-2, RING_STAGES.PACT.Z, smoothP);
-      targetScale = THREE.MathUtils.lerp(0, RING_STAGES.PACT.SCALE, smoothP);
-
-      targetRotX = THREE.MathUtils.lerp(0, RING_STAGES.PACT.ROT_X, smoothP);
-      targetRotZ = THREE.MathUtils.lerp(
-        RING_STAGES.GALLERY_BASE.ROT_Z,
-        RING_STAGES.PACT.ROT_Z,
-        smoothP,
-      );
-      targetRotY = THREE.MathUtils.lerp(
-        startRotY,
-        startRotY + Math.PI,
-        smoothP,
-      );
+      // In About: maintain subtle transparent background presence
+      targetX = aboutX;
+      targetY = aboutY;
+      targetScale = aboutScale;
+      targetRotX = aboutRotX;
+      targetRotY = aboutRotY;
+      targetRotZ = aboutRotZ;
+      targetOpacity = aboutOpacity;
     }
 
+    // High precision lerping for silky smooth 60fps animation
     gothicCompRef.current.position.x = THREE.MathUtils.lerp(
       gothicCompRef.current.position.x,
       targetX,
-      0.08,
+      0.06,
     );
     gothicCompRef.current.position.y = THREE.MathUtils.lerp(
       gothicCompRef.current.position.y,
       targetY,
-      0.08,
+      0.06,
     );
     gothicCompRef.current.position.z = THREE.MathUtils.lerp(
       gothicCompRef.current.position.z,
       targetZ,
-      0.08,
+      0.06,
     );
     gothicCompRef.current.scale.setScalar(
       THREE.MathUtils.lerp(gothicCompRef.current.scale.x, targetScale, 0.05),
     );
-    gothicCompRef.current.rotation.x = targetRotX;
+    gothicCompRef.current.rotation.x = THREE.MathUtils.lerp(
+      gothicCompRef.current.rotation.x,
+      targetRotX,
+      0.06,
+    );
     gothicCompRef.current.rotation.y = THREE.MathUtils.lerp(
       gothicCompRef.current.rotation.y,
       targetRotY,
-      0.08,
+      0.06,
     );
     gothicCompRef.current.rotation.z = THREE.MathUtils.lerp(
       gothicCompRef.current.rotation.z,
       targetRotZ,
-      0.08,
+      0.06,
     );
+
+    // Smooth material opacity transition
+    gothicCompRef.current.traverse((child) => {
+      if ((child as THREE.Mesh).isMesh && (child as THREE.Mesh).material) {
+        const mat = (child as THREE.Mesh).material as THREE.Material;
+        mat.transparent = true;
+        mat.opacity = THREE.MathUtils.lerp(mat.opacity, targetOpacity, 0.08);
+      }
+    });
   });
 }

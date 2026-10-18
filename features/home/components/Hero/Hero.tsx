@@ -139,9 +139,6 @@ export default function Hero() {
                     for half of your soul.&quot;
                 </p>
             </div>
-
-            {/* Seamless bottom fade into About */}
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-64 md:h-80 bg-gradient-to-b from-transparent via-[#050505]/70 to-[#050505] z-20" />
         </section>
     );
 }
