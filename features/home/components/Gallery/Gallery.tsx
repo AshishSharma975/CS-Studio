@@ -10,10 +10,9 @@ import { Project, projects } from "@/shared/data/projects";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const desGothicProjects = projects.filter((p) => p.category === "des-gothic")
-const monsterProjects = projects.filter((p) => p.category === "monster")
-const visualCharProjects = projects.filter((p) => p.category === "visual-char")
-
+const desGothicProjects = projects.filter((p) => p.category === "des-gothic");
+const monsterProjects = projects.filter((p) => p.category === "monster");
+const visualCharProjects = projects.filter((p) => p.category === "visual-char");
 
 interface GalleryRowProps {
     id?: string;
@@ -33,24 +32,14 @@ function GalleryRow({
     const sectionRef = useRef<HTMLElement>(null);
     const trackRef = useRef<HTMLDivElement>(null);
     const [hasMounted, setHasMounted] = React.useState(false);
-    const [isMobile, setisMobile] = React.useState(false);
-
-
-
 
     React.useEffect(() => {
         setHasMounted(true);
-        const handleResize = () => {
-            setisMobile(window.innerWidth < 768);
-        };
-        handleResize();
-        window.addEventListener("resize", handleResize);
-        return () => window.removeEventListener("resize", handleResize);
     }, []);
 
     useGSAP(
         () => {
-            if (!sectionRef.current || !trackRef.current || isMobile || !hasMounted) {
+            if (!sectionRef.current || !trackRef.current || !hasMounted) {
                 return;
             }
 
@@ -97,70 +86,14 @@ function GalleryRow({
                 );
             }
         },
-        { scope: sectionRef, dependencies: [hasMounted, isMobile] }
+        { scope: sectionRef, dependencies: [hasMounted] }
     );
 
     if (!hasMounted) return null;
 
-    if (isMobile) {
-        return (
-            <section id={id} className="relative w-full py-24 bg-transparent">
-                <div className="absolute inset-0 -z-10 pointer-events-none opacity-10">
-                    <Image
-                        src="/assets/images/gothic-background.jpg"
-                        alt="Gothic Texture"
-                        fill
-                        className="object-cover"
-                    />
-                </div>
-                <div className="mb-16">
-                    <h2 className="text-sm font-sans tracking-[0.3em] text-[#8a0303] uppercase mb-4">
-                        {subtitle}
-                    </h2>
-                    <h3 className="text-5xl font-cinzel text-neutral-200 uppercase">
-                        {title.split(" ").map((word, i) => (
-                            <span key={i} className="inline-block mr-4">{word} </span>
-                        ))}
-                    </h3>
-
-
-                </div>
-
-                <div className="flex flex-col gap-20">
-                    {items.slice(0, 4).map((project) => (
-                        <div key={project.id} className="flex flex-col group">
-                            <div className={`relative w-full card-glow overflow-hidden ${project.size === "large"
-                                    ? "h-[50vh]"
-                                    : project.size === "small"
-                                        ? "h-[35vh]"
-                                        : "h-[42vh]"
-                                }`}>
-                                <Image
-                                    src={project.src}
-                                    alt={project.title}
-                                    fill
-                                    sizes="100vw"
-                                    className="object-cover grayscale hover:grayscale-0 transition-grayscale duration-700"
-                                />
-                            </div>
-                            <div className="mt-3">
-                                <span className="text-xs font-sans tracking-[0.2em] text-[#8a0303] uppercase">
-                                    {project.category.replace("-", " ")}
-                                </span>
-                                <p className="text-2xl font-cinzel text-neutral-300 mt-1">
-                                    {project.title}
-                                </p>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </section>
-        );
-    }
-
     const trackPadding = isReverse
-        ? "pl-[20vw] pr-[10vw]"
-        : "pl-[10vw] pr-[20vw]";
+        ? "pl-[10vw] md:pl-[20vw] pr-[6vw] md:pr-[10vw]"
+        : "pl-[6vw] md:pl-[10vw] pr-[10vw] md:pr-[20vw]";
 
     return (
         <section ref={sectionRef} id={id} className="relative w-full h-screen overflow-hidden bg-transparent">
@@ -179,26 +112,28 @@ function GalleryRow({
 
             <div className="absolute inset-0 -z-10 pointer-events-none">
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[100vh] h-[100vw] rotate-90 opacity-10 mix-blend-screen">
-                  <Image
-                  src="/assets/images/gothic-background.jpg"
-                  alt="Gothic Texture"
-                  fill
-                  sizes="100vw"
-                  className="object-cover"
-                  />
+                    <Image
+                        src="/assets/images/gothic-background.jpg"
+                        alt="Gothic Texture"
+                        fill
+                        sizes="100vw"
+                        className="object-cover"
+                    />
                 </div>
                 <div className="absolute inset-0 bg-[#8a0303]/5 mix-blend-multiply"></div>
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] bg-[#8a0303]/15 blur-[100px] rounded-full mix-blend-screen transform-gpu pointer-events-none"></div>
             </div>
+
             <div
-             ref={trackRef}            
-             className={`flex h-full w-max items-center ${trackPadding} gap-32 transform-gpu will-change-transform`}>
+                ref={trackRef}
+                className={`flex h-full w-max items-center ${trackPadding} gap-12 md:gap-32 transform-gpu will-change-transform`}
+            >
                 {!isReverse && (
-                    <div className="relative z-30 flex flex-col justify-center h-full shrink-0 w-[40vw]">
-                        <h2 className="text-sm font-sans tracking-[0.3em] text-[#8a0303] uppercase mb-4">
+                    <div className="relative z-30 flex flex-col justify-center h-full shrink-0 w-[65vw] sm:w-[50vw] md:w-[40vw]">
+                        <h2 className="text-xs md:text-sm font-sans tracking-[0.3em] text-[#8a0303] uppercase mb-2 md:mb-4">
                             {subtitle}
                         </h2>
-                        <h3 className="text-8xl font-cinzel text-neutral-200 uppercase drop-shadow-2xl">
+                        <h3 className="text-4xl sm:text-6xl md:text-8xl font-cinzel text-neutral-200 uppercase drop-shadow-2xl">
                             {title.split(" ").map((word, i) => (
                                 <span key={i} className="block">
                                     {word}
@@ -208,20 +143,20 @@ function GalleryRow({
                     </div>
                 )}
 
-                <div className="flex h-[90vh] items-center gap-24">
+                <div className="flex h-[80vh] md:h-[90vh] items-center gap-8 md:gap-24">
                     {items.map((project, i) => {
                         const heightClass =
                             project.size === "large"
-                                ? "h-[88vh]"
+                                ? "h-[58vh] sm:h-[68vh] md:h-[88vh]"
                                 : project.size === "small"
-                                ? "h-[65vh]"
-                                : "h-[75vh]";
+                                ? "h-[42vh] sm:h-[50vh] md:h-[65vh]"
+                                : "h-[50vh] sm:h-[60vh] md:h-[75vh]";
                         const widthClass =
                             project.size === "large"
-                                ? "w-[60vw]"
+                                ? "w-[75vw] sm:w-[68vw] md:w-[60vw]"
                                 : project.size === "small"
-                                ? "w-[38vw]"
-                                : "w-[50vw]";
+                                ? "w-[58vw] sm:w-[48vw] md:w-[38vw]"
+                                : "w-[66vw] sm:w-[58vw] md:w-[50vw]";
 
                         const yOffsets = ["self-start", "self-center", "self-end"];
                         const desktopAlign = yOffsets[i % yOffsets.length];
@@ -229,23 +164,23 @@ function GalleryRow({
                         return (
                             <div
                                 key={project.id}
-                                className={`gallery-card card-glow relative z-30 shrink-0 flex flex-col group ${heightClass} ${widthClass} ${desktopAlign} transform-gpu`}
+                                className={`gallery-card card-glow relative z-30 shrink-0 flex flex-col group ${heightClass} ${widthClass} self-center md:${desktopAlign} transform-gpu`}
                             >
                                 <div className="card-image-wrap relative w-full h-full">
                                     <Image
                                         src={project.src}
                                         alt={project.title}
                                         fill
-                                        sizes="50vw"
+                                        sizes="(max-width: 768px) 80vw, 50vw"
                                         priority={i < 2}
                                         className="object-contain grayscale hover:grayscale-0 transition-transform transition-[filter] duration-700 ease-out group-hover:scale-[1.02]"
                                     />
                                 </div>
-                                <div className="mt-4 flex flex-col shrink-0">
-                                    <span className="text-xs font-sans tracking-[0.2em] text-[#8a0303] uppercase">
+                                <div className="mt-3 md:mt-4 flex flex-col shrink-0">
+                                    <span className="text-[10px] md:text-xs font-sans tracking-[0.2em] text-[#8a0303] uppercase">
                                         {project.category.replace("-", " ")}
                                     </span>
-                                    <span className="text-xl font-cinzel text-neutral-300">
+                                    <span className="text-base sm:text-lg md:text-xl font-cinzel text-neutral-300">
                                         {project.title}
                                     </span>
                                 </div>
@@ -255,11 +190,11 @@ function GalleryRow({
                 </div>
 
                 {isReverse && (
-                    <div className="relative z-30 flex flex-col items-end text-right justify-center h-full w-[40vw] shrink-0">
-                        <h2 className="text-sm font-sans tracking-[0.3em] text-[#8a0303] uppercase mb-4">
+                    <div className="relative z-30 flex flex-col items-end text-right justify-center h-full w-[65vw] sm:w-[50vw] md:w-[40vw] shrink-0">
+                        <h2 className="text-xs md:text-sm font-sans tracking-[0.3em] text-[#8a0303] uppercase mb-2 md:mb-4">
                             {subtitle}
                         </h2>
-                        <h3 className="text-8xl font-cinzel text-neutral-200 uppercase drop-shadow-2xl">
+                        <h3 className="text-4xl sm:text-6xl md:text-8xl font-cinzel text-neutral-200 uppercase drop-shadow-2xl">
                             {title.split(" ").map((word, i) => (
                                 <span key={i} className="block">
                                     {word}
@@ -270,8 +205,8 @@ function GalleryRow({
                 )}
             </div>
 
-            <div className="absolute top-0 left-0 right-0 h-32 bg-linear-to-b from-[#050505] to-transparent pointer-events-none z-20"></div>
-            <div className="absolute bottom-0 left-0 right-0 h-32 bg-linear-to-t from-[#050505] to-transparent pointer-events-none z-20"></div>
+            <div className="absolute top-0 left-0 right-0 h-20 md:h-32 bg-linear-to-b from-[#050505] to-transparent pointer-events-none z-20"></div>
+            <div className="absolute bottom-0 left-0 right-0 h-20 md:h-32 bg-linear-to-t from-[#050505] to-transparent pointer-events-none z-20"></div>
         </section>
     );
 }
