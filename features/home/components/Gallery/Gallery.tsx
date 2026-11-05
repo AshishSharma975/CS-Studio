@@ -47,51 +47,54 @@ function GalleryRow({
         return () => window.removeEventListener("resize", handleResize);
     }, []);
 
-    useGSAP(()=>{
-        if(!selectionRef.current || !trackRef.current || isMobile || !hasMounted){
-            return;
-        }
+    useGSAP(
+        () => {
+            if (!selectionRef.current || !trackRef.current || isMobile || !hasMounted) {
+                return;
+            }
 
             const getScrollWidth = () =>
-                Math.max(0 , trackRef.current!.scrollWidth - window.innerWidth)
+                Math.max(0, trackRef.current!.scrollWidth - window.innerWidth);
 
-        if(isReverse){
-            gsap.fromTo(
-                trackRef.current,
-                {x:getScrollWidth()},
-                {x:0,
-                ease: "none",
-                scrollTrigger:{
-                    trigger:selectionRef.current,
-                    start: "top top",
-                    end: ()=>`+=${window.innerHeight * 3}`,
-                    pin: true,
-                    anticipatePin:1,
-                    scrub: 1,
-                    invalidateOnRefresh: true,
-                }
+            if (isReverse) {
+                gsap.fromTo(
+                    trackRef.current,
+                    { x: getScrollWidth() },
+                    {
+                        x: 0,
+                        ease: "none",
+                        scrollTrigger: {
+                            trigger: selectionRef.current,
+                            start: "top top",
+                            end: () => `+=${window.innerHeight * 3}`,
+                            pin: true,
+                            anticipatePin: 1,
+                            scrub: 1,
+                            invalidateOnRefresh: true,
+                        },
+                    }
+                );
+            } else {
+                gsap.fromTo(
+                    trackRef.current,
+                    { x: 0 },
+                    {
+                        x: () => -getScrollWidth(),
+                        ease: "none",
+                        scrollTrigger: {
+                            trigger: selectionRef.current,
+                            start: "top top",
+                            end: () => `+=${window.innerHeight * 3}`,
+                            pin: true,
+                            anticipatePin: 1,
+                            scrub: 1,
+                            invalidateOnRefresh: true,
+                        },
+                    }
+                );
             }
-            )
-        }else{
-             gsap.fromTo(
-                trackRef.current,
-                {x:0},
-                {x:()=> -getScrollWidth(),
-                ease: "none",
-                scrollTrigger:{
-                    trigger:selectionRef.current,
-                    start: "top top",
-                    end: ()=>`+=${window.innerHeight * 3}`,
-                    pin: true,
-                    anticipatePin:1,
-                    scrub: 1,
-                    invalidateOnRefresh: true,
-                }
-            }
-        );
-        }
-    },
-    {scope:selectionRef, dependencies:[hasMounted,isMobile]}
+        },
+        { scope: selectionRef, dependencies: [hasMounted, isMobile] }
     );
 
     
