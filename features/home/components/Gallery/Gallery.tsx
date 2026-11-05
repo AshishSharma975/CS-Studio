@@ -16,6 +16,7 @@ const visualCharProjects = projects.filter((p) => p.category === "visual-char")
 
 
 interface GalleryRowProps {
+    id?: string;
     title: string;
     subtitle: string;
     items: Project[];
@@ -23,6 +24,7 @@ interface GalleryRowProps {
 }
 
 function GalleryRow({
+    id,
     title,
     subtitle,
     items,
@@ -102,7 +104,7 @@ function GalleryRow({
 
     if (isMobile) {
         return (
-            <section className="relative w-full py-24 bg-transparent">
+            <section id={id} className="relative w-full py-24 bg-transparent">
                 <div className="absolute inset-0 -z-10 pointer-events-none opacity-10">
                     <Image
                         src="/assets/images/gothic-background.jpg"
@@ -161,7 +163,7 @@ function GalleryRow({
         : "pl-[10vw] pr-[20vw]";
 
     return (
-        <section ref={sectionRef} className="relative w-full h-screen overflow-hidden bg-transparent">
+        <section ref={sectionRef} id={id} className="relative w-full h-screen overflow-hidden bg-transparent">
             <style>{`
 .card-image-wrap {
     transition: filter 0.5s ease, transform 0.5s ease;
@@ -283,12 +285,14 @@ export default function Gallery() {
             className="relative z-0 w-full bg-transparent selection:bg-red-900 leading-normal"
         >
             <GalleryRow
+                id="gallery-row-1"
                 title="Des Gothic"
                 subtitle="Chapter I"
                 items={desGothicProjects}
             />
 
             <GalleryRow
+                id="gallery-row-2"
                 title="Monsters"
                 subtitle="Chapter II"
                 items={monsterProjects}
@@ -296,6 +300,7 @@ export default function Gallery() {
             />
 
             <GalleryRow
+                id="gallery-row-3"
                 title="Visuals & Char"
                 subtitle="Chapter III"
                 items={visualCharProjects}

@@ -73,6 +73,7 @@ export default function About() {
   return (
     <section
       ref={containerRef}
+      id="about"
       className="relative z-10 flex min-h-screen w-full items-center overflow-hidden py-20 text-white selection:bg-red-900"
     >
       {/* Noise texture with feathered edges */}

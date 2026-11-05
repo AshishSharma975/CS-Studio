@@ -85,6 +85,7 @@ export default function Hero() {
     return (
         <section
             ref={containerRef}
+            id="hero"
             className="relative flex min-h-screen w-full items-center justify-center overflow-hidden text-white z-10 selection:bg-red-900"
             style={{ perspective: "1000px" }}
         >
