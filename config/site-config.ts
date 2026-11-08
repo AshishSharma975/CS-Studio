@@ -1,7 +1,7 @@
 // src/config/site.ts
 export const siteConfig = {
-  name: "Digital Artist - GN",
-  description: "Digital Artist - GN",
+  name: "Calcutta Studio",
+  description: "Calcutta Studio - Digital Art & Design",
   url: "https://cachetgn.vercel.app",
   ogImage: "https://cachetgn.vercel.app/og.png",
   links: {
@@ -15,9 +15,10 @@ export const siteConfig = {
     apple: "/apple-icon.png",
   },
   keywords: [
+    "Calcutta Studio",
+    "CS",
     "Horror Design",
     "Digital Artist",
-    "GN",
     "Digital Art",
     "Horror Art",
     "Digital Artwork",
@@ -29,9 +30,9 @@ export const siteConfig = {
   ],
   authors: [
     {
-      name: "GN",
+      name: "Calcutta Studio",
       url: "https://cachetgn.vercel.app",
     },
   ],
-  creator: "trhgatu",
+  creator: "Calcutta Studio",
 };
