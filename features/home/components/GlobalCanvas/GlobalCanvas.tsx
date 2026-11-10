@@ -93,7 +93,7 @@ export function GlobalCanvas() {
 
                         {typeof window !== "undefined" && (
                             <EffectComposer
-                                multisampling={window.innerWidth < 768 ? 0 : 4}
+                                multisampling={0}
                             >
                                 <Noise
                                     key="noise"

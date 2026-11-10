@@ -5,7 +5,7 @@ import "./globals.css";
 import { LenisScroll } from "@/shared/components/anims";
 import { Header } from "../shared/components/layout/Header";
 import { SocialSidebar } from "../shared/components/layout/SocialSidebar";
-// import { Footer } from "../shared/components/layout/Footer";
+import { Footer } from "../shared/components/layout/Footer";
 import { siteConfig } from "@/config/site-config";
 import { Analytics } from "@vercel/analytics/next";
 
@@ -92,7 +92,7 @@ export default function RootLayout({
             <Header />
             <SocialSidebar />
             <main className="flex-1">{children}</main>
-            {/* <Footer /> */}
+            <Footer />
             <Analytics />
           </div>
         </ThemeProvider>

@@ -14,8 +14,8 @@ export const LenisScroll = () => {
         gsap.registerPlugin(ScrollTrigger);
 
         const lenis = new Lenis({
-            lerp: 0.05,
-            wheelMultiplier: 1,
+            lerp: 0.08,
+            wheelMultiplier: 1.0,
             smoothWheel: true,
         });
 
