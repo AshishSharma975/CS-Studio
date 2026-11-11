@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Cinzel, Instrument_Serif } from "next/font/google";
 import { ThemeProvider } from "@/shared/components/providers";
 import "./globals.css";
-import { LenisScroll } from "@/shared/components/anims";
+import { LenisScroll, Preloader } from "@/shared/components/anims";
 import { Header } from "../shared/components/layout/Header";
 import { SocialSidebar } from "../shared/components/layout/SocialSidebar";
 import { Footer } from "../shared/components/layout/Footer";
@@ -88,6 +88,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <div className="min-h-screen flex flex-col">
+            <Preloader />
             <LenisScroll />
             <Header />
             <SocialSidebar />
