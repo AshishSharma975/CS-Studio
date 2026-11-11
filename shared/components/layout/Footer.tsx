@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { IconMail, IconBrandFacebook, IconBrandInstagram } from "@tabler/icons-react";
 
 export const Footer = () => {
@@ -11,9 +12,15 @@ export const Footer = () => {
             <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-16 relative z-10">
                 {/* Brand / Logo */}
                 <div className="flex flex-col gap-6 lg:border-r border-neutral-900 lg:pr-8">
-                    <h2 className="text-6xl md:text-8xl font-bold italic tracking-tighter">
-                        CS.
-                    </h2>
+                    <Link href="/" className="group inline-block transition-transform hover:scale-105 duration-300 w-fit">
+                        <Image
+                            src="/assets/images/calcutta-logo.png"
+                            alt="Calcutta Studio"
+                            width={200}
+                            height={52}
+                            className="h-10 md:h-12 w-auto object-contain drop-shadow-[0_0_6px_rgba(220,38,38,0.3)] group-hover:drop-shadow-[0_0_12px_rgba(255,30,30,0.6)] transition-all duration-300"
+                        />
+                    </Link>
                     <p className="text-neutral-500 font-sans text-xs tracking-[0.2em] uppercase max-w-xs leading-relaxed">
                         Digital Artist specializing in inking and horrific creatures.
                     </p>

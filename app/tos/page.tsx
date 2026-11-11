@@ -1,3 +1,4 @@
+
 "use client";
 
 import { motion } from "framer-motion";
@@ -10,70 +11,84 @@ interface TosItem {
 
 const tosContent: TosItem[] = [
     {
-        title: "Payment Methods",
+        title: "General Overview",
         content:
-            "Payments are accepted exclusively via Direct Bank Transfer. Details will be provided upon agreement.",
+            "Calcutta Studio is an independent creative studio focused on delivering original, thoughtful, and visually compelling work. By engaging our services, clients agree to the terms outlined below.",
     },
     {
-        title: "Commission Types",
+        title: "Services & Scope",
         content:
-            "Each commission type has its own specific terms and conditions. We categorize our services into three primary types:",
+            "We offer creative services including visual design, branding, digital experiences, illustrations, and other creative projects. Each project is individually discussed to establish its scope, deliverables, timeline, and pricing before work begins.",
+    },
+    {
+        title: "Project Booking & Payment",
+        content:
+            "Projects are confirmed once the scope of work, pricing, and timeline have been mutually agreed upon. A deposit may be required before work begins, with remaining payments settled according to agreed project milestones.",
         list: [
-            "Inking Art (ILLUSTRATION)",
-            "Monster Sketch Design",
-            "Gothic Sketch Design",
+            "Project booking is confirmed after mutual agreement.",
+            "Advance payment may be required before commencement.",
+            "Payments must be completed within the agreed timeline.",
         ],
     },
     {
-        title: "Turnaround Time & Rush Fees",
+        title: "Project Timeline",
         content:
-            "The typical completion time ranges from 3 to 6 weeks depending on complexity.",
+            "Estimated timelines are communicated before the project begins. Delays caused by additional requests, late feedback, or unforeseen circumstances may affect the delivery schedule.",
         list: [
-            "Rush Fee: 70k - 200k VND.",
-            "Commission requests may be declined if the requested deadline is too restrictive or beyond current capacity.",
+            "Project timelines depend on complexity and scope.",
+            "Rush requests may involve additional charges.",
+            "Calcutta Studio reserves the right to decline unrealistic deadlines.",
         ],
     },
     {
-        title: "Cancellations & Intellectual Property",
+        title: "Revisions & Changes",
         content:
-            "If the client initiates a cancellation, no refunds will be issued and the client loses all rights to use any Work-In-Progress (WIP) materials. For design commissions, the artist retains the right to reuse design elements (with original characters removed) for personal projects.",
-    },
-    {
-        title: "Usage Rights & Publication",
-        content:
-            "By default, all completed commissions are considered samples and the artist reserves the right to showcase them on social media and other platforms.",
+            "Each project includes a reasonable number of revisions as agreed during the initial discussion. Requests that significantly change the original scope may require additional charges and an updated timeline.",
         list: [
-            "Private Commission Fee: +30% of total value.",
-            "Commercial Use: 3x total commission value.",
+            "Revisions must remain within the original project scope.",
+            "Major design changes may be treated as additional work.",
+            "Additional revision charges will be communicated beforehand.",
         ],
     },
     {
-        title: "Complexity Surcharge",
+        title: "Cancellation & Refunds",
         content:
-            "Additional charges ranging from 70k to 300k VND may apply for highly detailed or complex requests.",
+            "Either party may request project cancellation through written communication. Payments for completed work and approved milestones are non-refundable. Any remaining balance or refund eligibility will be determined based on the work completed and the agreement between both parties.",
     },
     {
-        title: "Revisions",
+        title: "Intellectual Property",
         content:
-            "Two comprehensive revision rounds are included (up to 90% changes). Starting from the third revision, a surcharge of 10k to 50k VND per edit will be applied based on complexity.",
+            "All original creative work remains the intellectual property of Calcutta Studio unless otherwise agreed in writing. Clients receive usage rights for final deliverables according to the agreed project terms.",
+        list: [
+            "Unauthorized reproduction or redistribution is prohibited.",
+            "Resale or modification of studio work requires permission.",
+            "Source files are provided only when explicitly agreed upon.",
+        ],
     },
     {
-        title: "Artist Attribution",
+        title: "Portfolio & Publication",
         content:
-            "Appropriate credit to the artist (GN / Calcutta Studio) must be maintained whenever the work is shared or published.",
+            "Calcutta Studio reserves the right to showcase completed projects on its website, portfolio, social media, and promotional materials unless a confidentiality agreement has been established.",
+    },
+    {
+        title: "Client Responsibilities",
+        content:
+            "Clients are responsible for providing accurate project information, necessary assets, references, and timely feedback. Delays in communication or missing materials may affect project completion.",
     },
     {
         title: "Deliverables",
         content:
-            "For Sketch Design commissions, clients will receive both a full-resolution digital file and a transparent background version via email.",
+            "Final deliverables will be provided in the agreed formats and specifications. Editable source files, working files, and additional assets are included only when explicitly agreed upon.",
     },
     {
-        title: "Payment Schedule",
-        list: [
-            "10% Deposit: Required after slot confirmation and brief finalization.",
-            "30% - 50% Milestone: Due after the initial sketch is approved.",
-            "Final Payment: The remaining balance is due after completion and final approval.",
-        ],
+        title: "Communication",
+        content:
+            "All project-related communication should take place through mutually agreed channels. Both parties are expected to maintain clear, respectful, and professional communication throughout the project.",
+    },
+    {
+        title: "Agreement",
+        content:
+            "By engaging Calcutta Studio, you acknowledge that you have read, understood, and agreed to these Terms of Service.",
     },
 ];
 
@@ -92,8 +107,9 @@ export default function TOSPage() {
                     <h1 className="text-5xl md:text-7xl font-cinzel font-bold tracking-tighter mb-4">
                         Terms of Service.
                     </h1>
+
                     <p className="text-neutral-500 font-sans text-xs tracking-[0.3em] uppercase">
-                        Last Updated: April 2026
+                        Last Updated: November 2026
                     </p>
                 </motion.div>
 
@@ -104,13 +120,17 @@ export default function TOSPage() {
                             initial={{ opacity: 0, x: -20 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
-                            transition={{ duration: 0.5, delay: 0.1 * index }}
+                            transition={{
+                                duration: 0.5,
+                                delay: 0.1 * index,
+                            }}
                             className="group"
                         >
                             <h2 className="text-2xl font-cinzel tracking-widest text-neutral-200 group-hover:text-[#ff1a1a] transition-colors mb-4 flex items-baseline gap-4">
                                 <span className="text-xs md:text-sm text-[#ff1a1a] font-mono tracking-widest opacity-100 shrink-0 pt-1">
                                     {String(index + 1).padStart(2, "0")}
                                 </span>
+
                                 {item.title}
                             </h2>
 
@@ -123,8 +143,12 @@ export default function TOSPage() {
                             {item.list && (
                                 <ul className="space-y-3">
                                     {item.list.map((listItem, i) => (
-                                        <li key={i} className="flex gap-4 items-start">
+                                        <li
+                                            key={i}
+                                            className="flex gap-4 items-start"
+                                        >
                                             <span className="w-1.5 h-1.5 bg-neutral-700 mt-2 rotate-45 group-hover:bg-red-900 transition-colors shrink-0" />
+
                                             <span className="text-neutral-400 text-base font-sans tracking-wide group-hover:text-neutral-200 transition-colors">
                                                 {listItem}
                                             </span>
@@ -143,7 +167,7 @@ export default function TOSPage() {
                     className="mt-24 pt-12 border-t border-neutral-900"
                 >
                     <p className="text-neutral-500 font-serif italic text-xl tracking-widest leading-relaxed">
-                        &ldquo;By commissioning me, you acknowledge and agree to the terms listed above.&rdquo;
+                        &ldquo;By engaging Calcutta Studio, you acknowledge and agree to the terms outlined above.&rdquo;
                     </p>
                 </motion.div>
             </div>

@@ -195,7 +195,7 @@ export default function About() {
           {/* Signature */}
           <div className="border-t border-neutral-800 pt-6">
             <p className="font-serif text-2xl italic tracking-wide text-neutral-200">
-              Art from the Abyss.
+             Where Art Finds Its Identity.
             </p>
 
             <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.3em] text-neutral-600">

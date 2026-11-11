@@ -1,4 +1,4 @@
-export type ProjectCategory = "des-gothic" | "monster" | "visual-char";
+export type ProjectCategory = "des-gothic" | "monster" | "visual-char" | "portraits";
 export type ProjectSize = "small" | "medium" | "large";
 
 export interface Project {
@@ -10,7 +10,7 @@ export interface Project {
 }
 
 export const projects: Project[] = [
-    // Des Gothic - Chapter I (10 items)
+    // Des Gothic - Chapter I (14 items)
     {
         id: "dg-1",
         title: "Fusehime Soryu",
@@ -81,8 +81,36 @@ export const projects: Project[] = [
         src: "/assets/projects/des-gothic/dg13.jpg",
         size: "medium",
     },
+    {
+        id: "dg-14",
+        title: "Morrigan's Lament",
+        category: "des-gothic",
+        src: "/assets/projects/des-gothic/dg-morrigan.jpg",
+        size: "medium",
+    },
+    {
+        id: "dg-15",
+        title: "Valravn Requiem",
+        category: "des-gothic",
+        src: "/assets/projects/des-gothic/dg-valravn.jpg",
+        size: "large",
+    },
+    {
+        id: "dg-16",
+        title: "Sigil of Belial",
+        category: "des-gothic",
+        src: "/assets/projects/des-gothic/dg-belial.jpg",
+        size: "small",
+    },
+    {
+        id: "dg-17",
+        title: "Nocturna Penitence",
+        category: "des-gothic",
+        src: "/assets/projects/des-gothic/dg-nocturna.jpg",
+        size: "large",
+    },
 
-    // Monsters - Chapter II (Curated 6 items for smooth scroll)
+    // Monsters - Chapter II (12 items)
     {
         id: "m-1",
         title: "Asaktra",
@@ -125,8 +153,50 @@ export const projects: Project[] = [
         src: "/assets/projects/monsters/zueh.png",
         size: "medium",
     },
+    {
+        id: "m-14",
+        title: "Abyssal Leviathan",
+        category: "monster",
+        src: "/assets/projects/monsters/m-abyssal.webp",
+        size: "large",
+    },
+    {
+        id: "m-15",
+        title: "Obsidian Gargoyle",
+        category: "monster",
+        src: "/assets/projects/monsters/m-gargoyle.webp",
+        size: "medium",
+    },
+    {
+        id: "m-16",
+        title: "Dread Wraith",
+        category: "monster",
+        src: "/assets/projects/monsters/m-wraith.webp",
+        size: "small",
+    },
+    {
+        id: "m-17",
+        title: "Blood Wendigo",
+        category: "monster",
+        src: "/assets/projects/monsters/m-wendigo.webp",
+        size: "large",
+    },
+    {
+        id: "m-18",
+        title: "Malakor the Devourer",
+        category: "monster",
+        src: "/assets/projects/monsters/m-malakor.webp",
+        size: "medium",
+    },
+    {
+        id: "m-19",
+        title: "Crimson Fiend",
+        category: "monster",
+        src: "/assets/projects/monsters/m-crimson-beast.jpg",
+        size: "large",
+    },
 
-    // Visuals & Character - Chapter III (4 items)
+    // Visuals & Character - Chapter III (9 items)
     {
         id: "vc-1",
         title: "Kantel Board",
@@ -136,23 +206,165 @@ export const projects: Project[] = [
     },
     {
         id: "vc-2",
-        title: "Avatar Concept",
+        title: "Aurora Nocturne",
         category: "visual-char",
-        src: "/assets/images/avt.png",
-        size: "medium",
-    },
-    {
-        id: "vc-3",
-        title: "Visual Form",
-        category: "visual-char",
-        src: "/assets/images/my.jpeg",
+        src: "/assets/projects/visuals/vc-aurora.webp",
         size: "large",
     },
     {
-        id: "vc-4",
-        title: "Portrait Study",
+        id: "vc-3",
+        title: "Solaris Eclipse",
         category: "visual-char",
-        src: "/assets/images/avt.jfif",
+        src: "/assets/projects/visuals/vc-solaris.webp",
+        size: "medium",
+    },
+    {
+        id: "vc-4",
+        title: "Golden Aegis",
+        category: "visual-char",
+        src: "/assets/projects/visuals/vc-aegis.webp",
+        size: "large",
+    },
+    {
+        id: "vc-5",
+        title: "Valkyrie Reverie",
+        category: "visual-char",
+        src: "/assets/projects/visuals/vc-valkyrie.webp",
+        size: "small",
+    },
+    {
+        id: "vc-6",
+        title: "Seraphim Sovereign",
+        category: "visual-char",
+        src: "/assets/projects/visuals/vc-seraph.webp",
+        size: "large",
+    },
+    {
+        id: "vc-7",
+        title: "Kallisto Form",
+        category: "visual-char",
+        src: "/assets/projects/visuals/vc-kallisto.jpg",
+        size: "medium",
+    },
+    {
+        id: "vc-8",
+        title: "Marquis Shade",
+        category: "visual-char",
+        src: "/assets/projects/visuals/vc-marquis.jpg",
+        size: "large",
+    },
+    {
+        id: "vc-9",
+        title: "Astrea Vow",
+        category: "visual-char",
+        src: "/assets/projects/visuals/vc-astrea.jpg",
+        size: "medium",
+    },
+
+    // Calcutta Studio Portraits - Chapter IV (15 items)
+    {
+        id: "p-1",
+        title: "Crimson Solitude",
+        category: "portraits",
+        src: "/assets/projects/portraits/cs-crimson-solitude.webp",
+        size: "large",
+    },
+    {
+        id: "p-2",
+        title: "Conch of Silence",
+        category: "portraits",
+        src: "/assets/projects/portraits/cs-conch-reverie.webp",
+        size: "medium",
+    },
+    {
+        id: "p-3",
+        title: "Mirror of Noir",
+        category: "portraits",
+        src: "/assets/projects/portraits/cs-mirror-reflection.webp",
+        size: "large",
+    },
+    {
+        id: "p-4",
+        title: "Alta Rituals",
+        category: "portraits",
+        src: "/assets/projects/portraits/cs-alta-rituals.webp",
+        size: "medium",
+    },
+    {
+        id: "p-5",
+        title: "Prismatic Gaze",
+        category: "portraits",
+        src: "/assets/projects/portraits/cs-luminescence.webp",
+        size: "large",
+    },
+    {
+        id: "p-6",
+        title: "Spectral Eyes",
+        category: "portraits",
+        src: "/assets/projects/portraits/cs-spectral-eyes.webp",
+        size: "small",
+    },
+    {
+        id: "p-7",
+        title: "Emerald Sovereign",
+        category: "portraits",
+        src: "/assets/projects/portraits/cs-emerald-sovereign.webp",
+        size: "large",
+    },
+    {
+        id: "p-8",
+        title: "Ghazal-e-Bahaar",
+        category: "portraits",
+        src: "/assets/projects/portraits/cs-urdu-ghazal.webp",
+        size: "medium",
+    },
+    {
+        id: "p-9",
+        title: "Marble Descent",
+        category: "portraits",
+        src: "/assets/projects/portraits/cs-staircase-noir.webp",
+        size: "large",
+    },
+    {
+        id: "p-10",
+        title: "Calcutta Studio Triptych",
+        category: "portraits",
+        src: "/assets/projects/portraits/cs-studio-triptych.webp",
+        size: "large",
+    },
+    {
+        id: "p-11",
+        title: "The White Rose Diptych",
+        category: "portraits",
+        src: "/assets/projects/portraits/cs-white-rose.webp",
+        size: "medium",
+    },
+    {
+        id: "p-12",
+        title: "Magenta Reign",
+        category: "portraits",
+        src: "/assets/projects/portraits/cs-magenta-reign.webp",
+        size: "medium",
+    },
+    {
+        id: "p-13",
+        title: "Regal Radiance",
+        category: "portraits",
+        src: "/assets/projects/portraits/cs-regal-radiance.webp",
+        size: "large",
+    },
+    {
+        id: "p-14",
+        title: "Royal Heritage",
+        category: "portraits",
+        src: "/assets/projects/portraits/cs-royal-heritage.webp",
+        size: "large",
+    },
+    {
+        id: "p-15",
+        title: "Vermilion Shadows",
+        category: "portraits",
+        src: "/assets/projects/portraits/cs-vermilion-shadows.webp",
         size: "medium",
     },
 ];

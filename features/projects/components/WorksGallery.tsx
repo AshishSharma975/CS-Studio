@@ -16,6 +16,7 @@ type FilterType = "all" | ProjectCategory;
 
 const filters: { label: string; value: FilterType }[] = [
   { label: "All Works", value: "all" },
+  { label: "Portraits", value: "portraits" },
   { label: "Des Gothic", value: "des-gothic" },
   { label: "Monsters", value: "monster" },
   { label: "Visuals & Char", value: "visual-char" },

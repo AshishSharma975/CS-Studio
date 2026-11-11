@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
 import { IconMenu2, IconX } from "@tabler/icons-react"
 
@@ -16,15 +17,23 @@ export const Header = () => {
 
     return (
         <>
-          <header className="fixed top-0 left-0 w-full z-50 px-8 lg:px-16 py-8 flex justify-between items-center mix-blend-difference text-white pointer-events-none">
+          <header className="fixed top-0 left-0 w-full z-50 px-8 lg:px-16 py-6 sm:py-8 flex justify-between items-center pointer-events-none">
+            {/* Minimal Logo with Subtle Red Shine on Text */}
             <Link
               href="/"
-              className="font-serif text-3xl font-bold italic tracking-widest pointer-events-auto transition-transform hover:scale-105 duration-300"
+              className="pointer-events-auto transition-transform hover:scale-105 duration-300 flex items-center group"
             >
-              CS.
+              <Image
+                src="/assets/images/calcutta-logo.png"
+                alt="Calcutta Studio"
+                width={180}
+                height={46}
+                priority
+                className="h-8 sm:h-9 md:h-10 w-auto object-contain transition-all duration-300 drop-shadow-[0_0_6px_rgba(220,38,38,0.3)] group-hover:drop-shadow-[0_0_12px_rgba(255,30,30,0.6)]"
+              />
             </Link>
 
-            <nav className="hidden md:flex gap-8 font-sans text-xs tracking-[0.2em] uppercase pointer-events-auto">
+            <nav className="hidden md:flex gap-8 font-sans text-xs tracking-[0.2em] uppercase pointer-events-auto mix-blend-difference text-white">
               {navLinks.map((item) => (
                 <Link
                   key={item.name}
@@ -36,7 +45,7 @@ export const Header = () => {
               ))}
             </nav>
 
-            <div className="md:hidden pointer-events-auto">
+            <div className="md:hidden pointer-events-auto mix-blend-difference">
               <motion.button 
                 whileTap={{ scale: 0.9 }}
                 onClick={() => setIsMenuOpen(!isMenuOpen)}

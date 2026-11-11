@@ -240,6 +240,14 @@ export default function Gallery() {
                 subtitle="Chapter III"
                 items={visualCharProjects}
             />
+
+            <GalleryRow
+                id="gallery-row-4"
+                title="Portraits"
+                subtitle="Chapter IV - Calcutta Studio"
+                items={portraitProjects}
+                isReverse={true}
+            />
         </div>
     );
 }
