@@ -13,6 +13,7 @@ gsap.registerPlugin(ScrollTrigger);
 const desGothicProjects = projects.filter((p) => p.category === "des-gothic");
 const monsterProjects = projects.filter((p) => p.category === "monster");
 const visualCharProjects = projects.filter((p) => p.category === "visual-char");
+const portraitProjects = projects.filter((p) => p.category === "portraits");
 
 interface GalleryRowProps {
     id?: string;
