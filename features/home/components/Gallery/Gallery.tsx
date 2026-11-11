@@ -218,7 +218,7 @@ export default function Gallery() {
     return (
         <div
             ref={wrapperRef}
-            className="relative z-0 w-full bg-transparent selection:bg-red-900 leading-normal"
+            className="relative z-0 w-full overflow-hidden bg-transparent selection:bg-red-900 leading-normal"
         >
             <GalleryRow
                 id="gallery-row-1"

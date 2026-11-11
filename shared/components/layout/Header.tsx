@@ -123,7 +123,7 @@ export const Header = () => {
                   transition={{ delay: 0.45, duration: 0.8 }}
                   className="absolute bottom-12 left-1/2 -translate-x-1/2 text-neutral-800 font-serif italic text-4xl pointer-events-none select-none whitespace-nowrap"
                 >
-                  "Gaze into the abyss"
+                  &ldquo;Gaze into the abyss&rdquo;
                 </motion.div>
               </motion.div>
             )}

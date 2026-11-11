@@ -7,9 +7,9 @@ import Pact from "@/features/home/components/Pact/Pact"
 
 export default function HomePage() {
   return (
-    <div className="relative min-h-screen">
+    <div className="relative min-h-screen w-full overflow-x-hidden">
       <GlobalCanvas />
-      <div className="relative z-10 w-full">
+      <div className="relative z-10 w-full overflow-x-hidden">
         <Hero />
         <About />
         <Gallery />

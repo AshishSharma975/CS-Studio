@@ -77,9 +77,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className="overflow-x-hidden max-w-full">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${cinzel.variable} ${instrumentSerif.variable} font-sans antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${cinzel.variable} ${instrumentSerif.variable} font-sans antialiased overflow-x-hidden max-w-full`}
       >
         <ThemeProvider
           attribute="class"
@@ -87,12 +87,12 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="min-h-screen flex flex-col">
+          <div className="min-h-screen flex flex-col overflow-x-hidden max-w-full">
             <Preloader />
             <LenisScroll />
             <Header />
             <SocialSidebar />
-            <main className="flex-1">{children}</main>
+            <main className="flex-1 overflow-x-hidden max-w-full">{children}</main>
             <Footer />
             <Analytics />
           </div>

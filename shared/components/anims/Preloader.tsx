@@ -11,7 +11,8 @@ export const Preloader = () => {
 
   useEffect(() => {
     // Disable scrolling while preloader is active
-    document.body.style.overflow = "hidden";
+    document.body.style.overflowY = "hidden";
+    document.body.style.overflowX = "hidden";
 
     const duration = 1400; // 1.4 seconds total count-up
     const startTime = performance.now();
@@ -37,7 +38,8 @@ export const Preloader = () => {
       } else {
         setTimeout(() => {
           setIsComplete(true);
-          document.body.style.overflow = "";
+          document.body.style.overflowY = "";
+          document.body.style.overflowX = "hidden";
         }, 220);
       }
     };
@@ -46,7 +48,8 @@ export const Preloader = () => {
 
     return () => {
       cancelAnimationFrame(animFrame);
-      document.body.style.overflow = "";
+      document.body.style.overflowY = "";
+      document.body.style.overflowX = "hidden";
     };
   }, []);
 
@@ -135,3 +138,4 @@ export const Preloader = () => {
     </AnimatePresence>
   );
 };
+
