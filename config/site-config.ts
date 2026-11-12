@@ -5,8 +5,13 @@ export const siteConfig = {
   url: "https://cachetgn.vercel.app",
   ogImage: "https://cachetgn.vercel.app/og.png",
   links: {
+    whatsapp: "https://wa.me/918839145554",
+    phone: "+91 8839145554",
+    instagramStudio: "https://www.instagram.com/calcuttastudio98/",
+    instagramOwner: "https://www.instagram.com/sinu__5767_/",
     facebook: "https://www.facebook.com/motu43",
-    deviantart: "https://www.deviantart.com/cachetgn",
+    threads: "https://www.threads.net/@ginkomegane",
+    deviantart: "https://www.deviantart.com/cachetqn",
     behance: "https://www.behance.net/gallery/204915069/Portfolio-2024",
   },
   icons: {

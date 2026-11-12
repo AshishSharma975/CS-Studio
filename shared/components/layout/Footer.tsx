@@ -1,6 +1,11 @@
 import Link from "next/link";
 import Image from "next/image";
-import { IconMail, IconBrandFacebook, IconBrandInstagram } from "@tabler/icons-react";
+import {
+    IconMail,
+    IconBrandFacebook,
+    IconBrandInstagram,
+    IconBrandWhatsapp,
+} from "@tabler/icons-react";
 
 export const Footer = () => {
     const currentYear = new Date().getFullYear();
@@ -54,36 +59,72 @@ export const Footer = () => {
                     <h3 className="text-sm tracking-[0.3em] text-neutral-400 uppercase">
                         Connect
                     </h3>
-                    <div className="flex gap-6">
+                    <div className="flex gap-5 items-center">
+                        <a
+                            href="https://wa.me/918839145554?text=Hello%20Calcutta%20Studio%2C%20I%20would%20like%20to%20inquire%20about%20a%20photoshoot."
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="WhatsApp"
+                            title="WhatsApp (+91 8839145554)"
+                            className="text-neutral-600 hover:text-[#25D366] transition-colors"
+                        >
+                            <IconBrandWhatsapp stroke={1.2} size={24} />
+                        </a>
+                        <Link
+                            href="https://www.instagram.com/calcuttastudio98/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="Calcutta Studio Instagram"
+                            title="Calcutta Studio Instagram (@calcuttastudio98)"
+                            className="text-neutral-600 hover:text-[#ff1a1a] transition-colors"
+                        >
+                            <IconBrandInstagram stroke={1.2} size={24} />
+                        </Link>
+                        <Link
+                            href="https://www.facebook.com/motu43"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="Facebook"
+                            title="Facebook"
+                            className="text-neutral-600 hover:text-white transition-colors"
+                        >
+                            <IconBrandFacebook stroke={1.2} size={24} />
+                        </Link>
                         <Link
                             href="mailto:contact@calcutta.studio"
                             target="_blank"
                             rel="noopener noreferrer"
                             aria-label="Email"
+                            title="Email"
                             className="text-neutral-600 hover:text-white transition-colors"
                         >
-                            <IconMail stroke={1} size={24} />
-                        </Link>
-                        <Link
-                            href="https://www.facebook.com"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label="Facebook"
-                            className="text-neutral-600 hover:text-white transition-colors"
-                        >
-                            <IconBrandFacebook stroke={1} size={24} />
-                        </Link>
-                        <Link
-                            href="https://instagram.com"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label="Instagram"
-                            className="text-neutral-600 hover:text-white transition-colors"
-                        >
-                            <IconBrandInstagram stroke={1} size={24} />
+                            <IconMail stroke={1.2} size={24} />
                         </Link>
                     </div>
-                    <p className="mt-2 text-neutral-700 font-serif text-sm italic tracking-widest">
+
+                    <div className="flex flex-col gap-1 text-[11px] font-sans tracking-widest text-neutral-500">
+                        <span className="text-[10px] uppercase text-[#8a0303] tracking-[0.2em]">Instagram:</span>
+                        <a
+                            href="https://www.instagram.com/calcuttastudio98/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:text-white transition-colors flex items-center gap-1.5"
+                        >
+                            <span className="text-neutral-400">Studio:</span>
+                            <span className="text-neutral-300">@calcuttastudio98</span>
+                        </a>
+                        <a
+                            href="https://www.instagram.com/sinu__5767_/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:text-white transition-colors flex items-center gap-1.5"
+                        >
+                            <span className="text-neutral-400">Owner:</span>
+                            <span className="text-neutral-300">@sinu__5767_</span>
+                        </a>
+                    </div>
+
+                    <p className="mt-1 text-neutral-700 font-serif text-sm italic tracking-widest">
                         &ldquo;Gaze into the abyss&rdquo;
                     </p>
                 </div>

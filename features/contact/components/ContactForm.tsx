@@ -74,10 +74,24 @@ export const ContactForm = () => {
 
             <div className="flex flex-col">
               <span className="text-[10px] uppercase tracking-[0.3em] text-red-900 font-bold mb-1">
+                WhatsApp / Direct Call
+              </span>
+              <a
+                href="https://wa.me/918839145554?text=Hello%20Calcutta%20Studio%2C%20I%20would%20like%20to%20inquire%20about%20a%20photoshoot."
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-neutral-300 hover:text-[#25D366] transition-colors font-serif italic text-lg whitespace-nowrap"
+              >
+                +91 88391 45554
+              </a>
+            </div>
+
+            <div className="flex flex-col">
+              <span className="text-[10px] uppercase tracking-[0.3em] text-red-900 font-bold mb-1">
                 Location
               </span>
               <span className="text-neutral-300 font-serif italic text-lg">
-                Calcutta Studio / Remote
+                Calcutta Studio / Korba &amp; Pan-India
               </span>
             </div>
           </div>
