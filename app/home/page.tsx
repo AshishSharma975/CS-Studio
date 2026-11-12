@@ -3,7 +3,8 @@ import { GlobalCanvas } from "@/features/home/components/GlobalCanvas/GlobalCanv
 import Hero from "@/features/home/components/Hero/Hero";
 import About from "@/features/home/components/About/About";
 import Gallery from "@/features/home/components/Gallery/Gallery";
-import Pact from "@/features/home/components/Pact/Pact"
+import BehindTheScenes from "@/features/home/components/BehindTheScenes/BehindTheScenes";
+import Pact from "@/features/home/components/Pact/Pact";
 
 export default function HomePage() {
   return (
@@ -13,6 +14,7 @@ export default function HomePage() {
         <Hero />
         <About />
         <Gallery />
+        <BehindTheScenes />
         <Pact />
       </div>
     </div>
