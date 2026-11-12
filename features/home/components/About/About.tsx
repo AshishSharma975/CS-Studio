@@ -128,12 +128,10 @@ export default function About() {
           </div>
         </div>
 
-        {/* Right text column */}
         <div
           ref={rightColRef}
           className="flex flex-col justify-center space-y-8 py-8 md:py-24 md:pr-4 lg:pr-12"
         >
-          {/* Section heading */}
           <div className="space-y-3">
             <p className="font-sans text-sm uppercase tracking-[0.3em] text-neutral-500">
               The Architect of Nightmares
@@ -146,7 +144,6 @@ export default function About() {
             <div className="h-px w-20 bg-[#8a0303]" />
           </div>
 
-          {/* Description */}
           <div className="space-y-6 text-base leading-relaxed text-neutral-400 md:text-lg">
             <p>
               In the quietest hours of the night, when the boundary between
@@ -192,7 +189,6 @@ export default function About() {
             </div>
           </div>
 
-          {/* Signature */}
           <div className="border-t border-neutral-800 pt-6">
             <p className="font-serif text-2xl italic tracking-wide text-neutral-200">
              Where Art Finds Its Identity.
