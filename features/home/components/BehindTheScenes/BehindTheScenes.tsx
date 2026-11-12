@@ -189,24 +189,7 @@ export default function BehindTheScenes() {
       className="relative w-full h-screen bg-[#050505] text-white overflow-hidden flex flex-col items-center justify-center select-none"
     >
       {/* ============================================================== */}
-      {/* 1. AMBIENT BLURRED BACKDROP (Awwwards Cinema Glow)              */}
-      {/* ============================================================== */}
-      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
-        <video
-          ref={ambientVideoRef}
-          src="/assets/videos/bts-reel.mp4"
-          playsInline
-          muted
-          loop
-          className="w-full h-full object-cover opacity-20 blur-3xl scale-125 transform-gpu"
-          aria-hidden="true"
-        />
-        <div className="absolute inset-0 bg-radial-gradient from-transparent via-[#050505]/70 to-[#050505]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(180,10,10,0.12)_0%,transparent_70%)]" />
-      </div>
-
-      {/* ============================================================== */}
-      {/* 2. SECTION HEADER (Visible on initial arrival, fades on scroll) */}
+      {/* 1. SECTION HEADER (Visible on initial arrival, fades on scroll) */}
       {/* ============================================================== */}
       <div
         ref={headerRef}
@@ -224,7 +207,7 @@ export default function BehindTheScenes() {
       </div>
 
       {/* ============================================================== */}
-      {/* 3. EXPANDING VIDEO CARD CONTAINER                               */}
+      {/* 2. EXPANDING VIDEO CARD CONTAINER                               */}
       {/* ============================================================== */}
       <div
         ref={videoContainerRef}
@@ -240,15 +223,39 @@ export default function BehindTheScenes() {
           className="absolute inset-0 z-20 border border-neutral-800/80 rounded-2xl md:rounded-3xl pointer-events-none group-hover:border-[#8a0303]/60 transition-colors duration-500"
         />
 
-        {/* Video Element */}
-        <video
-          ref={videoRef}
-          src="/assets/videos/bts-reel.mp4"
-          playsInline
-          loop
-          preload="metadata"
-          className="w-full h-full object-cover object-center bg-black"
-        />
+        {/* Ambient blurred fill layer (Widescreen Edge-to-Edge Glow) */}
+        <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+          <video
+            ref={ambientVideoRef}
+            src="/assets/videos/bts-reel.mp4"
+            playsInline
+            muted
+            loop
+            className="w-full h-full object-cover opacity-35 blur-2xl scale-110 transform-gpu"
+            aria-hidden="true"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-black/60" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.2)_0%,rgba(5,5,5,0.85)_100%)]" />
+        </div>
+
+        {/* Main Video Reel (object-contain ensures 100% of video is visible without ANY cropping) */}
+        <div className="relative z-10 w-full h-full flex items-center justify-center p-0 sm:p-2 md:p-3">
+          <video
+            ref={videoRef}
+            src="/assets/videos/bts-reel.mp4"
+            playsInline
+            loop
+            preload="metadata"
+            onTimeUpdate={() => {
+              if (ambientVideoRef.current && videoRef.current) {
+                if (Math.abs(ambientVideoRef.current.currentTime - videoRef.current.currentTime) > 0.3) {
+                  ambientVideoRef.current.currentTime = videoRef.current.currentTime;
+                }
+              }
+            }}
+            className="w-full h-full object-contain object-center drop-shadow-[0_0_50px_rgba(0,0,0,0.95)]"
+          />
+        </div>
 
         {/* Soft Vignette Overlay */}
         <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/80 via-transparent to-black/30 z-10" />
@@ -303,7 +310,7 @@ export default function BehindTheScenes() {
         {/* ============================================================ */}
         <div
           ref={cinemaBadgeRef}
-          className="absolute bottom-6 sm:bottom-10 left-6 sm:left-12 z-30 flex flex-col pointer-events-none"
+          className="absolute bottom-4 sm:bottom-8 left-4 sm:left-10 z-30 flex flex-col pointer-events-none max-w-[85vw] sm:max-w-md"
         >
           <div className="flex items-center gap-2 mb-1">
             <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse" />
@@ -311,7 +318,7 @@ export default function BehindTheScenes() {
               On Set // Calcutta Studio
             </span>
           </div>
-          <span className="font-cinzel text-lg sm:text-2xl md:text-3xl uppercase tracking-wider text-white drop-shadow-lg">
+          <span className="font-cinzel text-base sm:text-xl md:text-2xl uppercase tracking-wider text-white drop-shadow-lg">
             Real Moments, Cinematic Magic
           </span>
           <span className="text-[9px] sm:text-[11px] font-mono tracking-widest text-neutral-400 mt-0.5">
