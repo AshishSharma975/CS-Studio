@@ -87,11 +87,16 @@ export default function BehindTheScenes() {
     () => {
       if (!sectionRef.current || !videoContainerRef.current) return;
 
+      gsap.set(videoContainerRef.current, {
+        scale: 0.65,
+        transformOrigin: "center center",
+      });
+
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top top",
-          end: () => `+=${window.innerHeight * 1.8}`,
+          end: () => `+=${window.innerHeight * 1.4}`,
           pin: true,
           anticipatePin: 1,
           scrub: 0.8,
@@ -109,7 +114,7 @@ export default function BehindTheScenes() {
           headerRef.current,
           {
             opacity: 0,
-            y: -40,
+            y: -35,
             ease: "power2.out",
             duration: 0.35,
           },
@@ -117,43 +122,47 @@ export default function BehindTheScenes() {
         );
       }
 
-      // 2. Video container expands from compact preview card to 100vw x 100vh full-screen bleed
-      tl.to(
+      // 2. Video container expands smoothly to maximum cinema size (locked 9:16 aspect ratio, zero cropping)
+      tl.fromTo(
         videoContainerRef.current,
         {
-          width: "100vw",
-          height: "100vh",
-          maxWidth: "100vw",
-          maxHeight: "100vh",
-          borderRadius: "0px",
-          ease: "power2.inOut",
+          scale: 0.65,
+          borderRadius: "28px",
+        },
+        {
+          scale: 1,
+          borderRadius: "18px",
+          ease: "power2.out",
           duration: 1,
         },
         0
       );
 
-      // 3. Border, shadows and frame morph seamlessly into immersive cinema
+      // 3. Border, shadows and frame morph seamlessly
       if (videoFrameRef.current) {
-        tl.to(
+        tl.fromTo(
           videoFrameRef.current,
           {
-            borderRadius: "0px",
-            borderColor: "transparent",
-            boxShadow: "none",
-            ease: "power2.inOut",
-            duration: 0.8,
+            borderRadius: "28px",
+            borderColor: "rgba(255, 255, 255, 0.15)",
           },
-          0.15
+          {
+            borderRadius: "18px",
+            borderColor: "rgba(138, 3, 3, 0.45)",
+            ease: "power2.out",
+            duration: 1,
+          },
+          0
         );
       }
 
-      // 4. Cinema watermark overlay fades in once full-screen
+      // 4. Cinema watermark overlay fades in once expanded
       if (cinemaBadgeRef.current) {
         tl.fromTo(
           cinemaBadgeRef.current,
-          { opacity: 0, y: 25 },
+          { opacity: 0, y: 15 },
           { opacity: 1, y: 0, ease: "power2.out", duration: 0.35 },
-          0.7
+          0.65
         );
       }
     },
@@ -173,6 +182,9 @@ export default function BehindTheScenes() {
       id="behind-the-scenes"
       className="relative w-full h-screen bg-[#050505] text-white overflow-hidden flex flex-col items-center justify-center select-none"
     >
+      {/* Subtle cinematic ambient glow behind video card */}
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,rgba(138,3,3,0.15)_0%,transparent_70%)]" />
+
       {/* ============================================================== */}
       {/* 1. SECTION HEADER (Visible on initial arrival, fades on scroll) */}
       {/* ============================================================== */}
@@ -197,25 +209,22 @@ export default function BehindTheScenes() {
       <div
         ref={videoContainerRef}
         onClick={togglePlayPause}
-        className="relative z-20 flex items-center justify-center overflow-hidden cursor-pointer group w-[85vw] sm:w-[55vw] md:w-[40vw] lg:w-[32vw] max-w-2xl h-[48vh] sm:h-[55vh] md:h-[62vh] rounded-3xl"
-        style={{
-          boxShadow: "0 0 60px rgba(0, 0, 0, 0.9), 0 0 30px rgba(180, 20, 20, 0.25)",
-        }}
+        className="relative z-20 flex items-center justify-center overflow-hidden cursor-pointer group aspect-[9/16] h-[82vh] max-h-[85vh] max-w-[90vw] rounded-2xl md:rounded-3xl shadow-[0_0_60px_rgba(0,0,0,0.95),0_0_35px_rgba(180,20,20,0.3)] will-change-transform origin-center"
       >
         {/* Frame Border with subtle hover glow */}
         <div
           ref={videoFrameRef}
-          className="absolute inset-0 z-20 border border-neutral-800/80 rounded-3xl pointer-events-none group-hover:border-[#8a0303]/60 transition-colors duration-500"
+          className="absolute inset-0 z-20 border border-neutral-800/80 rounded-2xl md:rounded-3xl pointer-events-none group-hover:border-[#8a0303]/60 transition-colors duration-500"
         />
 
-        {/* Video Element (object-cover with object-[center_top] anchors the head/face at the top so it is 100% visible as it grows to full screen) */}
+        {/* Video Element (720x1280 9:16 vertical video matches 9:16 container with zero cropping) */}
         <video
           ref={videoRef}
           src="/assets/videos/bts-reel.mp4"
           playsInline
           loop
           preload="metadata"
-          className="w-full h-full object-cover object-[center_top] bg-black"
+          className="w-full h-full object-cover object-center bg-black"
         />
 
         {/* Soft Vignette Overlay */}
