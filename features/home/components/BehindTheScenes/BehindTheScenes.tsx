@@ -18,7 +18,6 @@ export default function BehindTheScenes() {
   const videoContainerRef = useRef<HTMLDivElement>(null);
   const videoFrameRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const ambientVideoRef = useRef<HTMLVideoElement>(null);
   const cinemaBadgeRef = useRef<HTMLDivElement>(null);
 
   const [isPlaying, setIsPlaying] = useState(false);
@@ -27,7 +26,6 @@ export default function BehindTheScenes() {
 
   const playVideo = async () => {
     const video = videoRef.current;
-    const ambient = ambientVideoRef.current;
     if (!video) return;
 
     try {
@@ -36,23 +34,14 @@ export default function BehindTheScenes() {
       video.volume = 1;
       await video.play();
       setIsPlaying(true);
-      if (ambient) {
-        ambient.currentTime = video.currentTime;
-        ambient.play().catch(() => {});
-      }
     } catch {
-      // Browser autoplay policy might block unmuted audio without prior direct click
-      // Gracefully fallback to muted and surface sound toggle indicator
+      // Browser autoplay policy fallback to muted
       video.muted = true;
       setIsMuted(true);
       setHasSoundPrompt(true);
       try {
         await video.play();
         setIsPlaying(true);
-        if (ambient) {
-          ambient.currentTime = video.currentTime;
-          ambient.play().catch(() => {});
-        }
       } catch {
         // Handled
       }
@@ -61,13 +50,9 @@ export default function BehindTheScenes() {
 
   const pauseVideo = () => {
     const video = videoRef.current;
-    const ambient = ambientVideoRef.current;
     if (video) {
       video.pause();
       setIsPlaying(false);
-    }
-    if (ambient) {
-      ambient.pause();
     }
   };
 
@@ -212,7 +197,7 @@ export default function BehindTheScenes() {
       <div
         ref={videoContainerRef}
         onClick={togglePlayPause}
-        className="relative z-20 flex items-center justify-center overflow-hidden cursor-pointer group w-[85vw] sm:w-[65vw] md:w-[48vw] lg:w-[40vw] max-w-4xl h-[55vh] sm:h-[62vh] md:h-[68vh] rounded-2xl md:rounded-3xl"
+        className="relative z-20 flex items-center justify-center overflow-hidden cursor-pointer group w-[85vw] sm:w-[55vw] md:w-[40vw] lg:w-[32vw] max-w-2xl h-[48vh] sm:h-[55vh] md:h-[62vh] rounded-3xl"
         style={{
           boxShadow: "0 0 60px rgba(0, 0, 0, 0.9), 0 0 30px rgba(180, 20, 20, 0.25)",
         }}
@@ -220,42 +205,18 @@ export default function BehindTheScenes() {
         {/* Frame Border with subtle hover glow */}
         <div
           ref={videoFrameRef}
-          className="absolute inset-0 z-20 border border-neutral-800/80 rounded-2xl md:rounded-3xl pointer-events-none group-hover:border-[#8a0303]/60 transition-colors duration-500"
+          className="absolute inset-0 z-20 border border-neutral-800/80 rounded-3xl pointer-events-none group-hover:border-[#8a0303]/60 transition-colors duration-500"
         />
 
-        {/* Ambient blurred fill layer (Widescreen Edge-to-Edge Glow) */}
-        <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
-          <video
-            ref={ambientVideoRef}
-            src="/assets/videos/bts-reel.mp4"
-            playsInline
-            muted
-            loop
-            className="w-full h-full object-cover opacity-35 blur-2xl scale-110 transform-gpu"
-            aria-hidden="true"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-black/60" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.2)_0%,rgba(5,5,5,0.85)_100%)]" />
-        </div>
-
-        {/* Main Video Reel (object-contain ensures 100% of video is visible without ANY cropping) */}
-        <div className="relative z-10 w-full h-full flex items-center justify-center p-0 sm:p-2 md:p-3">
-          <video
-            ref={videoRef}
-            src="/assets/videos/bts-reel.mp4"
-            playsInline
-            loop
-            preload="metadata"
-            onTimeUpdate={() => {
-              if (ambientVideoRef.current && videoRef.current) {
-                if (Math.abs(ambientVideoRef.current.currentTime - videoRef.current.currentTime) > 0.3) {
-                  ambientVideoRef.current.currentTime = videoRef.current.currentTime;
-                }
-              }
-            }}
-            className="w-full h-full object-contain object-center drop-shadow-[0_0_50px_rgba(0,0,0,0.95)]"
-          />
-        </div>
+        {/* Video Element (object-cover with object-[center_top] anchors the head/face at the top so it is 100% visible as it grows to full screen) */}
+        <video
+          ref={videoRef}
+          src="/assets/videos/bts-reel.mp4"
+          playsInline
+          loop
+          preload="metadata"
+          className="w-full h-full object-cover object-[center_top] bg-black"
+        />
 
         {/* Soft Vignette Overlay */}
         <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/80 via-transparent to-black/30 z-10" />
