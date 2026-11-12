@@ -55,8 +55,6 @@ export function useGothicRingAnimation(
     pactTop: 11000,
   });
 
-  const rotYAccumRef = useRef(Math.PI);
-
   useEffect(() => {
     let aboutEl: HTMLElement | null = null;
     let row1El: HTMLElement | null = null;

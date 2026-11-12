@@ -9,7 +9,8 @@ export const WorksHero = () => {
 
   useEffect(() => {
     const isMobile = window.innerWidth < 768;
-    gsap.timeline().fromTo(
+    const tl = gsap.timeline();
+    tl.fromTo(
       titleRef.current,
       {
         opacity: 0,
@@ -24,6 +25,10 @@ export const WorksHero = () => {
         ease: "power3.out",
       }
     );
+
+    return () => {
+      tl.kill();
+    };
   }, []);
 
   return (

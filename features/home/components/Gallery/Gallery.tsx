@@ -23,6 +23,8 @@ interface GalleryRowProps {
     isReverse?: boolean;
 }
 
+const emptySubscribe = () => () => {};
+
 function GalleryRow({
     id,
     title,
@@ -32,11 +34,11 @@ function GalleryRow({
 }: GalleryRowProps) {
     const sectionRef = useRef<HTMLElement>(null);
     const trackRef = useRef<HTMLDivElement>(null);
-    const [hasMounted, setHasMounted] = React.useState(false);
-
-    React.useEffect(() => {
-        setHasMounted(true);
-    }, []);
+    const hasMounted = React.useSyncExternalStore(
+        emptySubscribe,
+        () => true,
+        () => false
+    );
 
     useGSAP(
         () => {

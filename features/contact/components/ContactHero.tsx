@@ -24,6 +24,10 @@ export const ContactHero = () => {
                 ease: "power3.out",
             }
         );
+
+        return () => {
+            tl.kill();
+        };
     }, []);
 
     return (

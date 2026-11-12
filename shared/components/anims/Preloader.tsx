@@ -16,6 +16,7 @@ export const Preloader = () => {
 
     const duration = 1400; // 1.4 seconds total count-up
     const startTime = performance.now();
+    let completeTimer: ReturnType<typeof setTimeout> | null = null;
 
     const updateCounter = (currentTime: number) => {
       const elapsed = currentTime - startTime;
@@ -36,7 +37,7 @@ export const Preloader = () => {
       if (progressFraction < 1) {
         requestAnimationFrame(updateCounter);
       } else {
-        setTimeout(() => {
+        completeTimer = setTimeout(() => {
           setIsComplete(true);
           document.body.style.overflowY = "";
           document.body.style.overflowX = "hidden";
@@ -48,6 +49,7 @@ export const Preloader = () => {
 
     return () => {
       cancelAnimationFrame(animFrame);
+      if (completeTimer) clearTimeout(completeTimer);
       document.body.style.overflowY = "";
       document.body.style.overflowX = "hidden";
     };

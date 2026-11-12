@@ -38,12 +38,12 @@ const GalleryContent = () => {
 
   useEffect(() => {
     if (selectedProject) {
-      document.body.style.overflow = "hidden";
+      document.body.style.overflowY = "hidden";
     } else {
-      document.body.style.overflow = "";
+      document.body.style.overflowY = "";
     }
     return () => {
-      document.body.style.overflow = "";
+      document.body.style.overflowY = "";
     };
   }, [selectedProject]);
 

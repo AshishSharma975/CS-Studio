@@ -16,19 +16,25 @@ import * as THREE from "three";
 import { GothicComponentScene } from "../../scenes/GothicComponentScene";
 import { InteractiveGothicBackground } from "../InteractiveGothicBackground";
 
+const emptySubscribe = () => () => {};
+const CHROMA_OFFSET = new THREE.Vector2(0.0015, 0.0015);
+
 export function GlobalCanvas() {
     const canvasWrapperRef = useRef<HTMLDivElement>(null);
-    const [mounted, setMounted] = React.useState(false);
+    const mounted = React.useSyncExternalStore(
+        emptySubscribe,
+        () => true,
+        () => false
+    );
     const [isMobile, setIsMobile] = React.useState(false);
 
     React.useEffect(() => {
-        setMounted(true);
         const handleResize = () => {
             setIsMobile(window.innerWidth < 768);
         };
 
         handleResize();
-        window.addEventListener("resize", handleResize);
+        window.addEventListener("resize", handleResize, { passive: true });
 
         return () => window.removeEventListener("resize", handleResize);
     }, []);
@@ -98,7 +104,7 @@ export function GlobalCanvas() {
                                 <Noise
                                     key="noise"
                                     opacity={
-                                        window.innerWidth < 768 ? 0.4 : 0.6
+                                        isMobile ? 0.4 : 0.6
                                     }
                                     premultiply
                                     blendFunction={BlendFunction.OVERLAY}
@@ -111,12 +117,10 @@ export function GlobalCanvas() {
                                     darkness={1.2}
                                 />
 
-                                {window.innerWidth >= 768 ? (
+                                {!isMobile ? (
                                     <ChromaticAberration
                                         key="chroma"
-                                        offset={
-                                            new THREE.Vector2(0.0015, 0.0015)
-                                        }
+                                        offset={CHROMA_OFFSET}
                                     />
                                 ) : (
                                     <React.Fragment key="chroma-placeholder" />

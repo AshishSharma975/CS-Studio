@@ -104,7 +104,7 @@ export const InteractiveGothicBackground = () => {
                 value: initialProgress || 0,
             },
         }),
-        [texture, size.width, size.height]
+        [texture, size.width, size.height, initialProgress]
     );
 
     const currentMouse = useRef(
@@ -141,11 +141,9 @@ export const InteractiveGothicBackground = () => {
             targetY = (state.pointer.y + 1.0) / 2.0;
         }
 
-        currentMouse.current.lerpVectors(
-            currentMouse.current,
-            new THREE.Vector2(targetX, targetY),
-            isMobile ? 0.03 : 0.05
-        );
+        const lerpFactor = isMobile ? 0.03 : 0.05;
+        currentMouse.current.x += (targetX - currentMouse.current.x) * lerpFactor;
+        currentMouse.current.y += (targetY - currentMouse.current.y) * lerpFactor;
 
         shaderRef.current.uniforms.uMouse.value.copy(
             currentMouse.current
