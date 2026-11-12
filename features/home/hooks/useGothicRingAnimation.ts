@@ -55,6 +55,8 @@ export function useGothicRingAnimation(
     pactTop: 11000,
   });
 
+  const updateMetricsRef = useRef<() => void>(() => {});
+
   useEffect(() => {
     let aboutEl: HTMLElement | null = null;
     let row1El: HTMLElement | null = null;
@@ -101,22 +103,24 @@ export function useGothicRingAnimation(
       };
     };
 
+    updateMetricsRef.current = updateMetrics;
     updateMetrics();
 
-    window.addEventListener("scroll", updateMetrics, { passive: true });
-    window.addEventListener("resize", () => {
+    const handleResize = () => {
       queryElements();
       updateMetrics();
-    });
+    };
+
+    window.addEventListener("resize", handleResize, { passive: true });
 
     return () => {
-      window.removeEventListener("scroll", updateMetrics);
-      window.removeEventListener("resize", updateMetrics);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
   useFrame((state, delta) => {
     if (!gothicCompRef.current) return;
+    updateMetricsRef.current();
 
     const { width, vh, aboutTop, row1Top, row2Top, row3Top, pactTop } =
       scrollMetricsRef.current;

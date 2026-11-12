@@ -83,34 +83,28 @@ const GalleryContent = () => {
     >
       <style>{`
         .card-image-wrap {
-          transition: filter 0.7s ease;
+          transition: filter 0.4s ease, transform 0.4s ease;
           will-change: filter, transform;
         }
         .card-glow .card-image-wrap {
-          filter:
-            drop-shadow(0 0 4px rgba(255, 0, 0, 0.4))
-            drop-shadow(0 0 12px rgba(161, 0, 0, 0.3))
-            drop-shadow(0 0 28px rgba(102, 0, 0, 0.2))
-            drop-shadow(0 0 50px rgba(138, 3, 3, 0.1));
+          filter: drop-shadow(0 0 8px rgba(220, 20, 20, 0.45));
         }
 
         @media (max-width: 768px) {
           .card-glow .card-image-wrap {
-            filter: drop-shadow(0 4px 8px rgba(138, 3, 3, 0.3));
+            filter: drop-shadow(0 2px 8px rgba(180, 10, 10, 0.4));
           }
           .card-glow:hover .card-image-wrap {
-            filter: drop-shadow(0 4px 12px rgba(138, 3, 3, 0.5));
+            filter: drop-shadow(0 4px 12px rgba(255, 20, 20, 0.6));
           }
         }
 
         @media (min-width: 769px) {
           .card-glow:hover .card-image-wrap {
             filter:
-              drop-shadow(0 0 6px rgba(255, 0, 0, 0.9))
-              drop-shadow(0 0 16px rgba(161, 0, 0, 0.8))
-              drop-shadow(0 0 35px rgba(102, 0, 0, 0.6))
-              drop-shadow(0 0 70px rgba(138, 3, 3, 0.4))
-              drop-shadow(0 0 100px rgba(138, 3, 3, 0.25));
+              drop-shadow(0 0 8px rgba(255, 0, 0, 0.85))
+              drop-shadow(0 0 24px rgba(161, 0, 0, 0.6))
+              drop-shadow(0 0 50px rgba(138, 3, 3, 0.3));
           }
         }
       `}</style>
@@ -156,7 +150,7 @@ const GalleryContent = () => {
 
             <div className="mt-4 md:mt-6 flex flex-col">
               <span className="text-[8px] md:text-[10px] font-sans tracking-[0.3em] text-[#8a0303] uppercase mb-1 md:mb-2 text-center md:text-left">
-                {project.category.replace("-", " ")}
+                {project.displayCategory || project.category.replace("-", " ")}
               </span>
               <span className="text-lg md:text-2xl font-cinzel text-neutral-300 group-hover:text-white transition-colors duration-300 text-center md:text-left leading-tight">
                 {project.title}
@@ -211,7 +205,7 @@ const GalleryContent = () => {
                 className="absolute bottom-4 md:bottom-[-80px] left-0 w-full text-center pointer-events-none px-6 py-4 md:p-0 bg-black/40 md:bg-transparent backdrop-blur-md md:backdrop-blur-none"
               >
                 <p className="text-[8px] md:text-[10px] font-sans tracking-[0.4em] text-[#8a0303] uppercase mb-1 drop-shadow-sm">
-                  {selectedProject.category.replace("-", " ")}
+                  {selectedProject.displayCategory || selectedProject.category.replace("-", " ")}
                 </p>
                 <h4 className="text-xl md:text-3xl font-cinzel text-neutral-200 tracking-widest uppercase drop-shadow-md">
                   {selectedProject.title}

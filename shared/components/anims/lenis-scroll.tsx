@@ -14,7 +14,7 @@ export const LenisScroll = () => {
         gsap.registerPlugin(ScrollTrigger);
 
         const lenis = new Lenis({
-            lerp: 0.08,
+            lerp: 0.1,
             wheelMultiplier: 1.0,
             smoothWheel: true,
         });
@@ -28,7 +28,7 @@ export const LenisScroll = () => {
         };
 
         gsap.ticker.add(updateLenis);
-        gsap.ticker.lagSmoothing(0);
+        gsap.ticker.lagSmoothing(500, 33);
 
         return () => {
             gsap.ticker.remove(updateLenis);

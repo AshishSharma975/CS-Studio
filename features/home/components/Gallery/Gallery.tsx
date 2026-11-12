@@ -102,14 +102,16 @@ function GalleryRow({
         <section ref={sectionRef} id={id} className="relative w-full h-screen overflow-hidden bg-transparent">
             <style>{`
 .card-image-wrap {
-    transition: filter 0.5s ease, transform 0.5s ease;
+    transition: filter 0.4s ease, transform 0.4s ease;
     will-change: transform;
 }
 .card-glow .card-image-wrap {
+    filter: drop-shadow(0 0 10px rgba(220, 20, 20, 0.5));
+}
+.card-glow:hover .card-image-wrap {
     filter:
-        drop-shadow(0 0 6px rgba(255, 0, 0, 0.75))
-        drop-shadow(0 0 18px rgba(161, 0, 0, 0.55))
-        drop-shadow(0 0 45px rgba(138, 3, 3, 0.25));
+        drop-shadow(0 0 8px rgba(255, 0, 0, 0.85))
+        drop-shadow(0 0 24px rgba(161, 0, 0, 0.6));
 }
             `}</style>
 
@@ -181,7 +183,7 @@ function GalleryRow({
                                 </div>
                                 <div className="mt-3 md:mt-4 flex flex-col shrink-0">
                                     <span className="text-[10px] md:text-xs font-sans tracking-[0.2em] text-[#8a0303] uppercase">
-                                        {project.category.replace("-", " ")}
+                                        {project.displayCategory || project.category.replace("-", " ")}
                                     </span>
                                     <span className="text-base sm:text-lg md:text-xl font-cinzel text-neutral-300">
                                         {project.title}
