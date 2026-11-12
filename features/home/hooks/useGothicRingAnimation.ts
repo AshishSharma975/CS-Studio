@@ -56,6 +56,7 @@ export function useGothicRingAnimation(
   });
 
   const updateMetricsRef = useRef<() => void>(() => {});
+  const initializedRef = useRef(false);
 
   useEffect(() => {
     let aboutEl: HTMLElement | null = null;
@@ -81,6 +82,10 @@ export function useGothicRingAnimation(
     };
 
     const updateMetrics = () => {
+      if (!aboutEl || !row1El || !pactEl) {
+        queryElements();
+      }
+
       const vh = window.innerHeight || 1;
       const width = window.innerWidth || 1200;
       const scrollY = window.scrollY || window.pageYOffset || 0;
@@ -158,7 +163,18 @@ export function useGothicRingAnimation(
     const pactScale = isMobile ? 0.55 : isTablet ? 0.70 : RING_STAGES.PACT.SCALE;
     const pactY = (isMobile ? -0.08 : RING_STAGES.PACT.Y) + idleY;
 
+    // Instant initial snap on first frame if at top of page
+    if (!initializedRef.current) {
+      initializedRef.current = true;
+      if (scrollMetricsRef.current.scrollY < 50) {
+        gothicCompRef.current.position.set(heroX, heroY, RING_STAGES.HERO.Z);
+        gothicCompRef.current.scale.setScalar(heroScale);
+        gothicCompRef.current.rotation.set(heroRotX, heroRotY, heroRotZ);
+      }
+    }
+
     // Stage progression factors
+    const scrollY = scrollMetricsRef.current.scrollY;
     const aboutEnterP = THREE.MathUtils.clamp(1 - aboutTop / vh, 0, 1);
     const row1EnterP = THREE.MathUtils.clamp(1 - row1Top / vh, 0, 1);
     const row1PinP = THREE.MathUtils.clamp(-row1Top / (3 * vh), 0, 1);
@@ -169,7 +185,7 @@ export function useGothicRingAnimation(
     const isRow1Pinned = row1Top <= 0 && row1Top > -3 * vh;
     const isRow2Pinned = row2Top <= 0 && row2Top > -3 * vh;
     const isRow3Pinned = row3Top <= 0 && row3Top > -3 * vh;
-    const isPactActive = pactTop <= vh * 0.45;
+    const isPactActive = scrollY > 2500 && pactTop <= vh * 0.45;
 
     const r1StartX = isMobile ? -0.5 : -1.8;
     const r1EndX = isMobile ? 0.5 : 1.8;
@@ -183,7 +199,32 @@ export function useGothicRingAnimation(
     let targetRotZ = heroRotZ;
     let targetOpacity = heroOpacity;
 
-    if (isPactActive || pactEnterP > 0.4) {
+    if (scrollY <= 50) {
+      // -------------------------------------------------------------
+      // STAGE 0: PURE HERO (Absolute lock at top of page)
+      // -------------------------------------------------------------
+      targetX = heroX;
+      targetY = heroY;
+      targetZ = RING_STAGES.HERO.Z;
+      targetScale = heroScale;
+      targetRotX = heroRotX;
+      targetRotY = heroRotY;
+      targetRotZ = heroRotZ;
+      targetOpacity = heroOpacity;
+    } else if (scrollY > 50 && aboutTop > 0) {
+      // -------------------------------------------------------------
+      // STAGE 1: HERO -> ABOUT TRANSITION
+      // -------------------------------------------------------------
+      const smoothP = THREE.MathUtils.smoothstep(aboutEnterP, 0, 1);
+
+      targetX = THREE.MathUtils.lerp(heroX, aboutX, smoothP);
+      targetY = THREE.MathUtils.lerp(heroY, aboutY, smoothP);
+      targetScale = THREE.MathUtils.lerp(heroScale, aboutScale, smoothP);
+      targetRotX = THREE.MathUtils.lerp(heroRotX, aboutRotX, smoothP);
+      targetRotY = THREE.MathUtils.lerp(heroRotY, aboutRotY, smoothP);
+      targetRotZ = THREE.MathUtils.lerp(heroRotZ, aboutRotZ, smoothP);
+      targetOpacity = THREE.MathUtils.lerp(heroOpacity, aboutOpacity, smoothP);
+    } else if (isPactActive || (scrollY > 2500 && pactEnterP > 0.4)) {
       // -------------------------------------------------------------
       // STAGE 5: THE PACT (Commissions Centerpiece)
       // -------------------------------------------------------------
@@ -199,7 +240,7 @@ export function useGothicRingAnimation(
       targetRotY = Math.PI * 2 + state.clock.elapsedTime * 0.15;
       targetRotZ = 0;
       targetOpacity = THREE.MathUtils.lerp(0.65, RING_STAGES.PACT.OPACITY, smoothP);
-    } else if (isRow3Pinned || row3Top <= 0) {
+    } else if (isRow3Pinned || (scrollY > 1500 && row3Top <= 0)) {
       // -------------------------------------------------------------
       // STAGE 4: GALLERY ROW 3 (Visuals & Char)
       // -------------------------------------------------------------
@@ -213,7 +254,7 @@ export function useGothicRingAnimation(
       targetRotY = Math.PI + p * Math.PI + idleSpin;
       targetRotZ = THREE.MathUtils.lerp(-Math.PI / 8, 0, p);
       targetOpacity = THREE.MathUtils.lerp(0.50, 0.70, p);
-    } else if (isRow2Pinned || row2Top <= 0) {
+    } else if (isRow2Pinned || (scrollY > 1000 && row2Top <= 0)) {
       // -------------------------------------------------------------
       // STAGE 3: GALLERY ROW 2 (Monsters [REVERSE])
       // -------------------------------------------------------------
@@ -227,7 +268,7 @@ export function useGothicRingAnimation(
       targetRotY = Math.PI * 2.2 - p * Math.PI * 1.2 + idleSpin;
       targetRotZ = -Math.PI / 8;
       targetOpacity = RING_STAGES.GALLERY_BASE.OPACITY;
-    } else if (isRow1Pinned || row1Top <= 0) {
+    } else if (isRow1Pinned || (scrollY > 500 && row1Top <= 0)) {
       // -------------------------------------------------------------
       // STAGE 2: GALLERY ROW 1 (Des Gothic)
       // -------------------------------------------------------------
@@ -272,18 +313,14 @@ export function useGothicRingAnimation(
       targetRotZ = aboutRotZ;
       targetOpacity = aboutOpacity;
     } else {
-      // -------------------------------------------------------------
-      // STAGE 1: HERO -> ABOUT
-      // -------------------------------------------------------------
-      const smoothP = THREE.MathUtils.smoothstep(aboutEnterP, 0, 1);
-
-      targetX = THREE.MathUtils.lerp(heroX, aboutX, smoothP);
-      targetY = THREE.MathUtils.lerp(heroY, aboutY, smoothP);
-      targetScale = THREE.MathUtils.lerp(heroScale, aboutScale, smoothP);
-      targetRotX = THREE.MathUtils.lerp(heroRotX, aboutRotX, smoothP);
-      targetRotY = THREE.MathUtils.lerp(heroRotY, aboutRotY, smoothP);
-      targetRotZ = THREE.MathUtils.lerp(heroRotZ, aboutRotZ, smoothP);
-      targetOpacity = THREE.MathUtils.lerp(heroOpacity, aboutOpacity, smoothP);
+      targetX = heroX;
+      targetY = heroY;
+      targetZ = RING_STAGES.HERO.Z;
+      targetScale = heroScale;
+      targetRotX = heroRotX;
+      targetRotY = heroRotY;
+      targetRotZ = heroRotZ;
+      targetOpacity = heroOpacity;
     }
 
     // High performance responsive damping for butter-smooth 60-120fps
