@@ -111,7 +111,8 @@ export default function BehindTheScenes() {
       if (!sectionRef.current || !videoContainerRef.current) return;
 
       gsap.set(videoContainerRef.current, {
-        scale: 0.68,
+        scale: 0.65,
+        z: -60,
         transformOrigin: "center center",
       });
 
@@ -119,7 +120,7 @@ export default function BehindTheScenes() {
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top top",
-          end: () => `+=${window.innerHeight * 1.4}`,
+          end: () => `+=${window.innerHeight * 1.5}`,
           pin: true,
           anticipatePin: 1,
           scrub: 0.8,
@@ -145,15 +146,17 @@ export default function BehindTheScenes() {
         );
       }
 
-      // 2. Video deck expands smoothly to maximum cinema deck size
+      // 2. Video deck expands smoothly and glides forward into view
       tl.fromTo(
         videoContainerRef.current,
         {
-          scale: 0.68,
+          scale: 0.65,
+          z: -60,
           borderRadius: "28px",
         },
         {
-          scale: 1,
+          scale: 1.05,
+          z: 20,
           borderRadius: "20px",
           ease: "power2.out",
           duration: 1,
@@ -221,6 +224,7 @@ export default function BehindTheScenes() {
     <section
       ref={sectionRef}
       id="behind-the-scenes"
+      style={{ perspective: 1200 }}
       className="relative w-full h-screen bg-[#050505] text-white overflow-hidden flex flex-col items-center justify-center select-none"
     >
       {/* Subtle cinematic ambient glow behind video card */}
@@ -250,7 +254,7 @@ export default function BehindTheScenes() {
       <div
         ref={videoContainerRef}
         onClick={togglePlayPause}
-        className="relative z-20 flex items-center justify-center overflow-hidden cursor-pointer group w-[88vw] max-w-sm md:max-w-5xl md:w-[86vw] h-[76vh] max-h-[780px] rounded-2xl md:rounded-3xl shadow-[0_0_70px_rgba(0,0,0,0.95),0_0_40px_rgba(138,3,3,0.3)] will-change-transform origin-center border border-neutral-800/80 bg-neutral-950/95"
+        className="relative z-20 flex items-center justify-center overflow-hidden cursor-pointer group w-[88vw] max-w-sm md:max-w-6xl md:w-[90vw] h-[80vh] max-h-[840px] rounded-2xl md:rounded-3xl shadow-[0_20px_80px_rgba(0,0,0,0.95),0_0_50px_rgba(138,3,3,0.35)] will-change-transform origin-center border border-neutral-800/80 bg-neutral-950/95"
       >
         {/* Subtle Frame Glow */}
         <div
@@ -304,7 +308,7 @@ export default function BehindTheScenes() {
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse" />
             <span className="text-[10px] font-mono tracking-widest uppercase text-neutral-400">
-              4K Cinema Archive • Korba, CG
+              Calcutta Studio Official
             </span>
           </div>
         </div>
@@ -344,14 +348,11 @@ export default function BehindTheScenes() {
             <div className="flex items-center gap-2 mb-1">
               <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse" />
               <span className="text-[10px] font-sans tracking-[0.3em] uppercase text-neutral-300">
-                On Set // Calcutta Studio
+                Calcutta Studio
               </span>
             </div>
             <span className="font-cinzel text-sm sm:text-base md:text-lg uppercase tracking-wider text-white drop-shadow-lg leading-tight">
               Real Moments, Cinematic Magic
-            </span>
-            <span className="text-[9px] font-mono tracking-widest text-neutral-400 mt-0.5">
-              BTS FILM ARCHIVE / 2026
             </span>
           </div>
         </div>
@@ -363,14 +364,8 @@ export default function BehindTheScenes() {
           ref={rightWingRef}
           className="hidden md:flex flex-col justify-between items-end flex-1 h-full py-8 pr-8 pl-4 z-20 select-none text-right"
         >
-          <div className="flex flex-col items-end">
-            <span className="text-[9px] font-mono tracking-widest text-neutral-400 uppercase mb-1">
-              Audio Experience
-            </span>
-            <span className="text-xs font-sans text-neutral-300">
-              {isMuted ? "Muted // Click to Listen" : "Stereo Sound Active"}
-            </span>
-          </div>
+          {/* Spacer so the top-right Sound button floats cleanly with zero overlap */}
+          <div className="h-8" />
 
           <div className="flex flex-col items-end max-w-xs space-y-2">
             <span className="text-[9px] font-sans tracking-[0.25em] uppercase text-neutral-400">
@@ -385,11 +380,8 @@ export default function BehindTheScenes() {
           </div>
 
           <div className="flex flex-col items-end">
-            <span className="text-[9px] font-mono tracking-widest text-[#8a0303] uppercase">
-              Calcutta Studio Official
-            </span>
-            <span className="text-[10px] font-mono text-neutral-400 tracking-wider">
-              © 2026 All Rights Reserved
+            <span className="font-cinzel text-xs tracking-[0.25em] text-[#8a0303] uppercase font-semibold">
+              Calcutta Studio
             </span>
           </div>
         </div>
