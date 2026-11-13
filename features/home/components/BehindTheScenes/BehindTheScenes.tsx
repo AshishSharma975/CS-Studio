@@ -66,6 +66,7 @@ export default function BehindTheScenes() {
     }
   };
 
+
   useGSAP(
     () => {
       if (!sectionRef.current || !videoContainerRef.current) return;
@@ -195,9 +196,7 @@ export default function BehindTheScenes() {
       {/* Subtle cinematic ambient glow behind video card */}
       <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,rgba(138,3,3,0.15)_0%,transparent_70%)]" />
 
-      {/* ============================================================== */}
-      {/* 1. SECTION HEADER (Visible on initial arrival, fades on scroll) */}
-      {/* ============================================================== */}
+     
       <div
         ref={headerRef}
         className="absolute top-10 sm:top-14 md:top-16 z-30 flex flex-col items-center text-center px-6 pointer-events-none"
@@ -213,9 +212,7 @@ export default function BehindTheScenes() {
         </p>
       </div>
 
-      {/* ============================================================== */}
-      {/* 2. EXPANDING CINEMA DECK (Landscape on laptop, Vertical on mobile) */}
-      {/* ============================================================== */}
+     
       <div
         ref={videoContainerRef}
         onClick={togglePlayPause}
@@ -231,9 +228,7 @@ export default function BehindTheScenes() {
         <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,rgba(138,3,3,0.22)_0%,rgba(10,10,10,0.85)_75%)] z-10" />
         <div className="absolute inset-0 pointer-events-none bg-gradient-to-r from-black/90 via-transparent to-black/90 z-10 hidden md:block" />
 
-        {/* ============================================================ */}
-        {/* LEFT WING (Desktop Landscape Cinema Info)                    */}
-        {/* ============================================================ */}
+
         <div
           ref={leftWingRef}
           className="hidden md:flex flex-col justify-between flex-1 h-full py-8 pl-8 pr-4 z-20 select-none text-left"
@@ -265,9 +260,7 @@ export default function BehindTheScenes() {
           </div>
         </div>
 
-        {/* ============================================================ */}
-        {/* CENTER STAGE: PRIMARY 9:16 VERTICAL REEL (ZERO CROPPING)    */}
-        {/* ============================================================ */}
+       
         <div className="relative h-full aspect-[9/16] flex items-center justify-center overflow-hidden rounded-xl md:rounded-2xl shadow-[0_0_50px_rgba(0,0,0,0.9),0_0_30px_rgba(138,3,3,0.35)] border border-neutral-800/80 z-20 shrink-0">
           {/* Main Reel Video (autoPlay + muted ensures instantaneous 100% reliable browser playback) */}
           <video
@@ -283,10 +276,8 @@ export default function BehindTheScenes() {
             className="w-full h-full object-cover object-center bg-black"
           />
 
-          {/* Soft Vignette Overlay */}
           <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/80 via-transparent to-black/30 z-10" />
 
-          {/* Subtle Center Play/Pause Indicator on hover/pause */}
           {!isPlaying && (
             <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/40 backdrop-blur-2xs transition-opacity duration-300">
               <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#8a0303]/80 border border-white/20 flex items-center justify-center text-white shadow-[0_0_40px_rgba(138,3,3,0.8)] transform group-hover:scale-110 transition-transform duration-300">
@@ -295,7 +286,6 @@ export default function BehindTheScenes() {
             </div>
           )}
 
-          {/* Cinema Watermark Badge */}
           <div
             ref={cinemaBadgeRef}
             className="absolute bottom-4 sm:bottom-6 left-4 sm:left-6 z-30 flex flex-col pointer-events-none max-w-[85vw] sm:max-w-xs"
@@ -312,14 +302,11 @@ export default function BehindTheScenes() {
           </div>
         </div>
 
-        {/* ============================================================ */}
-        {/* RIGHT WING (Desktop Landscape Cinema Controls & Notes)       */}
-        {/* ============================================================ */}
+       
         <div
           ref={rightWingRef}
           className="hidden md:flex flex-col justify-between items-end flex-1 h-full py-8 pr-8 pl-4 z-20 select-none text-right"
         >
-          {/* Spacer so the top-right Sound button floats cleanly with zero overlap */}
           <div className="h-8" />
 
           <div className="flex flex-col items-end max-w-xs space-y-2">
@@ -341,7 +328,6 @@ export default function BehindTheScenes() {
           </div>
         </div>
 
-        {/* Sound Toggle Button (Always at top-right for both mobile & desktop) */}
         <div className="absolute top-4 sm:top-6 right-4 sm:right-6 z-30 flex items-center gap-2">
           <button
             type="button"

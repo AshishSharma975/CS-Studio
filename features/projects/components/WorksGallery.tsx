@@ -39,6 +39,14 @@ const GalleryContent = () => {
   useEffect(() => {
     if (selectedProject) {
       document.body.style.overflowY = "hidden";
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === "Escape") setSelectedProject(null);
+      };
+      window.addEventListener("keydown", handleKeyDown);
+      return () => {
+        document.body.style.overflowY = "";
+        window.removeEventListener("keydown", handleKeyDown);
+      };
     } else {
       document.body.style.overflowY = "";
     }
@@ -168,46 +176,53 @@ const GalleryContent = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/95 backdrop-blur-md md:backdrop-blur-2xl p-4 md:p-12 cursor-zoom-out"
+            className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-black/95 backdrop-blur-md md:backdrop-blur-2xl p-4 sm:p-6 md:p-8 cursor-zoom-out select-none"
             onClick={() => setSelectedProject(null)}
           >
+            {/* Close Button top-right */}
+            <button
+              className="absolute top-4 right-4 md:top-6 md:right-8 text-white/60 hover:text-[#ff1a1a] transition-all duration-300 z-[10000] p-2 hover:rotate-90 cursor-pointer"
+              onClick={() => setSelectedProject(null)}
+              title="Close"
+              aria-label="Close modal"
+            >
+              <IconX size={32} stroke={1.5} />
+            </button>
+
+            {/* Inner Content Card (Flex column: Image on top, Text firmly inside viewport underneath) */}
             <motion.div
-              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              initial={{ scale: 0.94, opacity: 0, y: 15 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.9, opacity: 0, y: 20 }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="relative w-full h-[70vh] md:h-full max-w-5xl max-h-[85vh] cursor-default flex flex-col items-center justify-center"
+              exit={{ scale: 0.94, opacity: 0, y: 15 }}
+              transition={{ type: "spring", damping: 25, stiffness: 220 }}
+              className="relative w-full max-w-4xl h-full flex flex-col items-center justify-center cursor-default gap-3 md:gap-4 py-2"
               onClick={(e) => e.stopPropagation()}
             >
-              <button
-                className="absolute top-0 right-0 md:-right-12 md:top-0 text-white/50 hover:text-[#ff1a1a] transition-all duration-300 z-[10000] p-4 md:p-2 hover:rotate-90"
-                onClick={() => setSelectedProject(null)}
-                title="Close"
-              >
-                <IconX size={32} stroke={1.5} />
-              </button>
-
-              <div className="relative w-full h-full shadow-[0_0_100px_rgba(138,3,3,0.2)] border border-white/5 bg-black/20">
-                <Image
-                  src={selectedProject.src}
-                  alt={selectedProject.title}
-                  fill
-                  className="object-contain"
-                  priority
-                  sizes="100vw"
-                />
+              {/* Image Frame: Takes flex-1 so it naturally fits remaining vertical height without overflowing */}
+              <div className="relative w-full flex-1 min-h-0 flex items-center justify-center">
+                <div className="relative w-full h-full max-h-[74vh] flex items-center justify-center shadow-[0_0_80px_rgba(138,3,3,0.25)] border border-white/5 bg-black/30 rounded-xs overflow-hidden">
+                  <Image
+                    src={selectedProject.src}
+                    alt={selectedProject.title}
+                    fill
+                    className="object-contain"
+                    priority
+                    sizes="(max-width: 1024px) 95vw, 1200px"
+                  />
+                </div>
               </div>
 
+              {/* Text Info: Firmly placed below the image, guaranteed inside viewport without being cut off */}
               <motion.div
-                initial={{ opacity: 0, y: 10 }}
+                initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="absolute bottom-4 md:bottom-[-80px] left-0 w-full text-center pointer-events-none px-6 py-4 md:p-0 bg-black/40 md:bg-transparent backdrop-blur-md md:backdrop-blur-none"
+                transition={{ delay: 0.15 }}
+                className="w-full text-center flex flex-col items-center justify-center shrink-0 pt-1"
               >
-                <p className="text-[8px] md:text-[10px] font-sans tracking-[0.4em] text-[#8a0303] uppercase mb-1 drop-shadow-sm">
+                <p className="text-[9px] md:text-[11px] font-sans tracking-[0.4em] text-[#8a0303] uppercase font-semibold mb-1">
                   {selectedProject.displayCategory || selectedProject.category.replace("-", " ")}
                 </p>
-                <h4 className="text-xl md:text-3xl font-cinzel text-neutral-200 tracking-widest uppercase drop-shadow-md">
+                <h4 className="text-xl sm:text-2xl md:text-3xl font-cinzel text-neutral-100 tracking-widest uppercase drop-shadow-md">
                   {selectedProject.title}
                 </h4>
               </motion.div>
