@@ -99,36 +99,54 @@ const filters: { label: string; value: FilterType }[] = [
   { label: "Reels", value: "reels" },
 ];
 
-/* Exact Reference Video Accordion Reel Item */
+/* Exact Reference Video Accordion Reel Item: Hover-to-expand, Zero-Reflow CSS Grid Transition */
 function EditorialReelRow({
   reel,
   isActive,
-  onToggle,
+  onHover,
+  onSelect,
   onOpenModal,
 }: {
   reel: ReelItem;
   isActive: boolean;
-  onToggle: () => void;
+  onHover: () => void;
+  onSelect: () => void;
   onOpenModal: (reel: ReelItem) => void;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isMuted, setIsMuted] = useState(true);
+  const hoverTimer = useRef<NodeJS.Timeout | null>(null);
 
-  // Play video smoothly when active, pause when inactive
+  // Play video smoothly when active, pause when inactive (no DOM remounting)
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
     if (isActive) {
       video.muted = isMuted;
-      video.play().catch(() => {
-        video.muted = true;
-        setIsMuted(true);
-        video.play().catch(() => {});
-      });
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          video.muted = true;
+          setIsMuted(true);
+          video.play().catch(() => {});
+        });
+      }
     } else {
       video.pause();
     }
   }, [isActive, isMuted]);
+
+  const handleMouseEnter = () => {
+    if (hoverTimer.current) clearTimeout(hoverTimer.current);
+    // 45ms hover intent debounce: snappy response, zero stutter during rapid scroll
+    hoverTimer.current = setTimeout(() => {
+      onHover();
+    }, 45);
+  };
+
+  const handleMouseLeave = () => {
+    if (hoverTimer.current) clearTimeout(hoverTimer.current);
+  };
 
   const toggleSound = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -141,20 +159,22 @@ function EditorialReelRow({
 
   return (
     <div
-      className={`border-b border-white/10 transition-colors duration-400 ${
+      className={`border-b border-white/10 transition-colors duration-300 ${
         isActive ? "bg-white/[0.02]" : "hover:bg-white/[0.01]"
       }`}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
-      {/* Clickable Header Row: Refined Proportions */}
+      {/* Header Row: Refined luxury proportions, opens on hover and click */}
       <div
-        className="w-full py-5 md:py-7 px-2 sm:px-4 flex flex-col md:flex-row md:items-center justify-between gap-3 cursor-pointer select-none group"
-        onClick={onToggle}
+        className="w-full py-4 sm:py-5 md:py-6 px-2 sm:px-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 cursor-pointer select-none group"
+        onClick={onSelect}
       >
-        <div className="flex items-center gap-3 md:gap-5 flex-wrap">
+        <div className="flex items-center gap-3 md:gap-4 flex-wrap">
           <h3
-            className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-cinzel tracking-tight transition-all duration-300 ${
+            className={`text-xl sm:text-2xl md:text-3xl font-cinzel tracking-normal transition-all duration-300 ${
               isActive
-                ? "text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.4)] translate-x-1"
+                ? "text-white drop-shadow-[0_0_12px_rgba(255,50,50,0.35)] translate-x-1"
                 : "text-neutral-400 group-hover:text-neutral-200"
             }`}
           >
@@ -162,7 +182,7 @@ function EditorialReelRow({
           </h3>
 
           {/* Tags in Pill Badges */}
-          <div className="flex items-center gap-2 flex-wrap">
+          <div className="flex items-center gap-1.5 flex-wrap">
             {reel.tags.map((tag, i) => (
               <span
                 key={i}
@@ -178,7 +198,7 @@ function EditorialReelRow({
           </div>
         </div>
 
-        <div className="flex items-center gap-4 self-end md:self-center">
+        <div className="flex items-center gap-4 self-end sm:self-center shrink-0">
           <span className="text-xs font-mono text-neutral-500 tracking-wider">
             {reel.duration}
           </span>
@@ -192,69 +212,63 @@ function EditorialReelRow({
         </div>
       </div>
 
-      {/* Smooth Animated Cinema Mockup Window */}
-      <AnimatePresence initial={false}>
-        {isActive && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-            className="overflow-hidden px-2 sm:px-4 pb-8"
-          >
+      {/* Buttery-Smooth Zero-Reflow CSS Grid Accordion */}
+      <div
+        className={`grid transition-[grid-template-rows,opacity] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          isActive ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0 pointer-events-none"
+        }`}
+      >
+        <div className="overflow-hidden min-h-0">
+          <div className="px-2 sm:px-4 pb-8 pt-1">
             {/* Window Container with Compact Reference Scale */}
-            <div className="relative w-full max-w-2xl mx-auto rounded-xl overflow-hidden border border-white/10 bg-[#080808] shadow-[0_0_40px_rgba(138,3,3,0.3)]">
+            <div className="relative w-full max-w-xl mx-auto rounded-xl overflow-hidden border border-white/10 bg-[#080808] shadow-[0_0_35px_rgba(180,20,20,0.25)]">
               {/* Window Header Bar with 3 Dots */}
-              <div className="flex items-center justify-between px-4 py-2.5 border-b border-white/10 bg-white/[0.03]">
-                <div className="flex items-center gap-2">
+              <div className="flex items-center justify-between px-3.5 py-2 border-b border-white/10 bg-white/[0.03]">
+                <div className="flex items-center gap-1.5">
                   <span className="w-2.5 h-2.5 rounded-full bg-red-600/90" />
                   <span className="w-2.5 h-2.5 rounded-full bg-neutral-600" />
                   <span className="w-2.5 h-2.5 rounded-full bg-neutral-700" />
                 </div>
-                <span className="text-[10px] font-mono text-neutral-400 uppercase tracking-widest">
+                <span className="text-[10px] font-mono text-neutral-400 uppercase tracking-widest truncate max-w-[180px] sm:max-w-none">
                   {reel.category}
                 </span>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 sm:gap-3">
                   <button
                     onClick={toggleSound}
-                    className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-black/60 border border-white/15 text-neutral-300 hover:text-white hover:border-red-500 transition-all text-[10px] font-sans tracking-wider uppercase cursor-pointer"
+                    className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-black/60 border border-white/15 text-neutral-300 hover:text-white hover:border-red-500 transition-all text-[10px] font-sans tracking-wider uppercase cursor-pointer"
                   >
                     {isMuted ? (
                       <>
-                        <IconVolumeOff size={12} className="text-red-400" />
-                        <span>Muted</span>
+                        <IconVolumeOff size={11} className="text-red-400" />
+                        <span className="hidden sm:inline">Muted</span>
                       </>
                     ) : (
                       <>
-                        <IconVolume size={12} className="text-red-400" />
-                        <span>Sound</span>
+                        <IconVolume size={11} className="text-red-400" />
+                        <span className="hidden sm:inline">Sound</span>
                       </>
                     )}
                   </button>
                   <button
-                    onClick={() => onOpenModal(reel)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onOpenModal(reel);
+                    }}
                     className="p-1 text-neutral-400 hover:text-white transition-colors cursor-pointer"
                     title="Fullscreen Cinema View"
                   >
-                    <IconMaximize size={14} />
+                    <IconMaximize size={13} />
                   </button>
                 </div>
               </div>
 
               {/* Video Player Display: Centered 9:16 vertical reel inside cinema stage */}
               <div
-                className="relative w-full h-[360px] sm:h-[420px] md:h-[460px] bg-black flex items-center justify-center cursor-pointer group overflow-hidden"
+                className="relative w-full h-[320px] sm:h-[370px] md:h-[400px] bg-black flex items-center justify-center cursor-pointer group overflow-hidden"
                 onClick={() => onOpenModal(reel)}
               >
-                {/* Ambient Blurred Video Background Glow */}
-                <video
-                  src={reel.src}
-                  muted
-                  loop
-                  playsInline
-                  autoPlay
-                  className="absolute inset-0 w-full h-full object-cover blur-2xl opacity-20 scale-125 pointer-events-none"
-                />
+                {/* Pure CSS Radial Gradient (Replaces heavy blurred video for 120 FPS smoothness) */}
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(180,20,20,0.22)_0%,rgba(5,5,5,0.92)_72%,#000000_100%)] pointer-events-none" />
 
                 {/* Main Centered Reel Video */}
                 <video
@@ -262,20 +276,20 @@ function EditorialReelRow({
                   src={reel.src}
                   loop
                   playsInline
-                  autoPlay
+                  preload="metadata"
                   muted={isMuted}
                   className="relative z-10 h-full w-auto aspect-[9/16] object-cover rounded-md shadow-2xl"
                 />
 
                 {/* Subtle Hover Play Badge */}
                 <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-                  <div className="w-12 h-12 rounded-full bg-black/75 border border-white/30 flex items-center justify-center text-white backdrop-blur-md shadow-2xl">
-                    <IconPlayerPlay size={20} className="fill-white translate-x-0.5" />
+                  <div className="w-11 h-11 rounded-full bg-black/75 border border-white/30 flex items-center justify-center text-white backdrop-blur-md shadow-2xl">
+                    <IconPlayerPlay size={18} className="fill-white translate-x-0.5" />
                   </div>
                 </div>
 
                 {/* Bottom Details Overlay */}
-                <div className="absolute inset-x-0 bottom-0 z-20 p-3 sm:p-4 bg-gradient-to-t from-black via-black/80 to-transparent flex items-end justify-between gap-2 pointer-events-none">
+                <div className="absolute inset-x-0 bottom-0 z-20 p-3 sm:p-3.5 bg-gradient-to-t from-black via-black/85 to-transparent flex items-end justify-between gap-2 pointer-events-none">
                   <div>
                     <p className="text-xs text-neutral-300 font-sans max-w-sm leading-snug line-clamp-1">
                       {reel.description}
@@ -285,14 +299,14 @@ function EditorialReelRow({
                     </span>
                   </div>
                   <span className="text-[9px] font-mono text-neutral-400 uppercase tracking-widest shrink-0">
-                    Click to expand 4K
+                    Tap for 4K
                   </span>
                 </div>
               </div>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -497,13 +511,14 @@ const GalleryContent = () => {
           </div>
         ) : (
           /* Cinematic Reels Section: Exact Editorial Expanding Accordion List from Reference Video */
-          <div className="w-full max-w-5xl mx-auto flex flex-col border-t border-white/10">
+          <div className="w-full max-w-4xl mx-auto flex flex-col border-t border-white/10">
             {reelsData.map((reel) => (
               <EditorialReelRow
                 key={reel.id}
                 reel={reel}
                 isActive={activeReelId === reel.id}
-                onToggle={() =>
+                onHover={() => setActiveReelId(reel.id)}
+                onSelect={() =>
                   setActiveReelId((prev) => (prev === reel.id ? "" : reel.id))
                 }
                 onOpenModal={(r) => setSelectedReel(r)}
