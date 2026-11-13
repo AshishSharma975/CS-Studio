@@ -18,66 +18,27 @@ export default function BehindTheScenes() {
   const videoContainerRef = useRef<HTMLDivElement>(null);
   const videoFrameRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const bgVideoRef = useRef<HTMLVideoElement>(null);
   const cinemaBadgeRef = useRef<HTMLDivElement>(null);
   const leftWingRef = useRef<HTMLDivElement>(null);
   const rightWingRef = useRef<HTMLDivElement>(null);
 
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
-  const [hasSoundPrompt, setHasSoundPrompt] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [isMuted, setIsMuted] = useState(true);
 
-  const syncVideos = () => {
-    const main = videoRef.current;
-    const bg = bgVideoRef.current;
-    if (main && bg && Math.abs(bg.currentTime - main.currentTime) > 0.25) {
-      bg.currentTime = main.currentTime;
-    }
-  };
-
-  const playVideo = async () => {
+  const playVideo = () => {
     const video = videoRef.current;
-    const bg = bgVideoRef.current;
     if (!video) return;
-
-    try {
-      // Attempt unmuted play first as requested
-      video.muted = isMuted;
-      video.volume = 1;
-      await video.play();
-      if (bg) {
-        bg.muted = true;
-        bg.play().catch(() => {});
-      }
-      setIsPlaying(true);
-    } catch {
-      // Browser autoplay policy fallback to muted
+    video.muted = isMuted;
+    video.play().catch(() => {
+      // Browser autoplay policy guarantee: fallback to muted
       video.muted = true;
       setIsMuted(true);
-      setHasSoundPrompt(true);
-      try {
-        await video.play();
-        if (bg) {
-          bg.muted = true;
-          bg.play().catch(() => {});
-        }
-        setIsPlaying(true);
-      } catch {
-        // Handled
-      }
-    }
+      video.play().catch(() => {});
+    });
   };
 
   const pauseVideo = () => {
-    const video = videoRef.current;
-    const bg = bgVideoRef.current;
-    if (video) {
-      video.pause();
-      setIsPlaying(false);
-    }
-    if (bg) {
-      bg.pause();
-    }
+    videoRef.current?.pause();
   };
 
   const toggleSound = (e?: React.MouseEvent) => {
@@ -89,10 +50,9 @@ export default function BehindTheScenes() {
     video.muted = nextMuted;
     video.volume = 1;
     setIsMuted(nextMuted);
-    setHasSoundPrompt(false);
 
     if (video.paused) {
-      playVideo();
+      video.play().catch(() => {});
     }
   };
 
@@ -100,9 +60,9 @@ export default function BehindTheScenes() {
     const video = videoRef.current;
     if (!video) return;
     if (video.paused) {
-      playVideo();
+      video.play().catch(() => {});
     } else {
-      pauseVideo();
+      video.pause();
     }
   };
 
@@ -214,7 +174,12 @@ export default function BehindTheScenes() {
   );
 
   useEffect(() => {
-    // Cleanup video playback on unmount
+    // Start playback immediately on mount with browser-compliant muted audio
+    const video = videoRef.current;
+    if (video) {
+      video.muted = true;
+      video.play().catch(() => {});
+    }
     return () => {
       pauseVideo();
     };
@@ -262,19 +227,6 @@ export default function BehindTheScenes() {
           className="absolute inset-0 z-30 border border-neutral-800/80 rounded-2xl md:rounded-3xl pointer-events-none group-hover:border-[#8a0303]/60 transition-colors duration-500"
         />
 
-        {/* Ambient Blurred Video Reflection (Desktop only, 0% overhead on mobile) */}
-        <video
-          ref={bgVideoRef}
-          src="/assets/videos/bts-reel.mp4"
-          playsInline
-          loop
-          muted
-          aria-hidden="true"
-          tabIndex={-1}
-          preload="metadata"
-          className="absolute inset-0 w-full h-full object-cover blur-3xl opacity-25 scale-110 pointer-events-none hidden md:block"
-        />
-
         {/* Ambient Dark Gradient Overlays */}
         <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,rgba(138,3,3,0.22)_0%,rgba(10,10,10,0.85)_75%)] z-10" />
         <div className="absolute inset-0 pointer-events-none bg-gradient-to-r from-black/90 via-transparent to-black/90 z-10 hidden md:block" />
@@ -317,14 +269,17 @@ export default function BehindTheScenes() {
         {/* CENTER STAGE: PRIMARY 9:16 VERTICAL REEL (ZERO CROPPING)    */}
         {/* ============================================================ */}
         <div className="relative h-full aspect-[9/16] flex items-center justify-center overflow-hidden rounded-xl md:rounded-2xl shadow-[0_0_50px_rgba(0,0,0,0.9),0_0_30px_rgba(138,3,3,0.35)] border border-neutral-800/80 z-20 shrink-0">
-          {/* Main Reel Video */}
+          {/* Main Reel Video (autoPlay + muted ensures instantaneous 100% reliable browser playback) */}
           <video
             ref={videoRef}
             src="/assets/videos/bts-reel.mp4"
+            autoPlay
+            muted
             playsInline
             loop
-            preload="metadata"
-            onTimeUpdate={syncVideos}
+            preload="auto"
+            onPlay={() => setIsPlaying(true)}
+            onPause={() => setIsPlaying(false)}
             className="w-full h-full object-cover object-center bg-black"
           />
 
@@ -408,16 +363,6 @@ export default function BehindTheScenes() {
             )}
           </button>
         </div>
-
-        {/* Sound Notice prompt if browser muted autoplay */}
-        {hasSoundPrompt && isMuted && (
-          <div
-            onClick={toggleSound}
-            className="absolute top-16 sm:top-20 right-4 sm:right-6 z-30 px-3 py-1 bg-red-950/80 border border-red-700/50 rounded-full text-[9px] font-sans tracking-wider text-red-200 backdrop-blur-md animate-bounce pointer-events-auto"
-          >
-            Tap for Audio 🔊
-          </div>
-        )}
       </div>
     </section>
   );
