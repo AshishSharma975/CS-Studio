@@ -49,6 +49,11 @@ function GalleryRow({
             const getScrollWidth = () =>
                 Math.max(0, trackRef.current!.scrollWidth - window.innerWidth);
 
+            const getScrollDistance = () => {
+                const scrollW = getScrollWidth();
+                return Math.max(window.innerHeight * 2.5, scrollW * 0.45);
+            };
+
             if (isReverse) {
                 gsap.fromTo(
                     trackRef.current,
@@ -60,10 +65,10 @@ function GalleryRow({
                         scrollTrigger: {
                             trigger: sectionRef.current,
                             start: "top top",
-                            end: () => `+=${window.innerHeight * 3}`,
+                            end: () => `+=${getScrollDistance()}`,
                             pin: true,
                             anticipatePin: 1,
-                            scrub: true,
+                            scrub: 1.2,
                             invalidateOnRefresh: true,
                         },
                     }
@@ -79,10 +84,10 @@ function GalleryRow({
                         scrollTrigger: {
                             trigger: sectionRef.current,
                             start: "top top",
-                            end: () => `+=${window.innerHeight * 3}`,
+                            end: () => `+=${getScrollDistance()}`,
                             pin: true,
                             anticipatePin: 1,
-                            scrub: true,
+                            scrub: 1.2,
                             invalidateOnRefresh: true,
                         },
                     }

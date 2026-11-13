@@ -28,7 +28,7 @@ export const LenisScroll = () => {
         };
 
         gsap.ticker.add(updateLenis);
-        gsap.ticker.lagSmoothing(500, 33);
+        gsap.ticker.lagSmoothing(0);
 
         return () => {
             gsap.ticker.remove(updateLenis);
