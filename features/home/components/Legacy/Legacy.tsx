@@ -11,17 +11,15 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function Legacy() {
   const sectionRef = useRef<HTMLElement>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLDivElement>(null);
 
   useGSAP(
     () => {
       const section = sectionRef.current;
-      const track = trackRef.current;
-      if (!section || !track) return;
+      const canvas = canvasRef.current;
+      if (!section || !canvas) return;
 
-      const totalScroll = track.scrollWidth - window.innerWidth;
-
-      /* ── Setup SVG stroke lengths dynamically for 100% accurate draw-in ── */
+      /* ── Setup SVG stroke lengths dynamically for draw-in ── */
       const sigPaths = gsap.utils.toArray<SVGPathElement>(".lc-sig-path");
       sigPaths.forEach((p) => {
         try {
@@ -32,7 +30,7 @@ export default function Legacy() {
         }
       });
 
-      const arrowPaths = gsap.utils.toArray<SVGPathElement>(".lc-arr-path");
+      const arrowPaths = gsap.utils.toArray<SVGPathElement>(".arrow-path");
       arrowPaths.forEach((p) => {
         try {
           const len = p.getTotalLength ? p.getTotalLength() : 250;
@@ -42,36 +40,66 @@ export default function Legacy() {
         }
       });
 
-      /* ── Main horizontal scrub timeline (normalized to duration 12) ── */
+      /* ── Sweet-Tape 2D Canvas Pinning Architecture ──
+         Camera swoops along a 2D plane:
+         1. Starts on Top Title (y: -12vw)
+         2. Pans to Row 1 (TO DEVOTION) at y: -48vw
+         3. Follows Diagonal Down-Arrow down to Row 2 (TO HERITAGE) at y: -95vw (down below!)
+         4. Follows Diagonal Up-Arrow up to Row 3 (TO CINEMA) at y: -48vw (back up!)
+         5. Glides to Closing Seal
+      */
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: section,
           start: "top top",
-          end: () => `+=${totalScroll * 1.2}`,
+          end: "+=5200",
           pin: true,
-          scrub: 0.8,
+          scrub: 1.1,
           anticipatePin: 1,
           invalidateOnRefresh: true,
         },
       });
 
-      // 1. Horizontal Track Translation
-      tl.to(track, { x: () => -totalScroll, ease: "none", duration: 12 }, 0);
+      // ── Step 0 -> 1: Title to Row 1 (Papa - TO DEVOTION) ──
+      tl.to(canvas, {
+        x: "-40vw",
+        y: "-46vw",
+        ease: "power1.inOut",
+        duration: 3,
+      });
 
-      // 2. "Upar-Neeche" Parallax (staggered floating motion while scrolling)
-      tl.to(".lc-float-up", { y: -50, ease: "sine.inOut", duration: 12 }, 0);
-      tl.to(".lc-float-down", { y: 60, ease: "sine.inOut", duration: 12 }, 0);
-      tl.to(".lc-annot", { y: -30, ease: "sine.inOut", duration: 12 }, 0);
-      tl.to(".lc-badge", { x: 40, rotation: 15, ease: "none", duration: 12 }, 0);
+      // Papa's signature draws during Row 1
+      tl.to(".lc-sig-path", { strokeDashoffset: 0, ease: "power1.inOut", duration: 1.8 }, 1.2);
 
-      // 3. Papa's Signature Animation (writes when Panel 1 is in view)
-      tl.to(".lc-sig-path", { strokeDashoffset: 0, ease: "power1.inOut", duration: 1.8 }, 0.2);
+      // Arrow 1 draws as camera reaches transition
+      tl.to(".arrow-1-path", { strokeDashoffset: 0, ease: "power1.out", duration: 1.4 }, 2.4);
 
-      // 4. Staggered Arrow Drawings (each draws exactly when its panel enters)
-      tl.to(".lc-arr-1", { strokeDashoffset: 0, ease: "power1.out", duration: 1.2 }, 0.8);
-      tl.to(".lc-arr-2", { strokeDashoffset: 0, ease: "power1.out", duration: 1.2 }, 3.5);
-      tl.to(".lc-arr-3", { strokeDashoffset: 0, ease: "power1.out", duration: 1.2 }, 6.2);
-      tl.to(".lc-arr-4", { strokeDashoffset: 0, ease: "power1.out", duration: 1.2 }, 8.8);
+      // ── Step 1 -> 2: DIAGONAL DOWN along Arrow to Row 2 (TO HERITAGE at 95vw) ──
+      tl.to(canvas, {
+        x: "-210vw",
+        y: "-95vw",
+        ease: "power2.inOut",
+        duration: 4,
+      });
+
+      // Arrow 2 draws as camera prepares to swoop back up
+      tl.to(".arrow-2-path", { strokeDashoffset: 0, ease: "power1.out", duration: 1.4 }, 6.2);
+
+      // ── Step 2 -> 3: DIAGONAL UP along Arrow to Row 3 (TO CINEMA at 48vw) ──
+      tl.to(canvas, {
+        x: "-365vw",
+        y: "-46vw",
+        ease: "power2.inOut",
+        duration: 4,
+      });
+
+      // ── Step 3 -> 4: Glide to Final Closing Seal ──
+      tl.to(canvas, {
+        x: "-470vw",
+        y: "-46vw",
+        ease: "power1.out",
+        duration: 2.5,
+      });
     },
     { scope: sectionRef }
   );
@@ -80,10 +108,15 @@ export default function Legacy() {
     <section
       ref={sectionRef}
       id="legacy"
-      className="relative w-full overflow-hidden bg-[#050505]"
+      className="relative w-full h-screen overflow-hidden bg-[#050505] text-white select-none"
+      style={{
+        // Architectural grid & canvas variables (matching sweet-tape.com)
+        // @ts-expect-error CSS variable custom properties
+        "--giant-size": "clamp(120px, 30vw, 380px)",
+      }}
     >
-      {/* ── Top Architectural Header Bar ── */}
-      <div className="absolute top-6 left-12 right-12 z-30 flex items-center justify-between pointer-events-none border-b border-white/5 pb-3">
+      {/* ── Fixed Atmospheric Top Header ── */}
+      <div className="absolute top-6 left-8 right-8 z-30 flex items-center justify-between pointer-events-none border-b border-white/10 pb-3">
         <div className="flex items-center gap-3">
           <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse" />
           <span className="text-[10px] font-mono uppercase tracking-[0.35em] text-neutral-400">
@@ -95,77 +128,119 @@ export default function Legacy() {
         </span>
       </div>
 
-      {/* ── Pinned horizontal track ── */}
+      {/* ── Sweet-Tape 2D Canvas ── */}
       <div
-        ref={trackRef}
-        className="flex h-screen items-center will-change-transform"
-        style={{ width: "max-content" }}
+        ref={canvasRef}
+        className="giant-canvas will-change-transform absolute top-0 left-0"
+        style={{
+          width: "600vw",
+          height: "180vw",
+          transform: "translate3d(0, -10vw, 0)",
+        }}
       >
-        {/* ════════════════════════════════════════════
-            WORD 1  —  "ROOTED"
-        ════════════════════════════════════════════ */}
-        <div className="relative flex h-screen items-center pl-20 pr-12 shrink-0">
-          {/* Giant high-visibility background word */}
-          <span className="select-none font-cinzel font-black text-[25vw] leading-none tracking-tighter text-white/[0.22] uppercase whitespace-nowrap">
-            ROOTED
-          </span>
+        {/* ════════════════════════════════════════════════════
+            TOP TITLE: "WHY WE EXIST"
+        ════════════════════════════════════════════════════ */}
+        <div
+          className="absolute text-center z-10 flex flex-col items-center justify-center"
+          style={{ left: "2vw", top: "18vw", width: "100vw" }}
+        >
+          <h5 className="font-mono text-[11px] uppercase tracking-[0.4em] text-red-500 mb-2">
+            WHY WE EXIST
+          </h5>
+          <h2 className="font-cinzel font-black text-3xl sm:text-5xl lg:text-6xl text-white tracking-tight leading-none uppercase max-w-4xl px-4">
+            WE&apos;RE HERE FOR THE SACRED MOMENTS.
+          </h2>
+          <p className="font-serif italic text-neutral-400 text-sm sm:text-base mt-3 max-w-md">
+            Preserving timeless love through devotion, cinema, and unbroken family craft.
+          </p>
+        </div>
 
-          {/* ── Floating Photo Card: Papa (Positioned High) ── */}
-          <div
-            className="lc-card lc-float-up absolute left-[16vw] top-[14%] w-[270px] sm:w-[310px] rounded-2xl overflow-hidden border border-white/15 bg-[#0a0a0a] shadow-[0_30px_80px_rgba(0,0,0,0.95)] -rotate-2"
-            style={{ zIndex: 10 }}
-          >
-            {/* washi-tape strip */}
-            <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-28 h-6 bg-amber-100/20 border border-white/20 backdrop-blur-md rounded-sm flex items-center justify-center rotate-[-1deg] pointer-events-none z-20">
-              <span className="text-[8px] font-mono tracking-widest text-white/90 uppercase">FOUNDER · 1998</span>
-            </div>
+        {/* ════════════════════════════════════════════════════
+            ROW 1: "TO [Papa's Card] DEVOTION"
+            Position: gx = 1vw, gy = 48vw (UP)
+        ════════════════════════════════════════════════════ */}
+        <div
+          className="giant-row absolute flex items-center whitespace-nowrap"
+          style={{ left: "2vw", top: "48vw" }}
+        >
+          <div className="flex items-center font-cinzel font-black text-[var(--giant-size)] leading-[0.82] tracking-tighter text-white">
+            {/* Number badge ① */}
+            <span className="self-start text-[0.16em] font-mono text-amber-300 border border-amber-400/40 rounded-full w-[0.24em] h-[0.24em] flex items-center justify-center mr-[0.1em] mt-[0.08em] shadow-[0_0_30px_rgba(251,191,36,0.3)]">
+              1
+            </span>
 
-            <div className="relative w-full aspect-[3/4]">
-              <Image
-                src="/assets/images/father-vijay-nandan-sharma.jpg"
-                alt="Shri Vijay Nandan Sharma — Founder"
-                fill
-                className="object-cover grayscale contrast-105"
-                sizes="340px"
-                priority
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-transparent to-transparent" />
-            </div>
+            <span>TO</span>
 
-            <div className="p-4 bg-[#0a0a0a]">
-              <p className="font-cinzel text-sm text-white tracking-wide leading-snug">
-                Shri Vijay Nandan Sharma
-              </p>
-              <p className="mt-1 text-[10px] font-mono text-neutral-500 uppercase tracking-widest">
-                Calcutta Studio — Founder
-              </p>
+            {/* Embedded Photo Card: Papa (Vijay Nandan Sharma) */}
+            <div
+              className="giant-slot relative mx-[0.06em] shrink-0 overflow-hidden rounded-[0.12em] border border-white/20 bg-[#0a0a0a] shadow-[0_30px_90px_rgba(0,0,0,0.95)]"
+              style={{
+                width: "0.58em",
+                height: "0.78em",
+                transform: "rotate(3deg)",
+              }}
+            >
+              {/* Washi Tape Strip */}
+              <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-28 h-6 bg-amber-100/25 border border-white/30 backdrop-blur-md rounded-sm flex items-center justify-center rotate-[-1deg] z-20 pointer-events-none shadow-md">
+                <span className="text-[8px] font-mono tracking-widest text-white/90 uppercase">
+                  FOUNDER · 1998
+                </span>
+              </div>
 
-              {/* Hand-drawn Signature with Scroll-sync Draw */}
-              <div className="mt-3 pt-2 border-t border-white/5">
-                <svg
-                  viewBox="0 0 200 48"
-                  className="w-40 h-auto fill-none stroke-amber-300/90"
-                  strokeWidth="1.8"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path
-                    className="lc-sig-path"
-                    d="M8 36 C14 16 20 10 30 16 C36 20 22 44 20 46 M26 28 C32 26 40 27 44 31 M40 20 L40 22 M50 30 C54 25 60 23 64 27 C67 30 64 40 60 48 C57 54 48 52 52 44 M68 28 C72 22 80 22 84 27 C88 32 85 42 88 42 C94 42 100 28 104 28 C110 28 112 36 116 36 M4 44 C50 42 120 44 196 40"
-                  />
-                </svg>
-                <p className="text-[8px] font-mono text-neutral-500 mt-1 uppercase tracking-wider">
-                  Vijay Nandan Sharma
+              {/* Papa Photo */}
+              <div className="relative w-full h-[68%]">
+                <Image
+                  src="/assets/images/father-vijay-nandan-sharma.jpg"
+                  alt="Shri Vijay Nandan Sharma — Founder"
+                  fill
+                  className="object-cover grayscale contrast-110"
+                  sizes="400px"
+                  priority
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
+              </div>
+
+              {/* Papa Info & Live Scroll Signature */}
+              <div className="p-3 bg-[#0a0a0a] text-left">
+                <p className="font-cinzel text-xs sm:text-sm text-white font-bold leading-tight">
+                  Shri Vijay Nandan Sharma
                 </p>
+                <p className="text-[8px] font-mono text-neutral-400 uppercase tracking-widest mt-0.5">
+                  Calcutta Studio — Founder
+                </p>
+
+                {/* Hand-drawn Signature SVG */}
+                <div className="mt-2 pt-1 border-t border-white/10">
+                  <svg
+                    viewBox="0 0 200 48"
+                    className="w-32 sm:w-36 h-auto fill-none stroke-amber-300"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path
+                      className="lc-sig-path"
+                      d="M8 36 C14 16 20 10 30 16 C36 20 22 44 20 46 M26 28 C32 26 40 27 44 31 M40 20 L40 22 M50 30 C54 25 60 23 64 27 C67 30 64 40 60 48 C57 54 48 52 52 44 M68 28 C72 22 80 22 84 27 C88 32 85 42 88 42 C94 42 100 28 104 28 C110 28 112 36 116 36 M4 44 C50 42 120 44 196 40"
+                    />
+                  </svg>
+                </div>
               </div>
             </div>
+
+            <span>DEVOTION</span>
           </div>
 
-          {/* ── Drafting Crosshair Annotation #1 (Positioned Low) ── */}
-          <div className="lc-annot absolute bottom-[16%] left-[6vw] flex items-start gap-3 pointer-events-none">
-            <div className="relative w-7 h-12 shrink-0">
-              <div className="absolute left-3 top-0 bottom-0 w-[1px] bg-neutral-500/80" />
-              <div className="absolute top-3 left-0 right-0 h-[1px] bg-neutral-500/80" />
+          {/* Sweet-Tape Drafting Ink Note: Crosshair + 3 Stacked Lines */}
+          <div
+            className="hand-note absolute flex items-start gap-2.5 pointer-events-none"
+            style={{ left: "26%", top: "78%" }}
+          >
+            <div className="relative w-8 h-12 shrink-0">
+              <svg className="w-8 h-12 overflow-visible" viewBox="0 0 40 60" fill="none">
+                <path d="M 0 12 C 12 11 28 13 40 12" stroke="rgba(255,255,255,0.4)" strokeWidth="1.2" strokeLinecap="round" />
+                <path d="M 12 0 C 11 20 13 40 12 60" stroke="rgba(255,255,255,0.4)" strokeWidth="1.2" strokeLinecap="round" />
+              </svg>
             </div>
             <div className="font-serif italic text-neutral-300 text-xs sm:text-sm leading-tight tracking-wide">
               <p>where the lens</p>
@@ -173,220 +248,215 @@ export default function Legacy() {
               <p>sacred light.</p>
             </div>
           </div>
+        </div>
 
-          {/* ── Curved Arrow 1: Swooping down-right towards Panel 2/3 ── */}
-          <svg
-            className="lc-arrow absolute bottom-[12%] left-[24vw] w-32 h-20 fill-none stroke-neutral-400/70"
-            viewBox="0 0 120 70"
-            strokeWidth="1.8"
-            strokeLinecap="round"
-          >
+        {/* ════════════════════════════════════════════════════
+            DIAGONAL DOWN ARROW: Row 1 (UP) -> Row 2 (DOWN)
+            Position: gx = 184vw, gy = 77vw
+            Connects (1vw, 48vw) down to (215vw, 95vw)
+        ════════════════════════════════════════════════════ */}
+        <div
+          className="diag-down-arrow absolute pointer-events-none"
+          style={{ left: "184vw", top: "77vw", width: "26vw", height: "17.33vw" }}
+        >
+          <svg viewBox="0 0 150 100" fill="none" className="w-full h-full overflow-visible">
             <path
-              className="lc-arr-path lc-arr-1"
-              d="M 10 10 Q 60 8, 108 55 M 95 48 L 108 55 L 100 68"
+              className="arrow-path arrow-1-path stroke-red-500"
+              strokeWidth="2"
+              strokeLinecap="round"
+              d="M4 8 C 46 14 100 42 132 84"
+            />
+            <path
+              className="arrow-path arrow-1-path stroke-red-500"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M111 80 L132 84 L123 65"
             />
           </svg>
         </div>
 
-        {/* ════════════════════════════════════════════
-            WORD 2  —  "IN"
-        ════════════════════════════════════════════ */}
-        <div className="relative flex h-screen items-center px-10 shrink-0">
-          <span className="select-none font-cinzel font-black text-[25vw] leading-none tracking-tighter text-white/[0.22] uppercase whitespace-nowrap">
-            IN
-          </span>
-
-          {/* ── Floating Number badge ① (High) ── */}
-          <div className="lc-badge absolute right-8 top-[24%] w-14 h-14 rounded-full border border-amber-300/40 bg-[#111] flex items-center justify-center font-mono text-xl text-amber-200/90 shadow-[0_10px_30px_rgba(251,191,36,0.15)]">
-            ①
-          </div>
-
-          {/* ── Circular Emblem: Studio Origins (Low) ── */}
-          <div className="lc-float-down absolute left-4 bottom-[20%] w-36 h-36 rounded-full border border-white/10 bg-[#0f0f0f]/90 backdrop-blur-md flex flex-col items-center justify-center p-3 text-center shadow-2xl rotate-6">
-            <span className="text-[8px] font-mono uppercase tracking-[0.25em] text-amber-400">FOUNDED</span>
-            <span className="font-cinzel text-xl text-white font-bold my-0.5">1998</span>
-            <span className="text-[7.5px] font-sans text-neutral-400 uppercase tracking-widest leading-none">Korba, CG</span>
-          </div>
-        </div>
-
-        {/* ════════════════════════════════════════════
-            WORD 3  —  "DEVOTION."
-        ════════════════════════════════════════════ */}
-        <div className="relative flex h-screen items-center px-12 shrink-0">
-          <span className="select-none font-cinzel font-black text-[25vw] leading-none tracking-tighter text-white/[0.22] uppercase whitespace-nowrap">
-            DEVOTION.
-          </span>
-
-          {/* ── Origin Story Card (Positioned Low) ── */}
-          <div
-            className="lc-card lc-float-down absolute left-[22vw] bottom-[16%] w-[290px] rounded-xl border border-white/15 bg-[#0d0d0d]/95 backdrop-blur-md p-6 shadow-2xl rotate-1"
-            style={{ zIndex: 10 }}
-          >
-            <span className="text-[9px] font-mono uppercase tracking-[0.3em] text-[#ff2a2a]">
-              Artisan Discipline
+        {/* ════════════════════════════════════════════════════
+            ROW 2: "TO [Transition Card] HERITAGE"
+            Position: gx = 215vw, gy = 95vw (DOWN BELOW!)
+        ════════════════════════════════════════════════════ */}
+        <div
+          className="giant-row absolute flex items-center whitespace-nowrap"
+          style={{ left: "215vw", top: "95vw" }}
+        >
+          <div className="flex items-center font-cinzel font-black text-[var(--giant-size)] leading-[0.82] tracking-tighter text-white">
+            {/* Number badge ② */}
+            <span className="self-start text-[0.16em] font-mono text-red-400 border border-red-500/40 rounded-full w-[0.24em] h-[0.24em] flex items-center justify-center mr-[0.1em] mt-[0.08em] shadow-[0_0_30px_rgba(239,68,68,0.3)]">
+              2
             </span>
-            <h3 className="mt-2 font-cinzel text-xl text-white leading-snug">
-              Every Masterpiece<br />Starts With Devotion.
-            </h3>
-            <p className="mt-3 text-[11px] font-sans text-neutral-400 leading-relaxed">
-              Papa built Calcutta Studio on the principle of treating each wedding not as a booking, 
-              but as a family sacred trust captured for generations.
-            </p>
-            <div className="mt-4 flex items-center gap-3 text-[10px] font-mono text-neutral-500 pt-2 border-t border-white/5">
-              <span className="text-amber-400">1998</span>
-              <span className="text-neutral-700">—</span>
-              <span>16 Years of Pure Craft</span>
-            </div>
-          </div>
 
-          {/* ── Drafting Crosshair Annotation #2 (Positioned High) ── */}
-          <div className="lc-annot absolute top-[20%] left-[8vw] flex items-start gap-3 pointer-events-none">
-            <div className="relative w-7 h-12 shrink-0">
-              <div className="absolute left-3 top-0 bottom-0 w-[1px] bg-neutral-500/80" />
-              <div className="absolute top-3 left-0 right-0 h-[1px] bg-neutral-500/80" />
-            </div>
-            <div className="font-serif italic text-neutral-300 text-xs sm:text-sm leading-tight tracking-wide">
-              <p>every masterpiece</p>
-              <p>starts held</p>
-              <p>in place.</p>
-            </div>
-          </div>
+            <span>TO</span>
 
-          {/* ── Curved Arrow 2: Swooping UP-RIGHT from Low to High ── */}
-          <svg
-            className="lc-arrow absolute top-[30%] right-[6vw] w-28 h-20 fill-none stroke-neutral-400/70"
-            viewBox="0 0 110 70"
-            strokeWidth="1.8"
-            strokeLinecap="round"
-          >
-            <path
-              className="lc-arr-path lc-arr-2"
-              d="M 10 60 Q 55 50, 98 15 M 84 12 L 98 15 L 94 28"
-            />
-          </svg>
-        </div>
-
-        {/* ════════════════════════════════════════════
-            WORD 4  —  "REIMAGINED"
-        ════════════════════════════════════════════ */}
-        <div className="relative flex h-screen items-center pl-16 pr-12 shrink-0">
-          <span className="select-none font-cinzel font-black italic text-[25vw] leading-none tracking-tighter text-white/[0.22] uppercase whitespace-nowrap">
-            REIMAGINED
-          </span>
-
-          {/* ── Number badge ② (Low) ── */}
-          <div className="lc-badge absolute left-6 bottom-[22%] w-14 h-14 rounded-full border border-red-500/40 bg-[#111] flex items-center justify-center font-mono text-xl text-red-400/90 shadow-[0_10px_30px_rgba(239,68,68,0.2)]">
-            ②
-          </div>
-
-          {/* ── The 2014 Transition Card (Positioned High) ── */}
-          <div
-            className="lc-card lc-float-up absolute right-[10vw] top-[14%] w-[310px] rounded-xl border border-red-900/50 bg-[#0d0d0d]/95 backdrop-blur-md p-6 shadow-2xl -rotate-1"
-            style={{ zIndex: 10 }}
-          >
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-2 h-2 rounded-full bg-red-600 animate-pulse" />
-              <span className="text-[9px] font-mono uppercase tracking-[0.3em] text-[#ff2a2a]">
-                The 2014 Transition
-              </span>
-            </div>
-            <h3 className="font-cinzel text-lg text-white leading-snug">
-              FROM THE LENS<br />TO JEWELLERY CRAFT.
-            </h3>
-            <blockquote className="mt-3 border-l-2 border-amber-500/60 pl-3 font-serif italic text-xs text-neutral-300 leading-relaxed">
-              &ldquo;Master the light as an artist, and protect every client&apos;s trust like family gold.&rdquo;
-            </blockquote>
-            <p className="mt-3 text-[10px] font-mono text-neutral-500">
-              — Shri Vijay Nandan Sharma
-            </p>
-            <p className="mt-2 text-[11px] font-sans text-neutral-400 leading-relaxed pt-2 border-t border-white/5">
-              Papa shifted his focus to the family jewellery business in 2014, passing the creative studio torch to his elder son.
-            </p>
-          </div>
-
-          {/* ── Drafting Crosshair Annotation #3 (Positioned Low) ── */}
-          <div className="lc-annot absolute bottom-[16%] left-[28vw] flex items-start gap-3 pointer-events-none">
-            <div className="relative w-7 h-12 shrink-0">
-              <div className="absolute left-3 top-0 bottom-0 w-[1px] bg-neutral-500/80" />
-              <div className="absolute top-3 left-0 right-0 h-[1px] bg-neutral-500/80" />
-            </div>
-            <div className="font-serif italic text-neutral-300 text-xs sm:text-sm leading-tight tracking-wide">
-              <p>from our hands</p>
-              <p>to theirs,</p>
-              <p>arriving whole.</p>
-            </div>
-          </div>
-
-          {/* ── Curved Arrow 3: Swooping DOWN-RIGHT towards Sinu ── */}
-          <svg
-            className="lc-arrow absolute bottom-[14%] right-[22vw] w-28 h-20 fill-none stroke-neutral-400/70"
-            viewBox="0 0 110 70"
-            strokeWidth="1.8"
-            strokeLinecap="round"
-          >
-            <path
-              className="lc-arr-path lc-arr-3"
-              d="M 10 15 Q 60 10, 100 55 M 88 50 L 100 55 L 94 66"
-            />
-          </svg>
-        </div>
-
-        {/* ════════════════════════════════════════════
-            WORD 5  —  "IN CINEMA."
-        ════════════════════════════════════════════ */}
-        <div className="relative flex h-screen items-center pl-10 pr-20 shrink-0">
-          <span className="select-none font-cinzel font-black text-[25vw] leading-none tracking-tighter text-white/[0.22] uppercase whitespace-nowrap">
-            IN CINEMA.
-          </span>
-
-          {/* ── Floating Photo Card: Sinu (Positioned Low) ── */}
-          <div
-            className="lc-card lc-float-down absolute left-[18vw] bottom-[14%] w-[270px] sm:w-[310px] rounded-2xl overflow-hidden border border-white/15 bg-[#0a0a0a] shadow-[0_30px_80px_rgba(138,3,3,0.5)] rotate-1"
-            style={{ zIndex: 10 }}
-          >
-            {/* red washi-tape strip */}
-            <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-32 h-6 bg-red-950/60 border border-red-700/50 backdrop-blur-md rounded-sm flex items-center justify-center rotate-[1deg] pointer-events-none z-20">
-              <span className="text-[8px] font-mono tracking-widest text-red-300 uppercase">DIRECTOR · 2014—NOW</span>
-            </div>
-
-            <div className="relative w-full aspect-[3/4]">
-              <Image
-                src="/assets/images/my.jpeg"
-                alt="Subham Sharma (Sinu) — Creative Director"
-                fill
-                className="object-cover object-top grayscale"
-                sizes="340px"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-transparent to-transparent" />
-              <div className="absolute bottom-3 left-3 right-3 flex justify-between items-center">
-                <span className="text-[9px] font-mono tracking-widest text-white/90 uppercase bg-black/70 px-2 py-0.5 rounded border border-white/10">
-                  Creative Director
+            {/* Embedded 2014 Transition Card */}
+            <div
+              className="giant-slot relative mx-[0.06em] shrink-0 overflow-hidden rounded-[0.12em] border border-red-900/50 bg-[#0d0d0d] p-5 shadow-[0_30px_90px_rgba(138,3,3,0.5)]"
+              style={{
+                width: "0.62em",
+                height: "0.78em",
+                transform: "rotate(-3deg)",
+              }}
+            >
+              {/* Tape */}
+              <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-28 h-6 bg-red-950/60 border border-red-600/40 backdrop-blur-md rounded-sm flex items-center justify-center rotate-[1deg] z-20 pointer-events-none">
+                <span className="text-[8px] font-mono tracking-widest text-red-300 uppercase">
+                  THE 2014 SHIFT
                 </span>
-                <span className="text-[9px] font-mono text-red-400 font-semibold">2014—Today</span>
+              </div>
+
+              <div className="flex items-center gap-2 mb-2 mt-4">
+                <div className="w-2 h-2 rounded-full bg-red-600 animate-pulse" />
+                <span className="text-[8px] font-mono uppercase tracking-[0.3em] text-[#ff2a2a]">
+                  TORCH PASSED
+                </span>
+              </div>
+
+              <h4 className="font-cinzel text-xs sm:text-base text-white leading-snug font-bold">
+                FROM THE LENS<br />TO JEWELLERY CRAFT.
+              </h4>
+
+              <blockquote className="mt-3 border-l-2 border-amber-500/60 pl-2 font-serif italic text-[10px] sm:text-xs text-neutral-300 leading-relaxed">
+                &ldquo;Master the light as an artist, and protect every client&apos;s trust like family gold.&rdquo;
+              </blockquote>
+
+              <p className="mt-2 text-[8px] font-mono text-neutral-400">
+                — Shri Vijay Nandan Sharma
+              </p>
+
+              <p className="mt-3 text-[9px] font-sans text-neutral-400 leading-relaxed pt-2 border-t border-white/5">
+                In 2014, Papa transitioned to our family jewellery business, handing studio leadership to his elder son.
+              </p>
+            </div>
+
+            <span>HERITAGE</span>
+          </div>
+
+          {/* Sweet-Tape Drafting Ink Note 2 */}
+          <div
+            className="hand-note absolute flex items-start gap-2.5 pointer-events-none"
+            style={{ left: "19%", top: "-24%" }}
+          >
+            <div className="relative w-8 h-12 shrink-0">
+              <svg className="w-8 h-12 overflow-visible" viewBox="0 0 40 60" fill="none">
+                <path d="M 0 12 C 12 11 28 13 40 12" stroke="rgba(255,255,255,0.4)" strokeWidth="1.2" strokeLinecap="round" />
+                <path d="M 12 0 C 11 20 13 40 12 60" stroke="rgba(255,255,255,0.4)" strokeWidth="1.2" strokeLinecap="round" />
+              </svg>
+            </div>
+            <div className="font-serif italic text-neutral-300 text-xs sm:text-sm leading-tight tracking-wide">
+              <p>master the light,</p>
+              <p>protect trust</p>
+              <p>like family gold.</p>
+            </div>
+          </div>
+        </div>
+
+        {/* ════════════════════════════════════════════════════
+            DIAGONAL UP ARROW: Row 2 (DOWN) -> Row 3 (UP)
+            Position: gx = 338vw, gy = 80vw
+            Connects (215vw, 95vw) up to (371vw, 48vw)
+        ════════════════════════════════════════════════════ */}
+        <div
+          className="diag-up-arrow absolute pointer-events-none"
+          style={{ left: "338vw", top: "80vw", width: "26vw", height: "17.33vw" }}
+        >
+          <svg viewBox="0 0 150 100" fill="none" className="w-full h-full overflow-visible">
+            <path
+              className="arrow-path arrow-2-path stroke-amber-400"
+              strokeWidth="2"
+              strokeLinecap="round"
+              d="M4 92 C 46 86 100 58 132 16"
+            />
+            <path
+              className="arrow-path arrow-2-path stroke-amber-400"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M111 20 L132 16 L123 35"
+            />
+          </svg>
+        </div>
+
+        {/* ════════════════════════════════════════════════════
+            ROW 3: "TO [Sinu's Card] CINEMA"
+            Position: gx = 371vw, gy = 48vw (BACK UP!)
+        ════════════════════════════════════════════════════ */}
+        <div
+          className="giant-row absolute flex items-center whitespace-nowrap"
+          style={{ left: "371vw", top: "48vw" }}
+        >
+          <div className="flex items-center font-cinzel font-black text-[var(--giant-size)] leading-[0.82] tracking-tighter text-white">
+            {/* Number badge ③ */}
+            <span className="self-start text-[0.16em] font-mono text-red-500 border border-red-500/40 rounded-full w-[0.24em] h-[0.24em] flex items-center justify-center mr-[0.1em] mt-[0.08em] shadow-[0_0_30px_rgba(239,68,68,0.3)]">
+              3
+            </span>
+
+            <span>TO</span>
+
+            {/* Embedded Photo Card: Sinu (Subham Sharma) */}
+            <div
+              className="giant-slot relative mx-[0.06em] shrink-0 overflow-hidden rounded-[0.12em] border border-white/20 bg-[#0a0a0a] shadow-[0_30px_90px_rgba(138,3,3,0.5)]"
+              style={{
+                width: "0.58em",
+                height: "0.78em",
+                transform: "rotate(2deg)",
+              }}
+            >
+              {/* Washi Tape Strip */}
+              <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-32 h-6 bg-red-950/70 border border-red-700/50 backdrop-blur-md rounded-sm flex items-center justify-center rotate-[1deg] z-20 pointer-events-none shadow-md">
+                <span className="text-[8px] font-mono tracking-widest text-red-300 uppercase">
+                  DIRECTOR · 2014—NOW
+                </span>
+              </div>
+
+              {/* Sinu Photo */}
+              <div className="relative w-full h-[68%]">
+                <Image
+                  src="/assets/images/my.jpeg"
+                  alt="Subham Sharma (Sinu) — Creative Director"
+                  fill
+                  className="object-cover object-top grayscale contrast-110"
+                  sizes="400px"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
+                <div className="absolute bottom-2 left-2 right-2 flex justify-between items-center">
+                  <span className="text-[8px] font-mono tracking-widest text-white/90 uppercase bg-black/70 px-2 py-0.5 rounded border border-white/10">
+                    Lead Cinematographer
+                  </span>
+                  <span className="text-[8px] font-mono text-red-400 font-semibold">2014—Today</span>
+                </div>
+              </div>
+
+              {/* Sinu Info */}
+              <div className="p-3 bg-[#0a0a0a] text-left">
+                <p className="font-cinzel text-xs sm:text-sm text-white font-bold leading-tight">
+                  Subham Sharma (Sinu)
+                </p>
+                <p className="text-[8px] font-mono text-neutral-400 uppercase tracking-widest mt-0.5">
+                  Elder Son & Creative Director
+                </p>
+                <p className="mt-2 text-[9px] font-sans text-neutral-400 leading-relaxed">
+                  Elevated Calcutta Studio into dark gothic luxury wedding cinema and high-fashion couture bridal films.
+                </p>
               </div>
             </div>
 
-            <div className="p-4 bg-[#0a0a0a]">
-              <p className="font-cinzel text-sm text-white tracking-wide">Subham Sharma (Sinu)</p>
-              <p className="mt-1 text-[10px] font-mono text-neutral-500 uppercase tracking-widest">
-                Elder Son & Creative Director
-              </p>
-              <p className="mt-2 text-[11px] font-sans text-neutral-400 leading-relaxed">
-                Elevated Calcutta Studio into high-fashion couture wedding cinema, dark gothic bridal films & sacred rituals.
-              </p>
-            </div>
+            <span>CINEMA</span>
           </div>
 
-          {/* ── Number badge ③ (High) ── */}
-          <div className="lc-badge absolute right-[16vw] top-[20%] w-14 h-14 rounded-full border border-red-500/50 bg-[#111] flex items-center justify-center font-mono text-xl text-red-400/90 shadow-[0_10px_30px_rgba(239,68,68,0.25)]">
-            ③
-          </div>
-
-          {/* ── Drafting Crosshair Annotation #4 (Positioned High) ── */}
-          <div className="lc-annot absolute top-[22%] right-[20vw] flex items-start gap-3 pointer-events-none">
-            <div className="relative w-7 h-12 shrink-0">
-              <div className="absolute left-3 top-0 bottom-0 w-[1px] bg-neutral-500/80" />
-              <div className="absolute top-3 left-0 right-0 h-[1px] bg-neutral-500/80" />
+          {/* Sweet-Tape Drafting Ink Note 3 */}
+          <div
+            className="hand-note absolute flex items-start gap-2.5 pointer-events-none"
+            style={{ left: "25%", top: "75%" }}
+          >
+            <div className="relative w-8 h-12 shrink-0">
+              <svg className="w-8 h-12 overflow-visible" viewBox="0 0 40 60" fill="none">
+                <path d="M 0 12 C 12 11 28 13 40 12" stroke="rgba(255,255,255,0.4)" strokeWidth="1.2" strokeLinecap="round" />
+                <path d="M 12 0 C 11 20 13 40 12 60" stroke="rgba(255,255,255,0.4)" strokeWidth="1.2" strokeLinecap="round" />
+              </svg>
             </div>
             <div className="font-serif italic text-neutral-300 text-xs sm:text-sm leading-tight tracking-wide">
               <p>reinventing</p>
@@ -394,26 +464,17 @@ export default function Legacy() {
               <p>couture cinema.</p>
             </div>
           </div>
-
-          {/* ── Curved Arrow 4: Swooping UP-RIGHT towards Closing Seal ── */}
-          <svg
-            className="lc-arrow absolute top-[36%] left-[10vw] w-28 h-20 fill-none stroke-neutral-400/70"
-            viewBox="0 0 110 70"
-            strokeWidth="1.8"
-            strokeLinecap="round"
-          >
-            <path
-              className="lc-arr-path lc-arr-4"
-              d="M 10 60 Q 55 55, 95 18 M 82 14 L 95 18 L 92 30"
-            />
-          </svg>
         </div>
 
-        {/* ════════════════════════════════════════════
-            CLOSING PANEL — Grand Seal & Works Link
-        ════════════════════════════════════════════ */}
-        <div className="relative flex h-screen shrink-0 items-center px-24 min-w-[640px]">
-          <div className="max-w-lg space-y-6">
+        {/* ════════════════════════════════════════════════════
+            CLOSING PANEL: "TWO GENERATIONS. ONE LEGACY."
+            Position: gx = 510vw, gy = 48vw
+        ════════════════════════════════════════════════════ */}
+        <div
+          className="absolute flex items-center shrink-0"
+          style={{ left: "510vw", top: "42vw", width: "80vw" }}
+        >
+          <div className="max-w-xl space-y-6 bg-[#0a0a0a]/90 backdrop-blur-xl p-10 rounded-3xl border border-white/10 shadow-[0_30px_90px_rgba(0,0,0,0.95)]">
             <div className="flex items-center gap-2">
               <span className="w-8 h-[1px] bg-red-600" />
               <span className="text-[10px] font-mono uppercase tracking-[0.35em] text-[#ff2a2a]">
@@ -430,10 +491,10 @@ export default function Legacy() {
 
             <p className="text-sm font-sans text-neutral-400 leading-relaxed">
               Every frame we craft today honors the foundation built by our father in 1998, 
-              seamlessly reimagined through modern cinematic artistry.
+              seamlessly reimagined through modern dark gothic couture cinema.
             </p>
 
-            <div className="flex items-center gap-8 py-3">
+            <div className="flex items-center gap-8 py-3 border-y border-white/10">
               <div className="text-center">
                 <p className="font-cinzel text-2xl text-white font-bold">1998</p>
                 <p className="text-[9px] font-mono text-neutral-500 uppercase tracking-widest mt-1">Founded by Papa</p>
@@ -466,8 +527,7 @@ export default function Legacy() {
       {/* ── MOBILE: vertical stack fallback ── */}
       <style>{`
         @media (max-width: 767px) {
-          #legacy > div:first-of-type { display: none !important; }
-          #legacy > div:nth-of-type(2) { display: none !important; }
+          #legacy > .giant-canvas { display: none !important; }
           #legacy-mobile { display: flex !important; }
         }
       `}</style>
