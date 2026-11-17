@@ -9,495 +9,436 @@ import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(ScrollTrigger);
 
-/* Handcrafted Signature Component for Shri Vijay Nandan Sharma */
-function FatherSignature() {
-  return (
-    <div className="flex flex-col items-start gap-1 select-none">
-      <svg
-        viewBox="0 0 260 70"
-        className="w-44 sm:w-52 h-auto text-amber-200/90 fill-none stroke-current"
-        style={{ filter: "drop-shadow(0 0 6px rgba(212,175,55,0.3))" }}
-      >
-        {/* Artistic Cursive Handwriting Path for 'Vijay Nandan Sharma' */}
-        <path
-          d="M 15 45 C 22 20, 28 12, 38 18 C 45 23, 30 52, 28 55 M 34 32 C 40 30, 48 31, 52 35 M 48 24 L 48 26 M 58 35 C 62 30, 68 28, 72 32 C 75 35, 72 45, 68 56 C 65 64, 55 62, 60 52 M 78 34 C 82 28, 90 28, 94 33 C 98 38, 95 48, 98 48 C 104 48, 110 32, 115 32 C 120 32, 122 42, 126 42 M 138 20 C 142 32, 145 46, 146 50 M 138 20 C 145 18, 155 18, 158 24 C 160 30, 154 36, 146 36 M 150 36 C 158 36, 168 46, 172 50 M 178 32 C 182 28, 192 28, 195 35 C 196 42, 198 48, 204 48 M 210 32 C 218 28, 225 35, 230 42 C 235 48, 242 46, 248 42 M 20 62 C 60 58, 140 60, 240 54"
-          strokeWidth="2.2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-      <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-neutral-400 pl-2">
-        Vijay Nandan Sharma — Founder
-      </span>
-    </div>
-  );
-}
-
 export default function Legacy() {
-  const containerRef = useRef<HTMLElement>(null);
-  const horizontalTrackRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
 
   useGSAP(
     () => {
-      // Desktop horizontal scrub pin animation (Exact Awwwards reference interaction)
-      const mm = gsap.matchMedia();
+      const section = sectionRef.current;
+      const track = trackRef.current;
+      if (!section || !track) return;
 
-      mm.add("(min-width: 768px)", () => {
-        if (!containerRef.current || !horizontalTrackRef.current) return;
+      const totalScroll = track.scrollWidth - window.innerWidth;
 
-        const totalScroll =
-          horizontalTrackRef.current.scrollWidth - window.innerWidth;
-
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: "top top",
-            end: () => `+=${totalScroll * 1.3}`,
-            pin: true,
-            scrub: 1,
-            anticipatePin: 1,
-            invalidateOnRefresh: true,
-          },
-        });
-
-        // Scrub track horizontally
-        tl.to(horizontalTrackRef.current, {
-          x: () => -totalScroll,
-          ease: "none",
-        });
-
-        // Parallax depth on cards
-        tl.to(
-          ".legacy-parallax-fast",
-          {
-            x: -80,
-            ease: "none",
-          },
-          0
-        );
-
-        tl.to(
-          ".legacy-parallax-slow",
-          {
-            x: 60,
-            ease: "none",
-          },
-          0
-        );
+      /* ── Main horizontal scrub pin ── */
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: "top top",
+          end: () => `+=${totalScroll * 1.1}`,
+          pin: true,
+          scrub: 1,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+        },
       });
 
-      return () => mm.revert();
+      tl.to(track, { x: () => -totalScroll, ease: "none" }, 0);
+
+      /* ── Parallax layers ── */
+      // Photo cards move slower than the giant text (they "float" forward)
+      tl.to(".lc-card", { x: -120, ease: "none" }, 0);
+      // Annotations at a slightly different speed for depth
+      tl.to(".lc-annot", { x: -60, ease: "none" }, 0);
+      // Arrows at yet another speed
+      tl.to(".lc-arrow", { x: -40, ease: "none" }, 0);
+      // Number badges barely move (hang in viewport)
+      tl.to(".lc-badge", { x: 30, ease: "none" }, 0);
     },
-    { scope: containerRef }
+    { scope: sectionRef }
   );
 
   return (
     <section
-      ref={containerRef}
+      ref={sectionRef}
       id="legacy"
-      className="relative w-full bg-[#050505] text-white overflow-hidden border-t border-white/10"
+      className="relative w-full overflow-hidden bg-[#050505]"
     >
-      {/* Subtle Noise Texture & Dark Luxury Radial Glows */}
-      <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_40%,rgba(138,3,3,0.18)_0%,transparent_70%)]" />
-      <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(circle_at_20%_80%,rgba(212,175,55,0.06)_0%,transparent_50%)]" />
-
-      {/* Persistent Section Top Bar */}
-      <div className="relative z-20 w-full px-6 md:px-16 pt-12 md:pt-14 pb-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-white/5">
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/[0.04] border border-white/10 backdrop-blur-md">
-            <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse" />
-            <span className="w-1.5 h-1.5 rounded-full bg-amber-500/80" />
-            <span className="w-1.5 h-1.5 rounded-full bg-neutral-600" />
-            <span className="text-[10px] font-mono tracking-[0.25em] text-neutral-300 uppercase ml-1">
-              OUR HERITAGE // 1998 — PRESENT
-            </span>
-          </div>
-          <span className="hidden sm:inline text-xs font-mono text-neutral-500">
-            [ Korba, Chhattisgarh ]
+      {/* ── Pinned horizontal track ── */}
+      <div
+        ref={trackRef}
+        className="flex h-screen items-center will-change-transform"
+        style={{ width: "max-content" }}
+      >
+        {/* ════════════════════════════════════════════
+            WORD 1  —  "ROOTED"
+        ════════════════════════════════════════════ */}
+        <div className="relative flex h-screen items-center pl-24 pr-10 shrink-0">
+          {/* giant word */}
+          <span className="select-none font-cinzel font-black text-[22vw] leading-none tracking-tighter text-white/[0.07] uppercase whitespace-nowrap">
+            ROOTED
           </span>
-        </div>
 
-        <div className="flex items-center gap-4">
-          <span className="text-xs font-mono text-neutral-400 tracking-widest uppercase">
-            SCROLL TO EXPLORE THE HEIRLOOM →
-          </span>
-        </div>
-      </div>
-
-      {/* ========================================================= */}
-      {/* DESKTOP PINNED HORIZONTAL TRACK (Reference Video Style)    */}
-      {/* ========================================================= */}
-      <div className="hidden md:block relative z-10 h-[calc(100vh-80px)] w-full overflow-hidden">
-        <div
-          ref={horizontalTrackRef}
-          className="flex h-full items-center pl-16 pr-32 w-max gap-20 lg:gap-32 will-change-transform"
-        >
-          {/* PANEL 1: Title & Introduction Header */}
-          <div className="w-[420px] lg:w-[480px] shrink-0 flex flex-col justify-center">
-            <div className="flex items-center gap-2 mb-4">
-              <span className="w-6 h-[1px] bg-red-600" />
-              <span className="text-xs font-mono uppercase tracking-[0.3em] text-[#ff2a2a]">
-                A Tale of Two Generations
-              </span>
+          {/* ── Floating Photo Card: Papa ── */}
+          <div
+            className="lc-card absolute left-[18vw] top-1/2 -translate-y-[60%] w-[260px] sm:w-[300px] rounded-2xl overflow-hidden border border-white/10 bg-[#0a0a0a] shadow-[0_24px_64px_rgba(0,0,0,0.9)] -rotate-2"
+            style={{ zIndex: 10 }}
+          >
+            {/* washi-tape strip */}
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-24 h-6 bg-amber-100/20 border border-white/20 backdrop-blur-md rounded-sm flex items-center justify-center rotate-[-1deg] pointer-events-none z-20">
+              <span className="text-[8px] font-mono tracking-widest text-white/80 uppercase">FOUNDER · 1998</span>
             </div>
 
-            <h2 className="text-4xl lg:text-5xl font-cinzel font-normal leading-[1.15] tracking-tight mb-6 text-white drop-shadow-md">
-              ROOTED IN DEVOTION.
-              <br />
-              <span className="italic font-serif text-amber-200/90 font-light">
-                Reimagined
-              </span>{" "}
-              IN CINEMA.
-            </h2>
-
-            <p className="text-sm font-sans text-neutral-400 leading-relaxed max-w-md">
-              Calcutta Studio was born out of an artisan&apos;s hunger to freeze timeless memories. 
-              From darkroom chemistry to 4K bridal cinema, our craft has evolved across two generations of the Sharma family.
-            </p>
-
-            <div className="mt-8 flex items-center gap-6">
-              <div className="flex flex-col">
-                <span className="text-2xl font-cinzel text-white font-semibold">1998</span>
-                <span className="text-[10px] font-mono text-neutral-500 uppercase tracking-widest">
-                  Studio Founded
-                </span>
-              </div>
-              <span className="text-neutral-600">→</span>
-              <div className="flex flex-col">
-                <span className="text-2xl font-cinzel text-amber-200 font-semibold">2014</span>
-                <span className="text-[10px] font-mono text-neutral-500 uppercase tracking-widest">
-                  Torch Passed
-                </span>
-              </div>
-              <span className="text-neutral-600">→</span>
-              <div className="flex flex-col">
-                <span className="text-2xl font-cinzel text-red-500 font-semibold">TODAY</span>
-                <span className="text-[10px] font-mono text-neutral-500 uppercase tracking-widest">
-                  Couture Atelier
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* GIANT SCROLLING BACKGROUND TYPOGRAPHY 1 */}
-          <div className="shrink-0 select-none pointer-events-none -mr-16">
-            <span className="text-[14vw] font-cinzel font-black tracking-tighter text-white/[0.03] uppercase whitespace-nowrap leading-none block">
-              TO COMMENCE
-            </span>
-          </div>
-
-          {/* PANEL 2: The Founder — Shri Vijay Nandan Sharma */}
-          <div className="relative w-[520px] lg:w-[580px] shrink-0 flex flex-col justify-center">
-            {/* Number 1 Circular Hand-drawn Badge */}
-            <div className="absolute -top-6 -left-6 z-20 w-10 h-10 rounded-full border border-amber-300/40 bg-[#121212] flex items-center justify-center font-mono text-sm text-amber-200 shadow-xl">
-              ①
+            <div className="relative w-full aspect-[3/4]">
+              <Image
+                src="/assets/images/father-vijay-nandan-sharma.jpg"
+                alt="Shri Vijay Nandan Sharma — Founder"
+                fill
+                className="object-cover grayscale contrast-105"
+                sizes="320px"
+                priority
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent" />
             </div>
 
-            {/* Hand-drawn SVG Arrow with Annotation */}
-            <div className="absolute -top-14 right-8 z-20 flex items-center gap-2 text-amber-200/90 pointer-events-none">
-              <span className="font-serif italic text-sm tracking-wide">
-                Where the lens first caught light
-              </span>
-              <svg className="w-12 h-8 text-amber-300/70 -rotate-12 fill-none stroke-current" viewBox="0 0 50 30">
-                <path d="M 5 20 Q 25 5, 45 18 M 38 12 L 45 18 L 38 24" strokeWidth="1.8" strokeLinecap="round" />
-              </svg>
-            </div>
-
-            {/* Framed Archival Photo Card */}
-            <div className="relative rounded-2xl bg-[#0a0a0a] border border-white/10 p-5 shadow-[0_20px_60px_rgba(0,0,0,0.8)] legacy-parallax-fast -rotate-1 hover:rotate-0 transition-transform duration-500">
-              {/* Masking Tape Header Accent */}
-              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-28 h-7 bg-amber-100/20 backdrop-blur-md border border-white/20 shadow-md rotate-[-2deg] rounded-xs flex items-center justify-center pointer-events-none">
-                <span className="text-[8px] font-mono tracking-widest text-white/80 uppercase">
-                  FOUNDER • ARCHIVE
-                </span>
-              </div>
-
-              {/* Father Portrait Image */}
-              <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-neutral-900 border border-white/5 mb-5 group">
-                <Image
-                  src="/assets/images/father-vijay-nandan-sharma.jpg"
-                  alt="Shri Vijay Nandan Sharma - Founder of Calcutta Studio"
-                  fill
-                  className="object-cover object-center grayscale contrast-105 group-hover:grayscale-0 transition-all duration-700"
-                  sizes="(max-width: 1024px) 500px, 600px"
-                  priority
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
-                <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-white/90">
-                  <span className="text-xs font-mono tracking-widest uppercase bg-black/60 backdrop-blur-md px-2.5 py-1 rounded border border-white/10">
-                    With Canon Telephoto
-                  </span>
-                  <span className="text-[10px] font-mono text-amber-300">
-                    Circa 2000s
-                  </span>
-                </div>
-              </div>
-
-              {/* Details & Signature */}
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-xl font-cinzel text-white tracking-wide">
-                    Shri Vijay Nandan Sharma
-                  </h3>
-                  <span className="text-[10px] font-mono text-red-400 uppercase tracking-widest px-2 py-0.5 rounded bg-red-950/40 border border-red-800/40">
-                    Founder
-                  </span>
-                </div>
-
-                <p className="text-xs font-sans text-neutral-300 leading-relaxed">
-                  Papa laid the foundation of Calcutta Studio with an uncompromising eye for classic portraiture. 
-                  In 2014, when his journey transitioned to establishing our family jewellery business, 
-                  he proudly handed the camera and the legacy over to his elder son.
-                </p>
-
-                {/* Handwritten Signature */}
-                <div className="pt-2 border-t border-white/10 flex items-center justify-between">
-                  <FatherSignature />
-                  <div className="w-10 h-10 rounded-full border border-amber-400/30 bg-amber-950/20 flex items-center justify-center">
-                    <span className="text-[9px] font-mono text-amber-200">1998</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* PANEL 3: The 2014 Shift Bridge (Jewellery Atelier Shift) */}
-          <div className="w-[380px] lg:w-[420px] shrink-0 flex flex-col justify-center legacy-parallax-slow">
-            {/* Number 2 Hand-drawn Circular Badge */}
-            <div className="inline-flex items-center gap-2 mb-3">
-              <span className="w-8 h-8 rounded-full border border-red-500/40 bg-red-950/30 flex items-center justify-center font-mono text-xs text-red-300">
-                ②
-              </span>
-              <span className="text-xs font-mono text-[#ff2a2a] uppercase tracking-widest">
-                The 2014 Sacred Transition
-              </span>
-            </div>
-
-            <div className="rounded-xl border border-white/10 bg-[#0c0c0c]/80 backdrop-blur-md p-6 relative overflow-hidden shadow-2xl">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-red-600/10 rounded-full blur-3xl pointer-events-none" />
-
-              <h4 className="text-2xl font-cinzel text-amber-100 mb-3 leading-snug">
-                FROM THE LENS TO GOLD CRAFTSMANSHIP.
-              </h4>
-
-              <p className="text-xs font-sans text-neutral-300 leading-relaxed mb-4">
-                In 2014, Papa expanded our family vision into the heritage jewellery craft. 
-                With deep trust, he passed the darkroom keys to his elder son Subham, saying:
+            <div className="p-4">
+              <p className="font-cinzel text-sm text-white tracking-wide leading-snug">
+                Shri Vijay Nandan Sharma
               </p>
-
-              <blockquote className="border-l-2 border-amber-400/60 pl-3 italic font-serif text-sm text-neutral-200 mb-4">
-                &ldquo;Master the light as an artist, and protect every client&apos;s trust like family gold.&rdquo;
-              </blockquote>
-
-              <div className="flex items-center gap-3 pt-3 border-t border-white/10">
-                <div className="w-2 h-2 rounded-full bg-amber-400" />
-                <span className="text-[11px] font-mono uppercase text-neutral-400 tracking-wider">
-                  Shree Jewellers & Calcutta Studio Heritage
-                </span>
-              </div>
+              <p className="mt-1 text-[10px] font-mono text-neutral-500 uppercase tracking-widest">
+                Calcutta Studio — Founder
+              </p>
+              {/* Signature */}
+              <svg
+                viewBox="0 0 200 48"
+                className="mt-3 w-36 h-auto fill-none stroke-amber-200/80"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M8 36 C14 16 20 10 30 16 C36 20 22 44 20 46 M26 28 C32 26 40 27 44 31 M40 20 L40 22 M50 30 C54 25 60 23 64 27 C67 30 64 40 60 48 C57 54 48 52 52 44 M68 28 C72 22 80 22 84 27 C88 32 85 42 88 42 C94 42 100 28 104 28 C110 28 112 36 116 36 M4 44 C50 42 120 44 196 40" />
+              </svg>
+              <p className="text-[9px] font-mono text-neutral-500 mt-0.5">Vijay Nandan Sharma — Founder</p>
             </div>
           </div>
 
-          {/* GIANT SCROLLING BACKGROUND TYPOGRAPHY 2 */}
-          <div className="shrink-0 select-none pointer-events-none -mr-16">
-            <span className="text-[14vw] font-cinzel font-black tracking-tighter text-white/[0.03] uppercase whitespace-nowrap leading-none block">
-              TO TRANSCEND
+          {/* ── Hand-drawn annotation #1 ── */}
+          <div className="lc-annot absolute bottom-[22%] left-[8vw] flex items-start gap-2 pointer-events-none">
+            <span className="text-neutral-400/80 font-mono text-xs leading-none mt-0.5">+</span>
+            <span className="font-serif italic text-neutral-300/70 text-sm leading-snug max-w-[180px]">
+              where the lens<br />first caught light
             </span>
           </div>
 
-          {/* PANEL 4: The Elder Brother — Subham Sharma (Sinu) */}
-          <div className="relative w-[520px] lg:w-[580px] shrink-0 flex flex-col justify-center">
-            {/* Number 3 Circular Hand-drawn Badge */}
-            <div className="absolute -top-6 -left-6 z-20 w-10 h-10 rounded-full border border-red-500/50 bg-[#121212] flex items-center justify-center font-mono text-sm text-red-400 shadow-xl">
-              ③
-            </div>
+          {/* ── Curved arrow down-right ── */}
+          <svg
+            className="lc-arrow absolute bottom-[18%] left-[22vw] w-24 h-16 fill-none stroke-neutral-500/60"
+            viewBox="0 0 96 64"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          >
+            <path d="M 8 8 Q 48 4, 88 48 M 76 42 L 88 48 L 80 60" />
+          </svg>
+        </div>
 
-            {/* Hand-drawn SVG Arrow with Annotation */}
-            <div className="absolute -top-14 right-8 z-20 flex items-center gap-2 text-red-300 pointer-events-none">
-              <span className="font-serif italic text-sm tracking-wide">
-                Reinventing bridal couture cinema
-              </span>
-              <svg className="w-12 h-8 text-red-400/80 -rotate-6 fill-none stroke-current" viewBox="0 0 50 30">
-                <path d="M 5 15 Q 25 5, 45 15 M 38 9 L 45 15 L 38 21" strokeWidth="1.8" strokeLinecap="round" />
-              </svg>
-            </div>
+        {/* ════════════════════════════════════════════
+            WORD 2  —  "IN"
+        ════════════════════════════════════════════ */}
+        <div className="relative flex h-screen items-center px-6 shrink-0">
+          <span className="select-none font-cinzel font-black text-[22vw] leading-none tracking-tighter text-white/[0.07] uppercase whitespace-nowrap">
+            IN
+          </span>
 
-            {/* Framed Archival Photo Card */}
-            <div className="relative rounded-2xl bg-[#0a0a0a] border border-white/10 p-5 shadow-[0_20px_60px_rgba(138,3,3,0.3)] legacy-parallax-fast rotate-1 hover:rotate-0 transition-transform duration-500">
-              {/* Masking Tape Header Accent */}
-              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-32 h-7 bg-red-950/40 backdrop-blur-md border border-red-600/30 shadow-md rotate-[1.5deg] rounded-xs flex items-center justify-center pointer-events-none">
-                <span className="text-[8px] font-mono tracking-widest text-red-200 uppercase">
-                  DIRECTOR • SINCE 2014
-                </span>
-              </div>
+          {/* ── Number badge ① ── */}
+          <div className="lc-badge absolute right-6 top-1/3 w-12 h-12 rounded-full border border-amber-300/40 bg-[#111] flex items-center justify-center font-mono text-lg text-amber-200/80 shadow-2xl">
+            ①
+          </div>
+        </div>
 
-              {/* Sinu Portrait Image */}
-              <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-neutral-900 border border-white/5 mb-5 group">
-                <Image
-                  src="/assets/images/my.jpeg"
-                  alt="Subham Sharma (Sinu) - Creative Director"
-                  fill
-                  className="object-cover object-top grayscale group-hover:grayscale-0 transition-all duration-700"
-                  sizes="(max-width: 1024px) 500px, 600px"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
-                <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-white/90">
-                  <span className="text-xs font-mono tracking-widest uppercase bg-black/60 backdrop-blur-md px-2.5 py-1 rounded border border-white/10">
-                    Lead Cinematographer
-                  </span>
-                  <span className="text-[10px] font-mono text-red-400">
-                    2014 — Present
-                  </span>
-                </div>
-              </div>
+        {/* ════════════════════════════════════════════
+            WORD 3  —  "DEVOTION."
+        ════════════════════════════════════════════ */}
+        <div className="relative flex h-screen items-center px-10 shrink-0">
+          <span className="select-none font-cinzel font-black text-[22vw] leading-none tracking-tighter text-white/[0.07] uppercase whitespace-nowrap">
+            DEVOTION.
+          </span>
 
-              {/* Details & Leadership */}
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-xl font-cinzel text-white tracking-wide">
-                    Subham Sharma (Sinu)
-                  </h3>
-                  <span className="text-[10px] font-mono text-red-400 uppercase tracking-widest px-2 py-0.5 rounded bg-red-950/40 border border-red-800/40">
-                    Elder Brother & Director
-                  </span>
-                </div>
-
-                <p className="text-xs font-sans text-neutral-300 leading-relaxed">
-                  Stepping into his father&apos;s shoes in 2014, Subham elevated Calcutta Studio into 
-                  a dark gothic luxury atelier. Under his vision, wedding photography evolved into 
-                  cinematic royal films, sacred temple adornment, and high-fashion bridal storytelling.
-                </p>
-
-                <div className="pt-2 border-t border-white/10 flex items-center justify-between text-xs font-mono text-neutral-400">
-                  <span>Subham Sharma — Creative Lead</span>
-                  <span className="text-[#ff2a2a]">10+ Years at the Helm</span>
-                </div>
-              </div>
+          {/* ── Info card: origin story ── */}
+          <div
+            className="lc-card absolute left-[25vw] top-1/2 -translate-y-1/2 w-[280px] rounded-xl border border-white/10 bg-[#0d0d0d]/90 backdrop-blur-md p-6 shadow-2xl rotate-1"
+            style={{ zIndex: 10 }}
+          >
+            <span className="text-[9px] font-mono uppercase tracking-[0.3em] text-[#ff2a2a]">
+              Est. 1998 — Korba, CG
+            </span>
+            <h3 className="mt-2 font-cinzel text-xl text-white leading-snug">
+              A Studio Born<br />From Passion.
+            </h3>
+            <p className="mt-3 text-[11px] font-sans text-neutral-400 leading-relaxed">
+              Papa started Calcutta Studio with an artisan&apos;s devotion to portraiture — 
+              freezing timeless moments in every frame.
+            </p>
+            <div className="mt-4 flex items-center gap-3 text-[10px] font-mono text-neutral-500">
+              <span className="text-amber-400">1998</span>
+              <span className="text-neutral-700">—</span>
+              <span>Studio Founded</span>
             </div>
           </div>
 
-          {/* PANEL 5: The Grand Stamp & CTA */}
-          <div className="w-[360px] lg:w-[400px] shrink-0 flex flex-col justify-center items-start">
-            <div className="rounded-2xl border border-white/15 bg-gradient-to-b from-[#141414] to-[#070707] p-8 shadow-[0_0_50px_rgba(138,3,3,0.35)] w-full">
-              <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-[#ff2a2a] block mb-2">
+          {/* ── Annotation #2 ── */}
+          <div className="lc-annot absolute bottom-[20%] right-[12vw] flex items-start gap-2 pointer-events-none">
+            <span className="text-neutral-400/80 font-mono text-xs mt-0.5">+</span>
+            <span className="font-serif italic text-neutral-300/70 text-sm leading-snug max-w-[160px]">
+              every masterpiece<br />starts held in place
+            </span>
+          </div>
+
+          {/* ── Straight arrow right ── */}
+          <svg
+            className="lc-arrow absolute bottom-[24%] left-[12vw] w-20 h-10 fill-none stroke-neutral-500/50"
+            viewBox="0 0 80 40"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          >
+            <path d="M 4 30 Q 40 10, 72 20 M 62 14 L 72 20 L 62 26" />
+          </svg>
+        </div>
+
+        {/* ════════════════════════════════════════════
+            WORD 4  —  "REIMAGINED"
+        ════════════════════════════════════════════ */}
+        <div className="relative flex h-screen items-center pl-20 pr-10 shrink-0">
+          <span className="select-none font-cinzel font-black italic text-[22vw] leading-none tracking-tighter text-white/[0.07] uppercase whitespace-nowrap">
+            REIMAGINED
+          </span>
+
+          {/* ── Number badge ② ── */}
+          <div className="lc-badge absolute left-8 top-1/3 w-12 h-12 rounded-full border border-red-500/40 bg-[#111] flex items-center justify-center font-mono text-lg text-red-400/80 shadow-2xl">
+            ②
+          </div>
+
+          {/* ── The 2014 card ── */}
+          <div
+            className="lc-card absolute right-[8vw] top-1/2 -translate-y-[55%] w-[290px] rounded-xl border border-red-900/40 bg-[#0d0d0d]/90 backdrop-blur-md p-6 shadow-2xl -rotate-1"
+            style={{ zIndex: 10 }}
+          >
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-2 h-2 rounded-full bg-red-600" />
+              <span className="text-[9px] font-mono uppercase tracking-[0.3em] text-[#ff2a2a]">
+                The 2014 Transition
+              </span>
+            </div>
+            <h3 className="font-cinzel text-lg text-white leading-snug">
+              FROM THE LENS<br />TO GOLD CRAFT.
+            </h3>
+            <blockquote className="mt-3 border-l-2 border-amber-500/50 pl-3 font-serif italic text-xs text-neutral-300/90 leading-relaxed">
+              &ldquo;Master the light as an artist, and protect every client&apos;s trust like family gold.&rdquo;
+            </blockquote>
+            <p className="mt-3 text-[10px] font-mono text-neutral-500">— Shri Vijay Nandan Sharma</p>
+          </div>
+
+          {/* ── Annotation #3 ── */}
+          <div className="lc-annot absolute bottom-[22%] left-[30vw] flex items-start gap-2 pointer-events-none">
+            <span className="text-neutral-400/80 font-mono text-xs mt-0.5">+</span>
+            <span className="font-serif italic text-neutral-300/70 text-sm leading-snug max-w-[200px]">
+              from our hands to theirs,<br />arriving whole
+            </span>
+          </div>
+
+          {/* ── Down-curved arrow ── */}
+          <svg
+            className="lc-arrow absolute bottom-[16%] right-[25vw] w-20 h-16 fill-none stroke-neutral-500/50"
+            viewBox="0 0 80 64"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          >
+            <path d="M 72 8 Q 76 40, 44 56 M 50 62 L 44 56 L 56 54" />
+          </svg>
+        </div>
+
+        {/* ════════════════════════════════════════════
+            WORD 5  —  "IN CINEMA."
+        ════════════════════════════════════════════ */}
+        <div className="relative flex h-screen items-center pl-10 pr-20 shrink-0">
+          <span className="select-none font-cinzel font-black text-[22vw] leading-none tracking-tighter text-white/[0.07] uppercase whitespace-nowrap">
+            IN CINEMA.
+          </span>
+
+          {/* ── Floating Photo Card: Sinu ── */}
+          <div
+            className="lc-card absolute left-[22vw] top-1/2 -translate-y-[55%] w-[260px] sm:w-[300px] rounded-2xl overflow-hidden border border-white/10 bg-[#0a0a0a] shadow-[0_24px_64px_rgba(138,3,3,0.4)] rotate-1"
+            style={{ zIndex: 10 }}
+          >
+            {/* red washi-tape strip */}
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-28 h-6 bg-red-950/50 border border-red-700/40 backdrop-blur-md rounded-sm flex items-center justify-center rotate-[1deg] pointer-events-none z-20">
+              <span className="text-[8px] font-mono tracking-widest text-red-300 uppercase">DIRECTOR · 2014</span>
+            </div>
+
+            <div className="relative w-full aspect-[3/4]">
+              <Image
+                src="/assets/images/my.jpeg"
+                alt="Subham Sharma (Sinu) — Creative Director"
+                fill
+                className="object-cover object-top grayscale"
+                sizes="320px"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent" />
+              <div className="absolute bottom-3 left-3 right-3 flex justify-between items-center">
+                <span className="text-[9px] font-mono tracking-widest text-white/80 uppercase bg-black/60 px-2 py-0.5 rounded">Lead Cinematographer</span>
+                <span className="text-[9px] font-mono text-red-400">2014—Now</span>
+              </div>
+            </div>
+
+            <div className="p-4">
+              <p className="font-cinzel text-sm text-white tracking-wide">Subham Sharma (Sinu)</p>
+              <p className="mt-1 text-[10px] font-mono text-neutral-500 uppercase tracking-widest">
+                Creative Director & Elder Son
+              </p>
+              <p className="mt-2 text-[11px] font-sans text-neutral-400 leading-relaxed">
+                Elevated Calcutta Studio into dark gothic bridal cinema, sacred temple films & high-fashion couture.
+              </p>
+            </div>
+          </div>
+
+          {/* ── Number badge ③ ── */}
+          <div className="lc-badge absolute right-[14vw] top-1/3 w-12 h-12 rounded-full border border-red-500/50 bg-[#111] flex items-center justify-center font-mono text-lg text-red-400/80 shadow-2xl">
+            ③
+          </div>
+
+          {/* ── Annotation #4 ── */}
+          <div className="lc-annot absolute bottom-[22%] right-[16vw] flex items-start gap-2 pointer-events-none">
+            <span className="text-neutral-400/80 font-mono text-xs mt-0.5">+</span>
+            <span className="font-serif italic text-neutral-300/70 text-sm leading-snug max-w-[180px]">
+              reinventing bridal<br />couture cinema
+            </span>
+          </div>
+
+          {/* ── Up-curved arrow ── */}
+          <svg
+            className="lc-arrow absolute bottom-[20%] left-[14vw] w-24 h-16 fill-none stroke-neutral-500/50"
+            viewBox="0 0 96 64"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          >
+            <path d="M 8 56 Q 48 60, 88 16 M 78 10 L 88 16 L 82 28" />
+          </svg>
+        </div>
+
+        {/* ════════════════════════════════════════════
+            CLOSING PANEL — CTA & Grand Seal
+        ════════════════════════════════════════════ */}
+        <div className="relative flex h-screen shrink-0 items-center px-20 min-w-[600px]">
+          <div className="max-w-md space-y-6">
+            <div className="flex items-center gap-2">
+              <span className="w-6 h-[1px] bg-red-600" />
+              <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-[#ff2a2a]">
                 Unbroken Lineage
               </span>
-              <h3 className="text-3xl font-cinzel text-white mb-4 leading-tight">
-                TWO GENERATIONS.
-                <br />
-                ONE FAMILY LEGACY.
-              </h3>
-              <p className="text-xs font-sans text-neutral-400 leading-relaxed mb-6">
-                Every frame we capture honors the foundation built by our father in 1998, 
-                blended seamlessly with modern cinema.
-              </p>
-
-              <Link
-                href="/works"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-black text-xs font-sans font-medium tracking-wider uppercase hover:bg-neutral-200 transition-colors"
-              >
-                <span>View Our Works Archive</span>
-                <span>→</span>
-              </Link>
             </div>
+
+            <h2 className="font-cinzel text-4xl lg:text-5xl text-white leading-[1.1] tracking-tight">
+              TWO GENERATIONS.<br />
+              <span className="font-serif italic font-light text-amber-200/90">
+                One Legacy.
+              </span>
+            </h2>
+
+            <p className="text-sm font-sans text-neutral-400 leading-relaxed">
+              Every frame we capture honors the foundation built by our father in 1998, 
+              seamlessly blended with contemporary cinematic vision.
+            </p>
+
+            <div className="flex items-center gap-6 pt-2">
+              <div className="text-center">
+                <p className="font-cinzel text-2xl text-white">1998</p>
+                <p className="text-[9px] font-mono text-neutral-500 uppercase tracking-widest">Founded</p>
+              </div>
+              <span className="text-neutral-700 text-xl">→</span>
+              <div className="text-center">
+                <p className="font-cinzel text-2xl text-amber-200">2014</p>
+                <p className="text-[9px] font-mono text-neutral-500 uppercase tracking-widest">Torch Passed</p>
+              </div>
+              <span className="text-neutral-700 text-xl">→</span>
+              <div className="text-center">
+                <p className="font-cinzel text-2xl text-red-500">TODAY</p>
+                <p className="text-[9px] font-mono text-neutral-500 uppercase tracking-widest">Cinema Atelier</p>
+              </div>
+            </div>
+
+            <Link
+              href="/works"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-black text-xs font-sans font-semibold tracking-wider uppercase hover:bg-neutral-200 transition-colors"
+            >
+              <span>View Our Works Archive</span>
+              <span>→</span>
+            </Link>
           </div>
         </div>
       </div>
 
-      {/* ========================================================= */}
-      {/* MOBILE STACKED VERTICAL VIEW (< 768px)                     */}
-      {/* ========================================================= */}
-      <div className="md:hidden relative z-10 px-6 py-12 flex flex-col gap-12">
-        {/* Intro */}
+      {/* ── MOBILE: simple vertical stack (no pin) ── */}
+      <style>{`
+        @media (max-width: 767px) {
+          #legacy > div:first-child { display: none !important; }
+          #legacy-mobile { display: flex !important; }
+        }
+      `}</style>
+
+      <div
+        id="legacy-mobile"
+        className="hidden flex-col gap-10 px-6 py-16 bg-[#050505]"
+      >
         <div>
-          <span className="text-xs font-mono uppercase tracking-[0.3em] text-[#ff2a2a] block mb-2">
-            A Tale of Two Generations
-          </span>
-          <h2 className="text-3xl font-cinzel font-normal leading-tight text-white mb-4">
-            ROOTED IN DEVOTION.
-            <br />
-            <span className="italic font-serif text-amber-200/90 font-light">
-              Reimagined
-            </span>{" "}
-            IN CINEMA.
+          <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-[#ff2a2a]">A Tale of Two Generations</span>
+          <h2 className="mt-2 font-cinzel text-3xl text-white leading-tight">
+            ROOTED IN DEVOTION.<br />
+            <span className="italic font-serif font-light text-amber-200/90">Reimagined</span> IN CINEMA.
           </h2>
-          <p className="text-sm font-sans text-neutral-400 leading-relaxed">
-            Calcutta Studio was founded by Shri Vijay Nandan Sharma in 1998, and carried forward with passion by his elder son Subham Sharma (Sinu) since 2014.
-          </p>
         </div>
 
-        {/* Father Card */}
-        <div className="relative rounded-2xl bg-[#0a0a0a] border border-white/10 p-5 shadow-2xl">
-          <div className="flex items-center gap-2 mb-3">
-            <span className="w-6 h-6 rounded-full border border-amber-300/40 bg-neutral-900 flex items-center justify-center font-mono text-xs text-amber-200">
-              ①
-            </span>
-            <span className="text-[10px] font-mono tracking-widest text-amber-200 uppercase">
-              The Founder • 1998
-            </span>
+        {/* Papa Mobile Card */}
+        <div className="rounded-2xl overflow-hidden border border-white/10 bg-[#0a0a0a] shadow-2xl">
+          <div className="relative w-full aspect-[4/3]">
+            <Image src="/assets/images/father-vijay-nandan-sharma.jpg" alt="Shri Vijay Nandan Sharma" fill className="object-cover grayscale" />
           </div>
-
-          <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-neutral-900 border border-white/5 mb-4">
-            <Image
-              src="/assets/images/father-vijay-nandan-sharma.jpg"
-              alt="Shri Vijay Nandan Sharma"
-              fill
-              className="object-cover"
-            />
+          <div className="p-5">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="font-mono text-xs text-amber-200">①</span>
+              <span className="text-[9px] font-mono tracking-widest text-amber-300 uppercase">Founder · 1998</span>
+            </div>
+            <h3 className="font-cinzel text-lg text-white mb-2">Shri Vijay Nandan Sharma</h3>
+            <p className="text-xs font-sans text-neutral-400 leading-relaxed mb-3">
+              Papa started Calcutta Studio in 1998. In 2014, he transitioned to our family jewellery business, passing the studio reins to his elder son.
+            </p>
+            <svg viewBox="0 0 200 48" className="w-32 h-auto fill-none stroke-amber-200/80" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M8 36 C14 16 20 10 30 16 C36 20 22 44 20 46 M26 28 C32 26 40 27 44 31 M40 20 L40 22 M50 30 C54 25 60 23 64 27 C67 30 64 40 60 48 C57 54 48 52 52 44 M68 28 C72 22 80 22 84 27 C88 32 85 42 88 42 C94 42 100 28 104 28 C110 28 112 36 116 36 M4 44 C50 42 120 44 196 40" />
+            </svg>
           </div>
-
-          <h3 className="text-lg font-cinzel text-white mb-2">
-            Shri Vijay Nandan Sharma
-          </h3>
-          <p className="text-xs font-sans text-neutral-400 leading-relaxed mb-4">
-            Papa started Calcutta Studio in 1998 with deep devotion to portraiture. In 2014, he transitioned to the family jewellery business, passing the studio reigns to his elder son.
-          </p>
-
-          <FatherSignature />
         </div>
 
-        {/* Transition Bridge */}
+        {/* 2014 Bridge Mobile */}
         <div className="rounded-xl border border-white/10 bg-[#0e0e0e] p-5">
           <div className="flex items-center gap-2 mb-2">
-            <span className="w-6 h-6 rounded-full border border-red-500/40 bg-red-950/40 flex items-center justify-center font-mono text-xs text-red-300">
-              ②
-            </span>
-            <span className="text-[10px] font-mono text-red-400 uppercase tracking-widest">
-              The 2014 Shift
-            </span>
+            <span className="font-mono text-xs text-red-400">②</span>
+            <span className="text-[9px] font-mono tracking-widest text-red-400 uppercase">The 2014 Shift</span>
           </div>
-          <p className="text-xs font-sans text-neutral-300 leading-relaxed">
-            As Papa shifted focus to our family jewellery atelier, the studio vision was handed over to his elder son Subham to carry the artistic light forward.
-          </p>
+          <blockquote className="border-l-2 border-amber-400/60 pl-3 font-serif italic text-sm text-neutral-200">
+            &ldquo;Master the light as an artist, and protect every client&apos;s trust like family gold.&rdquo;
+          </blockquote>
+          <p className="mt-2 text-[10px] font-mono text-neutral-500">— Shri Vijay Nandan Sharma</p>
         </div>
 
-        {/* Sinu Card */}
-        <div className="relative rounded-2xl bg-[#0a0a0a] border border-white/10 p-5 shadow-2xl">
-          <div className="flex items-center gap-2 mb-3">
-            <span className="w-6 h-6 rounded-full border border-red-500/40 bg-neutral-900 flex items-center justify-center font-mono text-xs text-red-400">
-              ③
-            </span>
-            <span className="text-[10px] font-mono tracking-widest text-red-400 uppercase">
-              Director • Since 2014
-            </span>
+        {/* Sinu Mobile Card */}
+        <div className="rounded-2xl overflow-hidden border border-white/10 bg-[#0a0a0a] shadow-2xl">
+          <div className="relative w-full aspect-[4/3]">
+            <Image src="/assets/images/my.jpeg" alt="Subham Sharma (Sinu)" fill className="object-cover object-top grayscale" />
           </div>
-
-          <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-neutral-900 border border-white/5 mb-4">
-            <Image
-              src="/assets/images/my.jpeg"
-              alt="Subham Sharma (Sinu)"
-              fill
-              className="object-cover object-top"
-            />
+          <div className="p-5">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="font-mono text-xs text-red-400">③</span>
+              <span className="text-[9px] font-mono tracking-widest text-red-400 uppercase">Director · 2014–Present</span>
+            </div>
+            <h3 className="font-cinzel text-lg text-white mb-2">Subham Sharma (Sinu)</h3>
+            <p className="text-xs font-sans text-neutral-400 leading-relaxed">
+              Stepping in at 2014, Subham elevated Calcutta Studio into dark gothic luxury bridal cinema and couture wedding films.
+            </p>
           </div>
-
-          <h3 className="text-lg font-cinzel text-white mb-2">
-            Subham Sharma (Sinu)
-          </h3>
-          <p className="text-xs font-sans text-neutral-400 leading-relaxed">
-            Taking the helm in 2014, elder brother Subham transformed Calcutta Studio into high-fashion dark gothic bridal cinema and sacred wedding couture.
-          </p>
         </div>
+
+        <Link href="/works" className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-black text-xs font-semibold tracking-wider uppercase">
+          View Our Works →
+        </Link>
       </div>
     </section>
   );
