@@ -10,7 +10,7 @@ import {
 } from "@tabler/icons-react";
 
 export const Footer = () => {
-    const currentYear = new Date().getFullYear();
+    const currentYear = 2026;
 
     return (
         <footer className="w-full bg-[#050505] border-t border-neutral-900 text-white font-serif relative overflow-hidden py-24 px-8 lg:px-16 z-20">
