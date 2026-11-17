@@ -45,6 +45,14 @@ export default function Legacy() {
       tl.to(".lc-arrow", { x: -40, ease: "none" }, 0);
       // Number badges barely move (hang in viewport)
       tl.to(".lc-badge", { x: 30, ease: "none" }, 0);
+
+      // Signature path draws itself as scroll progresses
+      gsap.set(".lc-sig-path", { strokeDasharray: 700, strokeDashoffset: 700 });
+      tl.to(".lc-sig-path", { strokeDashoffset: 0, ease: "none" }, 0.1);
+
+      // Arrow paths draw themselves as scroll progresses
+      gsap.set(".lc-arr-path", { strokeDasharray: 220, strokeDashoffset: 220 });
+      tl.to(".lc-arr-path", { strokeDashoffset: 0, ease: "none" }, 0);
     },
     { scope: sectionRef }
   );
@@ -66,7 +74,7 @@ export default function Legacy() {
         ════════════════════════════════════════════ */}
         <div className="relative flex h-screen items-center pl-24 pr-10 shrink-0">
           {/* giant word */}
-          <span className="select-none font-cinzel font-black text-[22vw] leading-none tracking-tighter text-white/[0.07] uppercase whitespace-nowrap">
+          <span className="select-none font-cinzel font-black text-[22vw] leading-none tracking-tighter text-white/[0.15] uppercase whitespace-nowrap">
             ROOTED
           </span>
 
@@ -107,14 +115,14 @@ export default function Legacy() {
                 strokeLinecap="round"
                 strokeLinejoin="round"
               >
-                <path d="M8 36 C14 16 20 10 30 16 C36 20 22 44 20 46 M26 28 C32 26 40 27 44 31 M40 20 L40 22 M50 30 C54 25 60 23 64 27 C67 30 64 40 60 48 C57 54 48 52 52 44 M68 28 C72 22 80 22 84 27 C88 32 85 42 88 42 C94 42 100 28 104 28 C110 28 112 36 116 36 M4 44 C50 42 120 44 196 40" />
+                <path className="lc-sig-path" d="M8 36 C14 16 20 10 30 16 C36 20 22 44 20 46 M26 28 C32 26 40 27 44 31 M40 20 L40 22 M50 30 C54 25 60 23 64 27 C67 30 64 40 60 48 C57 54 48 52 52 44 M68 28 C72 22 80 22 84 27 C88 32 85 42 88 42 C94 42 100 28 104 28 C110 28 112 36 116 36 M4 44 C50 42 120 44 196 40" />
               </svg>
               <p className="text-[9px] font-mono text-neutral-500 mt-0.5">Vijay Nandan Sharma — Founder</p>
             </div>
           </div>
 
           {/* ── Hand-drawn annotation #1 ── */}
-          <div className="lc-annot absolute bottom-[22%] left-[8vw] flex items-start gap-2 pointer-events-none">
+          <div className="lc-annot absolute bottom-[22%] left-[8vw] flex flex-col gap-0.5 pointer-events-none">
             <span className="text-neutral-400/80 font-mono text-xs leading-none mt-0.5">+</span>
             <span className="font-serif italic text-neutral-300/70 text-sm leading-snug max-w-[180px]">
               where the lens<br />first caught light
@@ -128,7 +136,7 @@ export default function Legacy() {
             strokeWidth="1.5"
             strokeLinecap="round"
           >
-            <path d="M 8 8 Q 48 4, 88 48 M 76 42 L 88 48 L 80 60" />
+            <path className="lc-arr-path" d="M 8 8 Q 48 4, 88 48 M 76 42 L 88 48 L 80 60" />
           </svg>
         </div>
 
@@ -136,7 +144,7 @@ export default function Legacy() {
             WORD 2  —  "IN"
         ════════════════════════════════════════════ */}
         <div className="relative flex h-screen items-center px-6 shrink-0">
-          <span className="select-none font-cinzel font-black text-[22vw] leading-none tracking-tighter text-white/[0.07] uppercase whitespace-nowrap">
+          <span className="select-none font-cinzel font-black text-[22vw] leading-none tracking-tighter text-white/[0.15] uppercase whitespace-nowrap">
             IN
           </span>
 
@@ -150,7 +158,7 @@ export default function Legacy() {
             WORD 3  —  "DEVOTION."
         ════════════════════════════════════════════ */}
         <div className="relative flex h-screen items-center px-10 shrink-0">
-          <span className="select-none font-cinzel font-black text-[22vw] leading-none tracking-tighter text-white/[0.07] uppercase whitespace-nowrap">
+          <span className="select-none font-cinzel font-black text-[22vw] leading-none tracking-tighter text-white/[0.15] uppercase whitespace-nowrap">
             DEVOTION.
           </span>
 
@@ -177,7 +185,7 @@ export default function Legacy() {
           </div>
 
           {/* ── Annotation #2 ── */}
-          <div className="lc-annot absolute bottom-[20%] right-[12vw] flex items-start gap-2 pointer-events-none">
+          <div className="lc-annot absolute bottom-[20%] right-[12vw] flex flex-col gap-0.5 pointer-events-none">
             <span className="text-neutral-400/80 font-mono text-xs mt-0.5">+</span>
             <span className="font-serif italic text-neutral-300/70 text-sm leading-snug max-w-[160px]">
               every masterpiece<br />starts held in place
@@ -191,7 +199,7 @@ export default function Legacy() {
             strokeWidth="1.5"
             strokeLinecap="round"
           >
-            <path d="M 4 30 Q 40 10, 72 20 M 62 14 L 72 20 L 62 26" />
+            <path className="lc-arr-path" d="M 4 30 Q 40 10, 72 20 M 62 14 L 72 20 L 62 26" />
           </svg>
         </div>
 
@@ -199,7 +207,7 @@ export default function Legacy() {
             WORD 4  —  "REIMAGINED"
         ════════════════════════════════════════════ */}
         <div className="relative flex h-screen items-center pl-20 pr-10 shrink-0">
-          <span className="select-none font-cinzel font-black italic text-[22vw] leading-none tracking-tighter text-white/[0.07] uppercase whitespace-nowrap">
+          <span className="select-none font-cinzel font-black italic text-[22vw] leading-none tracking-tighter text-white/[0.15] uppercase whitespace-nowrap">
             REIMAGINED
           </span>
 
@@ -229,7 +237,7 @@ export default function Legacy() {
           </div>
 
           {/* ── Annotation #3 ── */}
-          <div className="lc-annot absolute bottom-[22%] left-[30vw] flex items-start gap-2 pointer-events-none">
+          <div className="lc-annot absolute bottom-[22%] left-[30vw] flex flex-col gap-0.5 pointer-events-none">
             <span className="text-neutral-400/80 font-mono text-xs mt-0.5">+</span>
             <span className="font-serif italic text-neutral-300/70 text-sm leading-snug max-w-[200px]">
               from our hands to theirs,<br />arriving whole
@@ -243,7 +251,7 @@ export default function Legacy() {
             strokeWidth="1.5"
             strokeLinecap="round"
           >
-            <path d="M 72 8 Q 76 40, 44 56 M 50 62 L 44 56 L 56 54" />
+            <path className="lc-arr-path" d="M 72 8 Q 76 40, 44 56 M 50 62 L 44 56 L 56 54" />
           </svg>
         </div>
 
@@ -251,7 +259,7 @@ export default function Legacy() {
             WORD 5  —  "IN CINEMA."
         ════════════════════════════════════════════ */}
         <div className="relative flex h-screen items-center pl-10 pr-20 shrink-0">
-          <span className="select-none font-cinzel font-black text-[22vw] leading-none tracking-tighter text-white/[0.07] uppercase whitespace-nowrap">
+          <span className="select-none font-cinzel font-black text-[22vw] leading-none tracking-tighter text-white/[0.15] uppercase whitespace-nowrap">
             IN CINEMA.
           </span>
 
@@ -297,7 +305,7 @@ export default function Legacy() {
           </div>
 
           {/* ── Annotation #4 ── */}
-          <div className="lc-annot absolute bottom-[22%] right-[16vw] flex items-start gap-2 pointer-events-none">
+          <div className="lc-annot absolute bottom-[22%] right-[16vw] flex flex-col gap-0.5 pointer-events-none">
             <span className="text-neutral-400/80 font-mono text-xs mt-0.5">+</span>
             <span className="font-serif italic text-neutral-300/70 text-sm leading-snug max-w-[180px]">
               reinventing bridal<br />couture cinema
@@ -311,7 +319,7 @@ export default function Legacy() {
             strokeWidth="1.5"
             strokeLinecap="round"
           >
-            <path d="M 8 56 Q 48 60, 88 16 M 78 10 L 88 16 L 82 28" />
+            <path className="lc-arr-path" d="M 8 56 Q 48 60, 88 16 M 78 10 L 88 16 L 82 28" />
           </svg>
         </div>
 
@@ -402,7 +410,7 @@ export default function Legacy() {
               Papa started Calcutta Studio in 1998. In 2014, he transitioned to our family jewellery business, passing the studio reins to his elder son.
             </p>
             <svg viewBox="0 0 200 48" className="w-32 h-auto fill-none stroke-amber-200/80" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M8 36 C14 16 20 10 30 16 C36 20 22 44 20 46 M26 28 C32 26 40 27 44 31 M40 20 L40 22 M50 30 C54 25 60 23 64 27 C67 30 64 40 60 48 C57 54 48 52 52 44 M68 28 C72 22 80 22 84 27 C88 32 85 42 88 42 C94 42 100 28 104 28 C110 28 112 36 116 36 M4 44 C50 42 120 44 196 40" />
+              <path className="lc-sig-path" d="M8 36 C14 16 20 10 30 16 C36 20 22 44 20 46 M26 28 C32 26 40 27 44 31 M40 20 L40 22 M50 30 C54 25 60 23 64 27 C67 30 64 40 60 48 C57 54 48 52 52 44 M68 28 C72 22 80 22 84 27 C88 32 85 42 88 42 C94 42 100 28 104 28 C110 28 112 36 116 36 M4 44 C50 42 120 44 196 40" />
             </svg>
           </div>
         </div>
