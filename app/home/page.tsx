@@ -4,6 +4,7 @@ import Hero from "@/features/home/components/Hero/Hero";
 import About from "@/features/home/components/About/About";
 import Gallery from "@/features/home/components/Gallery/Gallery";
 import BehindTheScenes from "@/features/home/components/BehindTheScenes/BehindTheScenes";
+import Legacy from "@/features/home/components/Legacy/Legacy";
 import Pact from "@/features/home/components/Pact/Pact";
 
 export default function HomePage() {
@@ -15,6 +16,7 @@ export default function HomePage() {
         <About />
         <Gallery />
         <BehindTheScenes />
+        <Legacy />
         <Pact />
       </div>
     </div>
