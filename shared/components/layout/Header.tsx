@@ -10,6 +10,7 @@ export const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const navLinks = [
+        { name: "home", href: "/" },
         { name: "works", href: "/works" },
         { name: "TOS", href: "/tos" },
         { name: "contact", href: "/contact" }
