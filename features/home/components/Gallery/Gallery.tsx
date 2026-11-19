@@ -252,8 +252,8 @@ export default function Gallery() {
         >
             <GalleryRow
                 id="gallery-row-1"
-                title="Des Gothic"
-                subtitle="Chapter I"
+                title="Royal Bridals"
+                subtitle="Chapter I — Calcutta Studio"
                 items={desGothicProjects}
             />
 
