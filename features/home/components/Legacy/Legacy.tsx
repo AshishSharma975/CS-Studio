@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import gsap from "gsap";
@@ -18,6 +18,9 @@ export default function Legacy() {
   const card2Ref = useRef<HTMLDivElement>(null);
   const card3Ref = useRef<HTMLDivElement>(null);
   const closingCardRef = useRef<HTMLDivElement>(null);
+
+  const [papaHover, setPapaHover] = useState(false);
+  const [sinuHover, setSinuHover] = useState(false);
 
   useGSAP(
     () => {
@@ -84,14 +87,10 @@ export default function Legacy() {
             const isSinu = p >= 0.46 && p <= 0.74;
 
             const papaImg = card1?.querySelector<HTMLElement>(".photo-bw-reveal");
-            const papaBadge = card1?.querySelector<HTMLElement>(".lc-badge");
             papaImg?.classList.toggle("is-in-center", isPapa);
-            papaBadge?.classList.toggle("is-badge-active", isPapa);
 
             const sinuImg = card3?.querySelector<HTMLElement>(".photo-bw-reveal");
-            const sinuBadge = card3?.querySelector<HTMLElement>(".lc-badge");
             sinuImg?.classList.toggle("is-in-center", isSinu);
-            sinuBadge?.classList.toggle("is-badge-active", isSinu);
           },
         },
       });
@@ -224,6 +223,16 @@ export default function Legacy() {
               style={{
                 transform: "rotate(2deg)",
               }}
+              onMouseEnter={() => {
+                if (typeof window !== "undefined" && window.matchMedia("(hover: hover)").matches) {
+                  setPapaHover(true);
+                }
+              }}
+              onMouseLeave={() => {
+                if (typeof window !== "undefined" && window.matchMedia("(hover: hover)").matches) {
+                  setPapaHover(false);
+                }
+              }}
             >
               <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-32 h-6 bg-amber-100/25 border border-white/30 backdrop-blur-md rounded-sm flex items-center justify-center rotate-[-1deg] z-20 pointer-events-none shadow-md">
                 <span className="text-[8px] font-mono tracking-widest text-white/90 uppercase">
@@ -237,15 +246,13 @@ export default function Legacy() {
                   alt="Shri Vijay Nandan Sharma — Founder"
                   fill
                   className="photo-bw-reveal object-cover group-hover:scale-105"
+                  style={{
+                    filter: papaHover ? "grayscale(0%) contrast(100%)" : undefined,
+                  }}
                   sizes="360px"
                   priority
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
-                <div className="absolute top-3 right-3 z-10">
-                  <span className="lc-badge text-[8px] font-mono px-2 py-0.5 rounded border bg-black/70 border-white/20 text-amber-200">
-                    REAL COLOR
-                  </span>
-                </div>
               </div>
 
               <div className="p-4 bg-[#0a0a0a] text-left">
@@ -431,6 +438,16 @@ export default function Legacy() {
               style={{
                 transform: "rotate(2deg)",
               }}
+              onMouseEnter={() => {
+                if (typeof window !== "undefined" && window.matchMedia("(hover: hover)").matches) {
+                  setSinuHover(true);
+                }
+              }}
+              onMouseLeave={() => {
+                if (typeof window !== "undefined" && window.matchMedia("(hover: hover)").matches) {
+                  setSinuHover(false);
+                }
+              }}
             >
               <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-32 h-6 bg-red-950/70 border border-red-700/50 backdrop-blur-md rounded-sm flex items-center justify-center rotate-[1deg] z-20 pointer-events-none shadow-md">
                 <span className="text-[8px] font-mono tracking-widest text-red-300 uppercase">
@@ -444,14 +461,12 @@ export default function Legacy() {
                   alt="Subham Sharma (Sinu) — Creative Director"
                   fill
                   className="photo-bw-reveal object-cover object-top group-hover:scale-105"
+                  style={{
+                    filter: sinuHover ? "grayscale(0%) contrast(100%)" : undefined,
+                  }}
                   sizes="360px"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
-                <div className="absolute top-3 right-3 z-10">
-                  <span className="lc-badge lc-badge-sinu text-[8px] font-mono px-2 py-0.5 rounded border bg-black/70 border-white/20 text-red-300">
-                    REAL COLOR
-                  </span>
-                </div>
                 <div className="absolute bottom-2 left-3 right-3 flex justify-between items-center">
                   <span className="text-[8px] font-mono tracking-widest text-white/90 uppercase bg-black/70 px-2 py-0.5 rounded border border-white/10">
                     Lead Cinematographer

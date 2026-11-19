@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import Image from "next/image";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
@@ -12,6 +12,7 @@ export default function About() {
   const containerRef = useRef<HTMLElement>(null);
   const leftColRef = useRef<HTMLDivElement>(null);
   const rightColRef = useRef<HTMLDivElement>(null);
+  const [isHovered, setIsHovered] = useState(false);
 
   useGSAP(
     () => {
@@ -45,13 +46,11 @@ export default function About() {
     if (typeof window === "undefined" || window.innerWidth >= 1024 || !leftColRef.current) return;
     const el = leftColRef.current;
     const img = el.querySelector(".photo-bw-reveal");
-    const badge = el.querySelector(".lc-badge");
     if (!img) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         img.classList.toggle("is-in-center", entry.isIntersecting);
-        badge?.classList.toggle("is-badge-active", entry.isIntersecting);
       },
       { rootMargin: "-25% 0px -25% 0px", threshold: 0.15 }
     );
@@ -72,23 +71,35 @@ export default function About() {
           ref={leftColRef}
           className="relative flex aspect-[3/4] w-full items-center justify-center opacity-0 md:aspect-auto md:h-[80vh]"
         >
-          <div className="group relative ml-auto mr-0 h-[90%] w-full max-w-sm overflow-hidden rounded-2xl border border-white/15 bg-[#0a0a0a] shadow-2xl md:mr-8 lg:mr-12 cursor-pointer transition-all duration-700 select-none">
+          <div
+            className="group relative ml-auto mr-0 h-[90%] w-full max-w-sm overflow-hidden rounded-2xl border border-white/15 bg-[#0a0a0a] shadow-2xl md:mr-8 lg:mr-12 cursor-pointer transition-all duration-700 select-none"
+            onMouseEnter={() => {
+              if (typeof window !== "undefined" && window.matchMedia("(hover: hover)").matches) {
+                setIsHovered(true);
+              }
+            }}
+            onMouseLeave={() => {
+              if (typeof window !== "undefined" && window.matchMedia("(hover: hover)").matches) {
+                setIsHovered(false);
+              }
+            }}
+          >
             <Image
               src="/assets/images/my.jpeg"
               alt="Subham Sharma (Sinu) — Creative Director"
               fill
               priority
               className="photo-bw-reveal object-cover object-top group-hover:scale-105"
+              style={{
+                filter: isHovered ? "grayscale(0%) contrast(100%)" : undefined,
+              }}
               sizes="(max-width: 768px) 100vw, 50vw"
             />
 
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20" />
 
-            <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
-              <span className="lc-badge lc-badge-sinu text-[8px] font-mono px-2 py-0.5 rounded border bg-black/70 border-white/20 text-red-300">
-                REAL COLOR
-              </span>
-              <span className="text-[8px] font-mono tracking-widest text-red-300 uppercase bg-black/70 px-2 py-0.5 rounded border border-white/20">
+            <div className="absolute top-4 right-4 z-10">
+              <span className="text-[8px] font-mono tracking-widest text-red-300 uppercase bg-black/70 px-2.5 py-1 rounded border border-white/20">
                 DIRECTOR · 2014—NOW
               </span>
             </div>

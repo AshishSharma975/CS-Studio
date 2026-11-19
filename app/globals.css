@@ -72,57 +72,23 @@ body.modal-open .social-sidebar {
   font-family: var(--font-instrument-serif), Georgia, serif;
 }
 
-/* ── Real Color Auto-Reveal: Mobile Screen-Center & Desktop Hover ── */
+/* ── Real Color Transition: Desktop Hover & Mobile Screen-Center ── */
 .photo-bw-reveal {
-  filter: grayscale(100%) contrast(110%) !important;
-  transition: filter 0.75s cubic-bezier(0.22, 1, 0.36, 1), transform 0.75s cubic-bezier(0.22, 1, 0.36, 1) !important;
+  filter: grayscale(100%) contrast(110%);
+  transition: filter 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
   transform: translateZ(0);
 }
 
-.lc-badge {
-  transition: all 0.5s ease;
-}
-
 /* Mobile: Auto-reveal real color ONLY when photo is in screen center */
-@media (max-width: 1023px) {
-  .photo-bw-reveal.is-in-center {
-    filter: grayscale(0%) contrast(100%) !important;
-  }
-
-  .lc-badge.is-badge-active {
-    background-color: #fbbf24 !important;
-    color: #000000 !important;
-    border-color: #f59e0b !important;
-    font-weight: 700 !important;
-  }
-
-  .lc-badge.lc-badge-sinu.is-badge-active {
-    background-color: #ef4444 !important;
-    color: #ffffff !important;
-    border-color: #f87171 !important;
-    font-weight: 700 !important;
-  }
+.photo-bw-reveal.is-in-center {
+  filter: grayscale(0%) contrast(100%) !important;
 }
 
-/* Desktop: ONLY hover reveals real color; smooth fade back to B&W on mouse leave */
-@media (min-width: 1024px) {
+/* Desktop: ONLY hover reveals real color; smooth 0.8s fade back to B&W on mouse leave */
+@media (hover: hover) {
   .group:hover .photo-bw-reveal,
   .group:hover.photo-bw-reveal,
   .photo-bw-reveal:hover {
     filter: grayscale(0%) contrast(100%) !important;
-  }
-
-  .group:hover .lc-badge {
-    background-color: #fbbf24 !important;
-    color: #000000 !important;
-    border-color: #f59e0b !important;
-    font-weight: 700 !important;
-  }
-
-  .group:hover .lc-badge.lc-badge-sinu {
-    background-color: #ef4444 !important;
-    color: #ffffff !important;
-    border-color: #f87171 !important;
-    font-weight: 700 !important;
   }
 }
