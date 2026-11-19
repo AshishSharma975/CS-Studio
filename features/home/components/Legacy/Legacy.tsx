@@ -67,45 +67,6 @@ export default function Legacy() {
       const pTitle = getTargetPos(title);
       gsap.set(canvas, { x: pTitle.x, y: pTitle.y });
 
-      /* ── Check center positioning for auto real color reveal (Mobile Only) ── */
-      const checkCenterReveal = () => {
-        if (window.innerWidth >= 1024) return;
-        const cx = window.innerWidth / 2;
-        const cy = window.innerHeight / 2;
-
-        if (card1) {
-          const r1 = card1.getBoundingClientRect();
-          const midX1 = r1.left + r1.width / 2;
-          const midY1 = r1.top + r1.height / 2;
-          const d1 = Math.hypot(cx - midX1, cy - midY1);
-          const papaImg = card1.querySelector<HTMLElement>(".photo-bw-reveal");
-          const papaBadge = card1.querySelector<HTMLElement>(".lc-badge");
-          if (d1 < 220) {
-            papaImg?.classList.add("is-in-center");
-            papaBadge?.classList.add("is-badge-active");
-          } else {
-            papaImg?.classList.remove("is-in-center");
-            papaBadge?.classList.remove("is-badge-active");
-          }
-        }
-
-        if (card3) {
-          const r3 = card3.getBoundingClientRect();
-          const midX3 = r3.left + r3.width / 2;
-          const midY3 = r3.top + r3.height / 2;
-          const d3 = Math.hypot(cx - midX3, cy - midY3);
-          const sinuImg = card3.querySelector<HTMLElement>(".photo-bw-reveal");
-          const sinuBadge = card3.querySelector<HTMLElement>(".lc-badge");
-          if (d3 < 220) {
-            sinuImg?.classList.add("is-in-center");
-            sinuBadge?.classList.add("is-badge-active");
-          } else {
-            sinuImg?.classList.remove("is-in-center");
-            sinuBadge?.classList.remove("is-badge-active");
-          }
-        }
-      };
-
       /* ── Main GSAP 2D Canvas Scrub Timeline ── */
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -116,7 +77,22 @@ export default function Legacy() {
           scrub: 0.8,
           anticipatePin: 1,
           invalidateOnRefresh: true,
-          onUpdate: checkCenterReveal,
+          onUpdate: (self) => {
+            if (window.innerWidth >= 1024) return;
+            const p = self.progress;
+            const isPapa = p >= 0.07 && p <= 0.24;
+            const isSinu = p >= 0.46 && p <= 0.74;
+
+            const papaImg = card1?.querySelector<HTMLElement>(".photo-bw-reveal");
+            const papaBadge = card1?.querySelector<HTMLElement>(".lc-badge");
+            papaImg?.classList.toggle("is-in-center", isPapa);
+            papaBadge?.classList.toggle("is-badge-active", isPapa);
+
+            const sinuImg = card3?.querySelector<HTMLElement>(".photo-bw-reveal");
+            const sinuBadge = card3?.querySelector<HTMLElement>(".lc-badge");
+            sinuImg?.classList.toggle("is-in-center", isSinu);
+            sinuBadge?.classList.toggle("is-badge-active", isSinu);
+          },
         },
       });
 

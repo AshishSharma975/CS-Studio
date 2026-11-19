@@ -75,8 +75,8 @@ body.modal-open .social-sidebar {
 /* ── Real Color Auto-Reveal: Mobile Screen-Center & Desktop Hover ── */
 .photo-bw-reveal {
   filter: grayscale(100%) contrast(110%) !important;
-  transition: filter 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  will-change: filter, transform;
+  transition: filter 0.4s ease-out, transform 0.4s ease-out !important;
+  transform: translateZ(0);
 }
 
 .lc-badge {

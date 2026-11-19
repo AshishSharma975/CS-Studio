@@ -385,36 +385,24 @@ const GalleryContent = () => {
     }
   }, [selectedReel, modalMuted]);
 
-  // Auto color center cards on mobile scroll in /works
+  // Auto color center cards on mobile scroll in /works via zero-reflow IntersectionObserver
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    const updateCenterCards = () => {
-      if (window.innerWidth >= 1024) return;
-      const cy = window.innerHeight / 2;
-      const cards = document.querySelectorAll<HTMLElement>(".project-card");
-      cards.forEach((card) => {
-        const rect = card.getBoundingClientRect();
-        const cardCenter = rect.top + rect.height / 2;
-        const dist = Math.abs(cy - cardCenter);
-        const img = card.querySelector<HTMLElement>(".photo-bw-reveal");
-        if (img) {
-          if (dist < rect.height * 0.6) {
-            img.classList.add("is-in-center");
-          } else {
-            img.classList.remove("is-in-center");
-          }
-        }
-      });
-    };
+    if (typeof window === "undefined" || window.innerWidth >= 1024) return;
+    const cards = document.querySelectorAll<HTMLElement>(".project-card");
+    if (!cards.length) return;
 
-    window.addEventListener("scroll", updateCenterCards, { passive: true });
-    window.addEventListener("resize", updateCenterCards, { passive: true });
-    const timer = setTimeout(updateCenterCards, 150);
-    return () => {
-      clearTimeout(timer);
-      window.removeEventListener("scroll", updateCenterCards);
-      window.removeEventListener("resize", updateCenterCards);
-    };
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const img = entry.target.querySelector<HTMLElement>(".photo-bw-reveal");
+          img?.classList.toggle("is-in-center", entry.isIntersecting);
+        });
+      },
+      { rootMargin: "-20% 0px -20% 0px", threshold: 0.1 }
+    );
+
+    cards.forEach((card) => observer.observe(card));
+    return () => observer.disconnect();
   }, [activeCategory]);
 
   const toggleModalPlayPause = (e?: React.MouseEvent) => {

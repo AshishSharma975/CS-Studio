@@ -40,30 +40,22 @@ export default function About() {
     { scope: containerRef }
   );
 
-  // Auto-reveal real color when brother's photo enters screen center on mobile
+  // Auto-reveal real color when brother's photo enters screen center on mobile (zero-reflow IntersectionObserver)
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    const checkCenter = () => {
-      if (window.innerWidth >= 1024 || !leftColRef.current) return;
-      const r = leftColRef.current.getBoundingClientRect();
-      const cy = window.innerHeight / 2;
-      const midY = r.top + r.height / 2;
-      const img = leftColRef.current.querySelector(".photo-bw-reveal");
-      if (Math.abs(cy - midY) < r.height * 0.55) {
-        img?.classList.add("is-in-center");
-      } else {
-        img?.classList.remove("is-in-center");
-      }
-    };
+    if (typeof window === "undefined" || window.innerWidth >= 1024 || !leftColRef.current) return;
+    const el = leftColRef.current;
+    const img = el.querySelector(".photo-bw-reveal");
+    if (!img) return;
 
-    window.addEventListener("scroll", checkCenter, { passive: true });
-    window.addEventListener("resize", checkCenter, { passive: true });
-    const timer = setTimeout(checkCenter, 150);
-    return () => {
-      clearTimeout(timer);
-      window.removeEventListener("scroll", checkCenter);
-      window.removeEventListener("resize", checkCenter);
-    };
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        img.classList.toggle("is-in-center", entry.isIntersecting);
+      },
+      { rootMargin: "-20% 0px -20% 0px", threshold: 0.1 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
   }, []);
 
   return (

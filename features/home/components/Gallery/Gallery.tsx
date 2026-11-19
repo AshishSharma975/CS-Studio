@@ -54,23 +54,28 @@ function GalleryRow({
                 return Math.max(window.innerHeight * 2.5, scrollW * 0.45);
             };
 
+            let isTicking = false;
             const updateMobileCenterColor = () => {
-                if (window.innerWidth >= 1024) return;
-                const cx = window.innerWidth / 2;
-                const cards = trackRef.current?.querySelectorAll<HTMLElement>(".gallery-card");
-                if (!cards) return;
-                cards.forEach((card) => {
-                    const rect = card.getBoundingClientRect();
-                    const midX = rect.left + rect.width / 2;
-                    const dist = Math.abs(cx - midX);
-                    const img = card.querySelector<HTMLElement>(".photo-bw-reveal");
-                    if (img) {
-                        if (dist < rect.width * 0.6) {
-                            img.classList.add("is-in-center");
-                        } else {
-                            img.classList.remove("is-in-center");
+                if (isTicking || window.innerWidth >= 1024) return;
+                isTicking = true;
+                requestAnimationFrame(() => {
+                    isTicking = false;
+                    const cx = window.innerWidth / 2;
+                    const cards = trackRef.current?.querySelectorAll<HTMLElement>(".gallery-card");
+                    if (!cards) return;
+                    cards.forEach((card) => {
+                        const rect = card.getBoundingClientRect();
+                        const midX = rect.left + rect.width / 2;
+                        const dist = Math.abs(cx - midX);
+                        const img = card.querySelector<HTMLElement>(".photo-bw-reveal");
+                        if (img) {
+                            if (dist < rect.width * 0.6) {
+                                img.classList.add("is-in-center");
+                            } else {
+                                img.classList.remove("is-in-center");
+                            }
                         }
-                    }
+                    });
                 });
             };
 
