@@ -71,36 +71,39 @@ export default function Legacy() {
       const pTitle = getTargetPos(title);
       gsap.set(canvas, { x: pTitle.x, y: pTitle.y });
 
-      /* ── Main GSAP 2D Canvas Scrub Timeline ── */
+      /* ── Main GSAP 2D Canvas Scrub Timeline (Snappy, No Dead Gap) ── */
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: section,
           start: "top top",
-          end: () => (window.innerWidth < 768 ? "+=3800" : "+=4800"),
+          end: () => (window.innerWidth < 768 ? "+=2600" : "+=4200"),
           pin: true,
-          scrub: 1,
+          scrub: 0.8,
           anticipatePin: 1,
           invalidateOnRefresh: true,
         },
       });
 
-      // Step 1: Pan from Title to Card 1 (Papa - DEVOTION)
+      // Title fades/slides up quickly as soon as user begins scrolling
+      tl.to(title, { opacity: 0, y: -40, ease: "power1.out", duration: 1 }, 0);
+
+      // Step 1: Snappy pan to Card 1 (Papa) - eliminates dead black space
       tl.to(
         canvas,
         {
           x: () => getTargetPos(card1).x,
           y: () => getTargetPos(card1).y,
           ease: "power1.inOut",
-          duration: 3,
+          duration: 1.2,
         },
         0
       );
 
       // Papa's signature draws during Card 1 view
-      tl.to(".lc-sig-path", { strokeDashoffset: 0, ease: "power1.inOut", duration: 2.2 }, 1.0);
+      tl.to(".lc-sig-path", { strokeDashoffset: 0, ease: "power1.inOut", duration: 1.5 }, 0.4);
 
-      // Down-arrow draws as we prepare to transition down
-      tl.to(".arrow-1-path", { strokeDashoffset: 0, ease: "power1.out", duration: 1.8 }, 2.4);
+      // Arrow 1 draws as we transition toward Card 2
+      tl.to(".arrow-1-path", { strokeDashoffset: 0, ease: "power1.out", duration: 1.5 }, 1.5);
 
       // Step 2: Diagonal swoosh down along Arrow to Card 2 (HERITAGE)
       tl.to(
@@ -109,13 +112,13 @@ export default function Legacy() {
           x: () => getTargetPos(card2).x,
           y: () => getTargetPos(card2).y,
           ease: "power2.inOut",
-          duration: 4,
+          duration: 2.6,
         },
-        3.5
+        2.2
       );
 
-      // Up-arrow draws as we prepare to transition up
-      tl.to(".arrow-2-path", { strokeDashoffset: 0, ease: "power1.out", duration: 1.8 }, 6.5);
+      // Arrow 2 draws as we transition toward Card 3
+      tl.to(".arrow-2-path", { strokeDashoffset: 0, ease: "power1.out", duration: 1.5 }, 4.5);
 
       // Step 3: Diagonal swoosh up along Arrow to Card 3 (CINEMA)
       tl.to(
@@ -124,9 +127,9 @@ export default function Legacy() {
           x: () => getTargetPos(card3).x,
           y: () => getTargetPos(card3).y,
           ease: "power2.inOut",
-          duration: 4,
+          duration: 2.6,
         },
-        7.5
+        5.1
       );
 
       // Step 4: Glide to Closing Panel
@@ -136,9 +139,9 @@ export default function Legacy() {
           x: () => getTargetPos(closingCard).x,
           y: () => getTargetPos(closingCard).y,
           ease: "power1.out",
-          duration: 3,
+          duration: 2.2,
         },
-        11.5
+        8.0
       );
     },
     { scope: sectionRef }
@@ -173,7 +176,7 @@ export default function Legacy() {
         <div
           ref={titleRef}
           className="absolute z-10 flex flex-col items-center justify-center text-center px-4 w-[90vw] max-w-[850px]"
-          style={{ left: "200px", top: "140px" }}
+          style={{ left: "200px", top: "150px" }}
         >
           <span className="font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.45em] text-red-500 mb-2">
             WHY WE EXIST
@@ -184,12 +187,16 @@ export default function Legacy() {
           <p className="font-serif italic text-neutral-400 text-xs sm:text-sm md:text-base mt-3 max-w-lg">
             Preserving timeless love through devotion, cinema, and unbroken family craft.
           </p>
+          <div className="flex items-center gap-2 mt-4 text-neutral-500 text-[10px] font-mono tracking-widest uppercase">
+            <span className="animate-pulse">Scroll to explore</span>
+            <span>↓</span>
+          </div>
         </div>
 
         {/* ROW 1: "TO [Papa's Card] DEVOTION" (HIGH) */}
         <div
           className="absolute flex items-center whitespace-nowrap"
-          style={{ left: "300px", top: "480px" }}
+          style={{ left: "300px", top: "450px" }}
         >
           <div className="flex items-center font-cinzel font-black text-[clamp(90px,16vw,260px)] leading-[0.82] tracking-tighter text-white">
             <span className="self-start text-[0.14em] font-mono text-amber-300 border border-amber-400/40 rounded-full w-[0.24em] h-[0.24em] flex items-center justify-center mr-[0.1em] mt-[0.06em] shadow-[0_0_30px_rgba(251,191,36,0.3)]">
