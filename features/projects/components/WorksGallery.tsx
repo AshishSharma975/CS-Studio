@@ -389,6 +389,7 @@ const GalleryContent = () => {
   useEffect(() => {
     if (typeof window === "undefined") return;
     const updateCenterCards = () => {
+      if (window.innerWidth >= 1024) return;
       const cy = window.innerHeight / 2;
       const cards = document.querySelectorAll<HTMLElement>(".project-card");
       cards.forEach((card) => {

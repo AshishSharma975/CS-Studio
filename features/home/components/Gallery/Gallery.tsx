@@ -55,6 +55,7 @@ function GalleryRow({
             };
 
             const updateMobileCenterColor = () => {
+                if (window.innerWidth >= 1024) return;
                 const cx = window.innerWidth / 2;
                 const cards = trackRef.current?.querySelectorAll<HTMLElement>(".gallery-card");
                 if (!cards) return;

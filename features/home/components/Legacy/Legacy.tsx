@@ -67,8 +67,9 @@ export default function Legacy() {
       const pTitle = getTargetPos(title);
       gsap.set(canvas, { x: pTitle.x, y: pTitle.y });
 
-      /* ── Check center positioning for auto real color reveal ── */
+      /* ── Check center positioning for auto real color reveal (Mobile Only) ── */
       const checkCenterReveal = () => {
+        if (window.innerWidth >= 1024) return;
         const cx = window.innerWidth / 2;
         const cy = window.innerHeight / 2;
 

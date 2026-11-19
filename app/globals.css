@@ -72,33 +72,57 @@ body.modal-open .social-sidebar {
   font-family: var(--font-instrument-serif), Georgia, serif;
 }
 
-/* ── Real Color Auto-Reveal for Photo Cards on Screen Center ── */
+/* ── Real Color Auto-Reveal: Mobile Screen-Center & Desktop Hover ── */
 .photo-bw-reveal {
   filter: grayscale(100%) contrast(110%) !important;
   transition: filter 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
   will-change: filter, transform;
 }
 
-.photo-bw-reveal.is-in-center,
-.group:hover .photo-bw-reveal,
-.group:active .photo-bw-reveal {
-  filter: grayscale(0%) contrast(100%) !important;
-}
-
 .lc-badge {
   transition: all 0.4s ease;
 }
 
-.lc-badge.is-badge-active {
-  background-color: #fbbf24 !important;
-  color: #000000 !important;
-  border-color: #f59e0b !important;
-  font-weight: 700 !important;
+/* Mobile: Auto-reveal real color when photo is in screen center */
+@media (max-width: 1023px) {
+  .photo-bw-reveal.is-in-center,
+  .group:active .photo-bw-reveal {
+    filter: grayscale(0%) contrast(100%) !important;
+  }
+
+  .lc-badge.is-badge-active {
+    background-color: #fbbf24 !important;
+    color: #000000 !important;
+    border-color: #f59e0b !important;
+    font-weight: 700 !important;
+  }
+
+  .lc-badge.lc-badge-sinu.is-badge-active {
+    background-color: #ef4444 !important;
+    color: #ffffff !important;
+    border-color: #f87171 !important;
+    font-weight: 700 !important;
+  }
 }
 
-.lc-badge.lc-badge-sinu.is-badge-active {
-  background-color: #ef4444 !important;
-  color: #ffffff !important;
-  border-color: #f87171 !important;
-  font-weight: 700 !important;
+/* Desktop: ONLY hover reveals real color, scroll never triggers it */
+@media (min-width: 1024px) {
+  .group:hover .photo-bw-reveal,
+  .group:hover.photo-bw-reveal {
+    filter: grayscale(0%) contrast(100%) !important;
+  }
+
+  .group:hover .lc-badge {
+    background-color: #fbbf24 !important;
+    color: #000000 !important;
+    border-color: #f59e0b !important;
+    font-weight: 700 !important;
+  }
+
+  .group:hover .lc-badge.lc-badge-sinu {
+    background-color: #ef4444 !important;
+    color: #ffffff !important;
+    border-color: #f87171 !important;
+    font-weight: 700 !important;
+  }
 }

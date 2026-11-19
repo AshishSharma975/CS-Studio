@@ -44,7 +44,7 @@ export default function About() {
   useEffect(() => {
     if (typeof window === "undefined") return;
     const checkCenter = () => {
-      if (!leftColRef.current) return;
+      if (window.innerWidth >= 1024 || !leftColRef.current) return;
       const r = leftColRef.current.getBoundingClientRect();
       const cy = window.innerHeight / 2;
       const midY = r.top + r.height / 2;
