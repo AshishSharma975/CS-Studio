@@ -147,6 +147,13 @@ function EditorialReelRow({
   }, [isActive, isMuted]);
 
   const handleMouseEnter = () => {
+    // Only expand on hover on desktop devices with mouse pointer (prevents mobile touch conflict)
+    if (typeof window !== "undefined") {
+      const isTouchOrMobile =
+        window.innerWidth < 1024 ||
+        window.matchMedia("(hover: none), (pointer: coarse)").matches;
+      if (isTouchOrMobile) return;
+    }
     if (hoverTimer.current) clearTimeout(hoverTimer.current);
     // 45ms hover intent debounce: snappy response, zero stutter during rapid scroll
     hoverTimer.current = setTimeout(() => {
@@ -155,6 +162,12 @@ function EditorialReelRow({
   };
 
   const handleMouseLeave = () => {
+    if (typeof window !== "undefined") {
+      const isTouchOrMobile =
+        window.innerWidth < 1024 ||
+        window.matchMedia("(hover: none), (pointer: coarse)").matches;
+      if (isTouchOrMobile) return;
+    }
     if (hoverTimer.current) clearTimeout(hoverTimer.current);
   };
 
@@ -175,12 +188,21 @@ function EditorialReelRow({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      {/* Header Row: Refined luxury proportions, opens on hover and click */}
+      {/* Header Row: Refined luxury proportions, opens on hover (desktop) and instant click (mobile) */}
       <div
-        className="w-full py-4 sm:py-5 md:py-6 px-2 sm:px-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 cursor-pointer select-none group"
+        role="button"
+        tabIndex={0}
+        aria-expanded={isActive}
+        className="w-full py-4 sm:py-5 md:py-6 px-2 sm:px-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 cursor-pointer select-none group touch-manipulation active:bg-white/[0.04] transition-colors"
         onClick={onSelect}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            onSelect();
+          }
+        }}
       >
-        <div className="flex items-center gap-3 md:gap-4 flex-wrap">
+        <div className="flex items-center gap-3 md:gap-4 flex-wrap pointer-events-none">
           <h3
             className={`text-xl sm:text-2xl md:text-3xl font-cinzel tracking-normal transition-all duration-300 ${
               isActive
@@ -208,7 +230,7 @@ function EditorialReelRow({
           </div>
         </div>
 
-        <div className="flex items-center gap-4 self-end sm:self-center shrink-0">
+        <div className="flex items-center gap-4 self-end sm:self-center shrink-0 pointer-events-none">
           <span className="text-xs font-mono text-neutral-500 tracking-wider">
             {reel.duration}
           </span>
