@@ -124,11 +124,11 @@ export default function About() {
 
           <div className="space-y-5 text-sm sm:text-base leading-relaxed text-neutral-300 font-sans">
             <p>
-              Calcutta Studio was founded in 1998 by our father, Shri Vijay Nandan Sharma, built on artisan portraiture, sacred temple ceremonies, and steadfast trust.
+              Calcutta Studio was founded in 1998 by Shri Vijay Nandan Sharma, built on artisan portraiture, sacred temple ceremonies, and steadfast trust.
             </p>
 
             <p>
-              In 2014, Papa transitioned to our family jewellery business, handing studio leadership over to his elder son, Subham Sharma (Sinu). Under Subham&apos;s creative direction, we elevated the craft into dark gothic luxury wedding cinema and high-fashion couture bridal films.
+              In 2014, Shri Vijay Nandan Sharma transitioned to our family jewellery business, handing studio leadership over to his elder son, Subham Sharma (Sinu). Under Subham&apos;s creative direction, we elevated the craft into dark gothic luxury wedding cinema and high-fashion couture bridal films.
             </p>
 
             <p className="font-serif italic text-base sm:text-lg text-neutral-200 border-l-2 border-red-600 pl-4 py-1">
@@ -139,7 +139,7 @@ export default function About() {
           <div className="grid grid-cols-3 gap-4 pt-4 border-t border-white/10 text-center">
             <div>
               <p className="font-cinzel text-lg sm:text-xl text-white font-bold">1998</p>
-              <p className="text-[9px] font-mono text-neutral-400 uppercase mt-0.5">Founded by Papa</p>
+              <p className="text-[9px] font-mono text-neutral-400 uppercase mt-0.5">Founder Era</p>
             </div>
             <div className="border-x border-white/10">
               <p className="font-cinzel text-lg sm:text-xl text-amber-200 font-bold">2014</p>

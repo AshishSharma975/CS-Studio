@@ -365,7 +365,7 @@ export default function Legacy() {
 
               <div className="mt-4 sm:mt-5 pt-3 border-t border-white/10">
                 <p className="text-[11px] font-sans text-neutral-300 leading-relaxed">
-                  In 2014, Papa transitioned to our family jewellery business, passing studio leadership over to his elder son.
+                  In 2014, Shri Vijay Nandan Sharma transitioned to our family jewellery business, passing studio leadership over to his elder son.
                 </p>
               </div>
             </div>
@@ -518,7 +518,7 @@ export default function Legacy() {
             </h2>
 
             <p className="text-xs sm:text-sm font-sans text-neutral-300 leading-relaxed">
-              Every frame we craft today honors the foundation built by our father in 1998, 
+              Every frame we craft today honors the foundation built by our Founder in 1998, 
               seamlessly reimagined through modern dark gothic couture cinema.
             </p>
 
