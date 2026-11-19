@@ -54,6 +54,29 @@ function GalleryRow({
                 return Math.max(window.innerHeight * 2.5, scrollW * 0.45);
             };
 
+            const updateMobileCenterColor = () => {
+                if (window.innerWidth >= 1024) return;
+                const centerX = window.innerWidth / 2;
+                const cards = trackRef.current?.querySelectorAll<HTMLElement>(".gallery-card");
+                if (!cards) return;
+                cards.forEach((card) => {
+                    const rect = card.getBoundingClientRect();
+                    const cardCenter = rect.left + rect.width / 2;
+                    const dist = Math.abs(centerX - cardCenter);
+                    const threshold = rect.width * 0.55;
+                    const img = card.querySelector<HTMLImageElement>("img");
+                    if (img) {
+                        if (dist < threshold) {
+                            img.style.filter = "grayscale(0%) contrast(100%)";
+                            img.style.transform = "scale(1.03)";
+                        } else {
+                            img.style.filter = "grayscale(100%) contrast(110%)";
+                            img.style.transform = "scale(1)";
+                        }
+                    }
+                });
+            };
+
             if (isReverse) {
                 gsap.fromTo(
                     trackRef.current,
@@ -70,6 +93,7 @@ function GalleryRow({
                             anticipatePin: 1,
                             scrub: 1.2,
                             invalidateOnRefresh: true,
+                            onUpdate: updateMobileCenterColor,
                         },
                     }
                 );
@@ -89,6 +113,7 @@ function GalleryRow({
                             anticipatePin: 1,
                             scrub: 1.2,
                             invalidateOnRefresh: true,
+                            onUpdate: updateMobileCenterColor,
                         },
                     }
                 );

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import gsap from "gsap";
@@ -18,10 +18,6 @@ export default function Legacy() {
   const card2Ref = useRef<HTMLDivElement>(null);
   const card3Ref = useRef<HTMLDivElement>(null);
   const closingCardRef = useRef<HTMLDivElement>(null);
-
-  // Tap-to-reveal color states on mobile/touch
-  const [papaColor, setPapaColor] = useState(false);
-  const [sinuColor, setSinuColor] = useState(false);
 
   useGSAP(
     () => {
@@ -71,7 +67,7 @@ export default function Legacy() {
       const pTitle = getTargetPos(title);
       gsap.set(canvas, { x: pTitle.x, y: pTitle.y });
 
-      /* ── Main GSAP 2D Canvas Scrub Timeline (Snappy, No Dead Gap) ── */
+      /* ── Main GSAP 2D Canvas Scrub Timeline ── */
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: section,
@@ -87,7 +83,7 @@ export default function Legacy() {
       // Title fades/slides up quickly as soon as user begins scrolling
       tl.to(title, { opacity: 0, y: -40, ease: "power1.out", duration: 1 }, 0);
 
-      // Step 1: Snappy pan to Card 1 (Papa) - eliminates dead black space
+      // Step 1: Snappy pan to Card 1 (Papa)
       tl.to(
         canvas,
         {
@@ -99,8 +95,32 @@ export default function Legacy() {
         0
       );
 
+      // ── Papa's Photo blooms into REAL COLOR when centered ──
+      tl.to(
+        ".lc-papa-img",
+        { filter: "grayscale(0%) contrast(100%)", duration: 0.6, ease: "power1.inOut" },
+        0.5
+      );
+      tl.to(
+        ".lc-papa-badge",
+        { backgroundColor: "#fbbf24", color: "#000000", borderColor: "#f59e0b", duration: 0.3 },
+        0.5
+      );
+
       // Papa's signature draws during Card 1 view
       tl.to(".lc-sig-path", { strokeDashoffset: 0, ease: "power1.inOut", duration: 1.5 }, 0.4);
+
+      // ── As camera leaves Card 1, Photo gently fades back to B/W ──
+      tl.to(
+        ".lc-papa-img",
+        { filter: "grayscale(100%) contrast(110%)", duration: 0.6, ease: "power1.inOut" },
+        1.8
+      );
+      tl.to(
+        ".lc-papa-badge",
+        { backgroundColor: "rgba(0,0,0,0.7)", color: "#fde68a", borderColor: "rgba(255,255,255,0.2)", duration: 0.3 },
+        1.8
+      );
 
       // Arrow 1 draws as we transition toward Card 2
       tl.to(".arrow-1-path", { strokeDashoffset: 0, ease: "power1.out", duration: 1.5 }, 1.5);
@@ -130,6 +150,30 @@ export default function Legacy() {
           duration: 2.6,
         },
         5.1
+      );
+
+      // ── Sinu's Photo blooms into REAL COLOR when centered ──
+      tl.to(
+        ".lc-sinu-img",
+        { filter: "grayscale(0%) contrast(100%)", duration: 0.6, ease: "power1.inOut" },
+        5.3
+      );
+      tl.to(
+        ".lc-sinu-badge",
+        { backgroundColor: "#ef4444", color: "#ffffff", borderColor: "#f87171", duration: 0.3 },
+        5.3
+      );
+
+      // ── As camera leaves Card 3, Photo gently fades back to B/W ──
+      tl.to(
+        ".lc-sinu-img",
+        { filter: "grayscale(100%) contrast(110%)", duration: 0.6, ease: "power1.inOut" },
+        7.5
+      );
+      tl.to(
+        ".lc-sinu-badge",
+        { backgroundColor: "rgba(0,0,0,0.7)", color: "#fca5a5", borderColor: "rgba(255,255,255,0.2)", duration: 0.3 },
+        7.5
       );
 
       // Step 4: Glide to Closing Panel
@@ -208,7 +252,6 @@ export default function Legacy() {
             {/* Embedded Photo Card: Papa */}
             <div
               ref={card1Ref}
-              onClick={() => setPapaColor((v) => !v)}
               className="group relative mx-4 sm:mx-10 shrink-0 overflow-hidden rounded-2xl border border-white/20 bg-[#0a0a0a] shadow-[0_30px_90px_rgba(0,0,0,0.95)] whitespace-normal font-sans tracking-normal leading-normal cursor-pointer select-none w-[290px] sm:w-[320px] h-[410px] sm:h-[440px]"
               style={{
                 transform: "rotate(2deg)",
@@ -225,24 +268,14 @@ export default function Legacy() {
                   src="/assets/images/father-vijay-nandan-sharma.jpg"
                   alt="Shri Vijay Nandan Sharma — Founder"
                   fill
-                  className={`object-cover transition-all duration-700 ease-out ${
-                    papaColor
-                      ? "grayscale-0 contrast-100 scale-105"
-                      : "grayscale contrast-110 group-hover:grayscale-0 group-hover:contrast-100 group-hover:scale-105"
-                  }`}
+                  className="lc-papa-img object-cover transition-all duration-700 ease-out grayscale contrast-110 group-hover:grayscale-0 group-hover:contrast-100 group-hover:scale-105"
                   sizes="360px"
                   priority
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
                 <div className="absolute top-3 right-3 z-10">
-                  <span
-                    className={`text-[8px] font-mono px-2 py-0.5 rounded border transition-colors ${
-                      papaColor
-                        ? "bg-amber-400 text-black border-amber-300 font-bold"
-                        : "bg-black/70 border-white/20 text-amber-200 group-hover:bg-amber-400 group-hover:text-black"
-                    }`}
-                  >
-                    {papaColor ? "REAL COLOR" : "TAP / HOVER"}
+                  <span className="lc-papa-badge text-[8px] font-mono px-2 py-0.5 rounded border transition-colors bg-black/70 border-white/20 text-amber-200">
+                    REAL COLOR
                   </span>
                 </div>
               </div>
@@ -426,7 +459,6 @@ export default function Legacy() {
 
             <div
               ref={card3Ref}
-              onClick={() => setSinuColor((v) => !v)}
               className="group relative mx-4 sm:mx-10 shrink-0 overflow-hidden rounded-2xl border border-white/20 bg-[#0a0a0a] shadow-[0_30px_90px_rgba(138,3,3,0.5)] whitespace-normal font-sans tracking-normal leading-normal cursor-pointer select-none w-[290px] sm:w-[320px] h-[410px] sm:h-[440px]"
               style={{
                 transform: "rotate(2deg)",
@@ -443,23 +475,13 @@ export default function Legacy() {
                   src="/assets/images/my.jpeg"
                   alt="Subham Sharma (Sinu) — Creative Director"
                   fill
-                  className={`object-cover object-top transition-all duration-700 ease-out ${
-                    sinuColor
-                      ? "grayscale-0 contrast-100 scale-105"
-                      : "grayscale contrast-110 group-hover:grayscale-0 group-hover:contrast-100 group-hover:scale-105"
-                  }`}
+                  className="lc-sinu-img object-cover object-top transition-all duration-700 ease-out grayscale contrast-110 group-hover:grayscale-0 group-hover:contrast-100 group-hover:scale-105"
                   sizes="360px"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
                 <div className="absolute top-3 right-3 z-10">
-                  <span
-                    className={`text-[8px] font-mono px-2 py-0.5 rounded border transition-colors ${
-                      sinuColor
-                        ? "bg-red-500 text-white border-red-400 font-bold"
-                        : "bg-black/70 border-white/20 text-red-300 group-hover:bg-red-500 group-hover:text-white"
-                    }`}
-                  >
-                    {sinuColor ? "REAL COLOR" : "TAP / HOVER"}
+                  <span className="lc-sinu-badge text-[8px] font-mono px-2 py-0.5 rounded border transition-colors bg-black/70 border-white/20 text-red-300">
+                    REAL COLOR
                   </span>
                 </div>
                 <div className="absolute bottom-2 left-3 right-3 flex justify-between items-center">

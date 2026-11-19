@@ -385,6 +385,39 @@ const GalleryContent = () => {
     }
   }, [selectedReel, modalMuted]);
 
+  // Auto color center cards on mobile scroll in /works
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const updateCenterCards = () => {
+      if (window.innerWidth >= 1024) return;
+      const centerY = window.innerHeight / 2;
+      const cards = document.querySelectorAll<HTMLElement>(".project-card");
+      cards.forEach((card) => {
+        const rect = card.getBoundingClientRect();
+        const cardCenter = rect.top + rect.height / 2;
+        const dist = Math.abs(centerY - cardCenter);
+        const threshold = rect.height * 0.7;
+        const img = card.querySelector<HTMLImageElement>("img");
+        if (img) {
+          if (dist < threshold) {
+            img.style.filter = "grayscale(0%) contrast(100%)";
+          } else {
+            img.style.filter = "grayscale(100%) contrast(110%)";
+          }
+        }
+      });
+    };
+
+    window.addEventListener("scroll", updateCenterCards, { passive: true });
+    window.addEventListener("resize", updateCenterCards, { passive: true });
+    const timer = setTimeout(updateCenterCards, 150);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("scroll", updateCenterCards);
+      window.removeEventListener("resize", updateCenterCards);
+    };
+  }, [activeCategory]);
+
   const toggleModalPlayPause = (e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
     const v = modalVideoRef.current;
