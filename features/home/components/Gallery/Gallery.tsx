@@ -55,23 +55,19 @@ function GalleryRow({
             };
 
             const updateMobileCenterColor = () => {
-                if (window.innerWidth >= 1024) return;
-                const centerX = window.innerWidth / 2;
+                const cx = window.innerWidth / 2;
                 const cards = trackRef.current?.querySelectorAll<HTMLElement>(".gallery-card");
                 if (!cards) return;
                 cards.forEach((card) => {
                     const rect = card.getBoundingClientRect();
-                    const cardCenter = rect.left + rect.width / 2;
-                    const dist = Math.abs(centerX - cardCenter);
-                    const threshold = rect.width * 0.55;
-                    const img = card.querySelector<HTMLImageElement>("img");
+                    const midX = rect.left + rect.width / 2;
+                    const dist = Math.abs(cx - midX);
+                    const img = card.querySelector<HTMLElement>(".photo-bw-reveal");
                     if (img) {
-                        if (dist < threshold) {
-                            img.style.filter = "grayscale(0%) contrast(100%)";
-                            img.style.transform = "scale(1.03)";
+                        if (dist < rect.width * 0.6) {
+                            img.classList.add("is-in-center");
                         } else {
-                            img.style.filter = "grayscale(100%) contrast(110%)";
-                            img.style.transform = "scale(1)";
+                            img.classList.remove("is-in-center");
                         }
                     }
                 });
@@ -208,7 +204,7 @@ function GalleryRow({
                                         fill
                                         sizes="(max-width: 768px) 80vw, 50vw"
                                         priority={i < 2}
-                                        className="object-contain grayscale hover:grayscale-0 transition-transform transition-[filter] duration-700 ease-out group-hover:scale-[1.02]"
+                                        className="photo-bw-reveal object-contain group-hover:scale-[1.02]"
                                     />
                                 </div>
                                 <div className="mt-3 md:mt-4 flex flex-col shrink-0">

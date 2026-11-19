@@ -389,20 +389,18 @@ const GalleryContent = () => {
   useEffect(() => {
     if (typeof window === "undefined") return;
     const updateCenterCards = () => {
-      if (window.innerWidth >= 1024) return;
-      const centerY = window.innerHeight / 2;
+      const cy = window.innerHeight / 2;
       const cards = document.querySelectorAll<HTMLElement>(".project-card");
       cards.forEach((card) => {
         const rect = card.getBoundingClientRect();
         const cardCenter = rect.top + rect.height / 2;
-        const dist = Math.abs(centerY - cardCenter);
-        const threshold = rect.height * 0.7;
-        const img = card.querySelector<HTMLImageElement>("img");
+        const dist = Math.abs(cy - cardCenter);
+        const img = card.querySelector<HTMLElement>(".photo-bw-reveal");
         if (img) {
-          if (dist < threshold) {
-            img.style.filter = "grayscale(0%) contrast(100%)";
+          if (dist < rect.height * 0.6) {
+            img.classList.add("is-in-center");
           } else {
-            img.style.filter = "grayscale(100%) contrast(110%)";
+            img.classList.remove("is-in-center");
           }
         }
       });
@@ -540,7 +538,7 @@ const GalleryContent = () => {
                     alt={project.title}
                     fill
                     sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
-                    className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700 ease-out group-hover:scale-105"
+                    className="photo-bw-reveal object-cover group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-60 group-hover:opacity-10 transition-opacity duration-500" />
                 </div>

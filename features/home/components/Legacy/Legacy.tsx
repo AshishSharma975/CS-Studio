@@ -67,6 +67,44 @@ export default function Legacy() {
       const pTitle = getTargetPos(title);
       gsap.set(canvas, { x: pTitle.x, y: pTitle.y });
 
+      /* ── Check center positioning for auto real color reveal ── */
+      const checkCenterReveal = () => {
+        const cx = window.innerWidth / 2;
+        const cy = window.innerHeight / 2;
+
+        if (card1) {
+          const r1 = card1.getBoundingClientRect();
+          const midX1 = r1.left + r1.width / 2;
+          const midY1 = r1.top + r1.height / 2;
+          const d1 = Math.hypot(cx - midX1, cy - midY1);
+          const papaImg = card1.querySelector<HTMLElement>(".photo-bw-reveal");
+          const papaBadge = card1.querySelector<HTMLElement>(".lc-badge");
+          if (d1 < 220) {
+            papaImg?.classList.add("is-in-center");
+            papaBadge?.classList.add("is-badge-active");
+          } else {
+            papaImg?.classList.remove("is-in-center");
+            papaBadge?.classList.remove("is-badge-active");
+          }
+        }
+
+        if (card3) {
+          const r3 = card3.getBoundingClientRect();
+          const midX3 = r3.left + r3.width / 2;
+          const midY3 = r3.top + r3.height / 2;
+          const d3 = Math.hypot(cx - midX3, cy - midY3);
+          const sinuImg = card3.querySelector<HTMLElement>(".photo-bw-reveal");
+          const sinuBadge = card3.querySelector<HTMLElement>(".lc-badge");
+          if (d3 < 220) {
+            sinuImg?.classList.add("is-in-center");
+            sinuBadge?.classList.add("is-badge-active");
+          } else {
+            sinuImg?.classList.remove("is-in-center");
+            sinuBadge?.classList.remove("is-badge-active");
+          }
+        }
+      };
+
       /* ── Main GSAP 2D Canvas Scrub Timeline ── */
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -77,6 +115,7 @@ export default function Legacy() {
           scrub: 0.8,
           anticipatePin: 1,
           invalidateOnRefresh: true,
+          onUpdate: checkCenterReveal,
         },
       });
 
@@ -95,32 +134,8 @@ export default function Legacy() {
         0
       );
 
-      // ── Papa's Photo blooms into REAL COLOR when centered ──
-      tl.to(
-        ".lc-papa-img",
-        { filter: "grayscale(0%) contrast(100%)", duration: 0.6, ease: "power1.inOut" },
-        0.5
-      );
-      tl.to(
-        ".lc-papa-badge",
-        { backgroundColor: "#fbbf24", color: "#000000", borderColor: "#f59e0b", duration: 0.3 },
-        0.5
-      );
-
       // Papa's signature draws during Card 1 view
       tl.to(".lc-sig-path", { strokeDashoffset: 0, ease: "power1.inOut", duration: 1.5 }, 0.4);
-
-      // ── As camera leaves Card 1, Photo gently fades back to B/W ──
-      tl.to(
-        ".lc-papa-img",
-        { filter: "grayscale(100%) contrast(110%)", duration: 0.6, ease: "power1.inOut" },
-        1.8
-      );
-      tl.to(
-        ".lc-papa-badge",
-        { backgroundColor: "rgba(0,0,0,0.7)", color: "#fde68a", borderColor: "rgba(255,255,255,0.2)", duration: 0.3 },
-        1.8
-      );
 
       // Arrow 1 draws as we transition toward Card 2
       tl.to(".arrow-1-path", { strokeDashoffset: 0, ease: "power1.out", duration: 1.5 }, 1.5);
@@ -150,30 +165,6 @@ export default function Legacy() {
           duration: 2.6,
         },
         5.1
-      );
-
-      // ── Sinu's Photo blooms into REAL COLOR when centered ──
-      tl.to(
-        ".lc-sinu-img",
-        { filter: "grayscale(0%) contrast(100%)", duration: 0.6, ease: "power1.inOut" },
-        5.3
-      );
-      tl.to(
-        ".lc-sinu-badge",
-        { backgroundColor: "#ef4444", color: "#ffffff", borderColor: "#f87171", duration: 0.3 },
-        5.3
-      );
-
-      // ── As camera leaves Card 3, Photo gently fades back to B/W ──
-      tl.to(
-        ".lc-sinu-img",
-        { filter: "grayscale(100%) contrast(110%)", duration: 0.6, ease: "power1.inOut" },
-        7.5
-      );
-      tl.to(
-        ".lc-sinu-badge",
-        { backgroundColor: "rgba(0,0,0,0.7)", color: "#fca5a5", borderColor: "rgba(255,255,255,0.2)", duration: 0.3 },
-        7.5
       );
 
       // Step 4: Glide to Closing Panel
@@ -268,13 +259,13 @@ export default function Legacy() {
                   src="/assets/images/father-vijay-nandan-sharma.jpg"
                   alt="Shri Vijay Nandan Sharma — Founder"
                   fill
-                  className="lc-papa-img object-cover transition-all duration-700 ease-out grayscale contrast-110 group-hover:grayscale-0 group-hover:contrast-100 group-hover:scale-105"
+                  className="photo-bw-reveal object-cover group-hover:scale-105"
                   sizes="360px"
                   priority
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
                 <div className="absolute top-3 right-3 z-10">
-                  <span className="lc-papa-badge text-[8px] font-mono px-2 py-0.5 rounded border transition-colors bg-black/70 border-white/20 text-amber-200">
+                  <span className="lc-badge text-[8px] font-mono px-2 py-0.5 rounded border bg-black/70 border-white/20 text-amber-200">
                     REAL COLOR
                   </span>
                 </div>
@@ -475,12 +466,12 @@ export default function Legacy() {
                   src="/assets/images/my.jpeg"
                   alt="Subham Sharma (Sinu) — Creative Director"
                   fill
-                  className="lc-sinu-img object-cover object-top transition-all duration-700 ease-out grayscale contrast-110 group-hover:grayscale-0 group-hover:contrast-100 group-hover:scale-105"
+                  className="photo-bw-reveal object-cover object-top group-hover:scale-105"
                   sizes="360px"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
                 <div className="absolute top-3 right-3 z-10">
-                  <span className="lc-sinu-badge text-[8px] font-mono px-2 py-0.5 rounded border transition-colors bg-black/70 border-white/20 text-red-300">
+                  <span className="lc-badge lc-badge-sinu text-[8px] font-mono px-2 py-0.5 rounded border bg-black/70 border-white/20 text-red-300">
                     REAL COLOR
                   </span>
                 </div>
