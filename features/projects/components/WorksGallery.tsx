@@ -346,6 +346,7 @@ const GalleryContent = () => {
     const isModalOpen = Boolean(selectedProject || selectedReel);
     if (isModalOpen) {
       document.body.style.overflowY = "hidden";
+      document.body.classList.add("modal-open");
       const handleKeyDown = (e: KeyboardEvent) => {
         if (e.key === "Escape") {
           setSelectedProject(null);
@@ -355,13 +356,16 @@ const GalleryContent = () => {
       window.addEventListener("keydown", handleKeyDown);
       return () => {
         document.body.style.overflowY = "";
+        document.body.classList.remove("modal-open");
         window.removeEventListener("keydown", handleKeyDown);
       };
     } else {
       document.body.style.overflowY = "";
+      document.body.classList.remove("modal-open");
     }
     return () => {
       document.body.style.overflowY = "";
+      document.body.classList.remove("modal-open");
     };
   }, [selectedProject, selectedReel]);
 
@@ -546,16 +550,16 @@ const GalleryContent = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-black/95 backdrop-blur-md md:backdrop-blur-2xl p-4 sm:p-6 md:p-8 cursor-zoom-out select-none"
+            className="fixed inset-0 z-[100000] flex flex-col items-center justify-center bg-black/95 backdrop-blur-md md:backdrop-blur-2xl p-4 sm:p-6 md:p-8 cursor-zoom-out select-none"
             onClick={() => setSelectedProject(null)}
           >
             <button
-              className="absolute top-4 right-4 md:top-6 md:right-8 text-white/60 hover:text-[#ff1a1a] transition-all duration-300 z-[10000] p-2 hover:rotate-90 cursor-pointer"
+              className="absolute top-5 right-5 md:top-8 md:right-10 text-white/90 hover:text-white bg-black/80 hover:bg-red-950/90 border border-white/20 hover:border-red-500 rounded-full p-2.5 transition-all duration-300 z-[100001] cursor-pointer shadow-2xl backdrop-blur-md hover:scale-105"
               onClick={() => setSelectedProject(null)}
               title="Close"
               aria-label="Close modal"
             >
-              <IconX size={32} stroke={1.5} />
+              <IconX size={24} stroke={2} />
             </button>
 
             <motion.div
@@ -605,16 +609,16 @@ const GalleryContent = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-black/95 backdrop-blur-xl md:backdrop-blur-2xl p-4 sm:p-6 select-none"
+            className="fixed inset-0 z-[100000] flex flex-col items-center justify-center bg-black/95 backdrop-blur-xl md:backdrop-blur-2xl p-4 sm:p-6 select-none"
             onClick={() => setSelectedReel(null)}
           >
             <button
-              className="absolute top-4 right-4 md:top-6 md:right-8 text-white/60 hover:text-[#ff1a1a] transition-all duration-300 z-[10000] p-2 hover:rotate-90 cursor-pointer"
+              className="absolute top-5 right-5 md:top-8 md:right-10 text-white/90 hover:text-white bg-black/80 hover:bg-red-950/90 border border-white/20 hover:border-red-500 rounded-full p-2.5 transition-all duration-300 z-[100001] cursor-pointer shadow-2xl backdrop-blur-md hover:scale-105"
               onClick={() => setSelectedReel(null)}
               title="Close Reel"
               aria-label="Close reel player"
             >
-              <IconX size={32} stroke={1.5} />
+              <IconX size={24} stroke={2} />
             </button>
 
             <motion.div

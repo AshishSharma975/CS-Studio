@@ -59,6 +59,14 @@ body {
   font-family: var(--font-cinzel);
 }
 
+/* Hide header and floating sidebars when any full-screen modal/reel is open */
+body.modal-open header,
+body.modal-open .social-sidebar {
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
 .font-serif,
 .font-instrument {
   font-family: var(--font-instrument-serif), Georgia, serif;
