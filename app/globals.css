@@ -75,18 +75,17 @@ body.modal-open .social-sidebar {
 /* ── Real Color Auto-Reveal: Mobile Screen-Center & Desktop Hover ── */
 .photo-bw-reveal {
   filter: grayscale(100%) contrast(110%) !important;
-  transition: filter 0.4s ease-out, transform 0.4s ease-out !important;
+  transition: filter 0.75s cubic-bezier(0.22, 1, 0.36, 1), transform 0.75s cubic-bezier(0.22, 1, 0.36, 1) !important;
   transform: translateZ(0);
 }
 
 .lc-badge {
-  transition: all 0.4s ease;
+  transition: all 0.5s ease;
 }
 
-/* Mobile: Auto-reveal real color when photo is in screen center */
+/* Mobile: Auto-reveal real color ONLY when photo is in screen center */
 @media (max-width: 1023px) {
-  .photo-bw-reveal.is-in-center,
-  .group:active .photo-bw-reveal {
+  .photo-bw-reveal.is-in-center {
     filter: grayscale(0%) contrast(100%) !important;
   }
 
@@ -105,10 +104,11 @@ body.modal-open .social-sidebar {
   }
 }
 
-/* Desktop: ONLY hover reveals real color, scroll never triggers it */
+/* Desktop: ONLY hover reveals real color; smooth fade back to B&W on mouse leave */
 @media (min-width: 1024px) {
   .group:hover .photo-bw-reveal,
-  .group:hover.photo-bw-reveal {
+  .group:hover.photo-bw-reveal,
+  .photo-bw-reveal:hover {
     filter: grayscale(0%) contrast(100%) !important;
   }
 
