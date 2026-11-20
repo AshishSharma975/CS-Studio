@@ -5,7 +5,6 @@ import About from "@/features/home/components/About/About";
 import Gallery from "@/features/home/components/Gallery/Gallery";
 import BehindTheScenes from "@/features/home/components/BehindTheScenes/BehindTheScenes";
 import Legacy from "@/features/home/components/Legacy/Legacy";
-import WhyUs from "@/features/home/components/WhyUs/WhyUs";
 import Pact from "@/features/home/components/Pact/Pact";
 
 export default function HomePage() {
@@ -18,7 +17,6 @@ export default function HomePage() {
         <Gallery />
         <BehindTheScenes />
         <Legacy />
-        <WhyUs />
         <Pact />
       </div>
     </div>
