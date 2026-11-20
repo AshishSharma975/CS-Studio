@@ -23,8 +23,18 @@ export default function BehindTheScenes() {
   const rightWingRef = useRef<HTMLDivElement>(null);
 
   const [isPlaying, setIsPlaying] = useState(true);
-  const [isMuted, setIsMuted] = useState(true);
+  const [isMuted, setIsMuted] = useState(false);
   const userMutedRef = useRef(false);
+
+  const unmuteIfAllowed = () => {
+    if (userMutedRef.current) return;
+    const video = videoRef.current;
+    if (video && video.muted) {
+      video.muted = false;
+      video.volume = 1;
+      setIsMuted(false);
+    }
+  };
 
   const playVideo = () => {
     const video = videoRef.current;
@@ -34,14 +44,15 @@ export default function BehindTheScenes() {
       video.muted = false;
       video.volume = 1;
       setIsMuted(false);
-      video.play().catch(() => {
-        video.muted = true;
-        setIsMuted(true);
-        video.play().catch(() => {});
-      });
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          video.muted = true;
+          video.play().catch(() => {});
+        });
+      }
     } else {
       video.muted = true;
-      setIsMuted(true);
       video.play().catch(() => {});
     }
   };
@@ -51,7 +62,6 @@ export default function BehindTheScenes() {
     if (!video) return;
     video.pause();
     video.muted = true;
-    setIsMuted(true);
   };
 
   const toggleSound = (e?: React.MouseEvent) => {
@@ -74,6 +84,7 @@ export default function BehindTheScenes() {
     const video = videoRef.current;
     if (!video) return;
     if (video.paused) {
+      unmuteIfAllowed();
       video.play().catch(() => {});
     } else {
       video.pause();
@@ -184,7 +195,23 @@ export default function BehindTheScenes() {
   );
 
   useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          playVideo();
+        } else {
+          pauseVideo();
+        }
+      },
+      { threshold: 0.25 }
+    );
+
+    observer.observe(section);
     return () => {
+      observer.disconnect();
       pauseVideo();
     };
   }, []);
@@ -194,6 +221,10 @@ export default function BehindTheScenes() {
       ref={sectionRef}
       id="behind-the-scenes"
       style={{ perspective: 1200 }}
+      onPointerEnter={unmuteIfAllowed}
+      onPointerMove={unmuteIfAllowed}
+      onPointerDown={unmuteIfAllowed}
+      onTouchStart={unmuteIfAllowed}
       className="relative w-full h-screen bg-[#050505] text-white overflow-hidden flex flex-col items-center justify-center select-none"
     >
       {/* Ambient glow */}
@@ -264,7 +295,10 @@ export default function BehindTheScenes() {
         </div>
 
        
-        <div className="relative h-full aspect-[9/16] flex items-center justify-center overflow-hidden rounded-xl md:rounded-2xl shadow-[0_0_50px_rgba(0,0,0,0.9),0_0_30px_rgba(138,3,3,0.35)] border border-neutral-800/80 z-20 shrink-0">
+        <div
+          onClick={togglePlayPause}
+          className="relative h-full aspect-[9/16] flex items-center justify-center overflow-hidden rounded-xl md:rounded-2xl shadow-[0_0_50px_rgba(0,0,0,0.9),0_0_30px_rgba(138,3,3,0.35)] border border-neutral-800/80 z-20 shrink-0 cursor-pointer"
+        >
           {/* Main Reel Video (autoPlay + muted ensures instantaneous 100% reliable browser playback) */}
           <video
             ref={videoRef}
