@@ -3,7 +3,6 @@
 
 import React, { useRef, Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
-import { Environment } from "@react-three/drei";
 import {
     EffectComposer,
     Noise,
@@ -66,68 +65,67 @@ export function GlobalCanvas() {
                     }
                     eventPrefix="client"
                 >
+                    <fog attach="fog" args={["#050505", 3, 15]} />
+
+                    <ambientLight intensity={0.1} />
+
+                    <directionalLight
+                        position={[0, 4, 6]}
+                        intensity={1.2}
+                        color="#ffffff"
+                    />
+
+                    <spotLight
+                        position={[3, 8, 4]}
+                        angle={0.5}
+                        penumbra={1}
+                        intensity={2.5}
+                        castShadow
+                        color="#ffffff"
+                    />
+
+                    <pointLight
+                        position={[-2, -5, -2]}
+                        intensity={50}
+                        color="#8a0303"
+                        distance={10}
+                        decay={2}
+                    />
+
                     <Suspense fallback={null}>
                         <InteractiveGothicBackground />
-
-                        <fog attach="fog" args={["#050505", 3, 15]} />
-
-                        <ambientLight intensity={0.05} />
-
-                        <spotLight
-                            position={[3, 8, 4]}
-                            angle={0.5}
-                            penumbra={1}
-                            intensity={2.5}
-                            castShadow
-                            color="#ffffff"
-                        />
-
-                        <pointLight
-                            position={[-2, -5, -2]}
-                            intensity={50}
-                            color="#8a0303"
-                            distance={10}
-                            decay={2}
-                        />
-
-                        <GothicComponentScene />
-
-                        <Environment
-                            files="/hdr/qwantani_night_puresky_2k.hdr"
-                            environmentIntensity={0.05}
-                        />
-
-                        {typeof window !== "undefined" && (
-                            <EffectComposer
-                                multisampling={0}
-                            >
-                                <Noise
-                                    key="noise"
-                                    opacity={
-                                        isMobile ? 0.4 : 0.6
-                                    }
-                                    premultiply
-                                    blendFunction={BlendFunction.OVERLAY}
-                                />
-
-                                <Vignette
-                                    key="vignette"
-                                    eskil={false}
-                                    offset={0.15}
-                                    darkness={1.2}
-                                />
-
-                                {!isMobile ? (
-                                    <ChromaticAberration
-                                        key="chroma"
-                                        offset={CHROMA_OFFSET}
-                                    />
-                                ) : (
-                                    <React.Fragment key="chroma-placeholder" />
-                                )}
-                            </EffectComposer>
-                        )}
                     </Suspense>
+
+                    <Suspense fallback={null}>
+                        <GothicComponentScene />
+                    </Suspense>
+
+                    {typeof window !== "undefined" && (
+                        <EffectComposer multisampling={0}>
+                            <Noise
+                                key="noise"
+                                opacity={isMobile ? 0.4 : 0.6}
+                                premultiply
+                                blendFunction={BlendFunction.OVERLAY}
+                            />
+
+                            <Vignette
+                                key="vignette"
+                                eskil={false}
+                                offset={0.15}
+                                darkness={1.2}
+                            />
+
+                            {!isMobile ? (
+                                <ChromaticAberration
+                                    key="chroma"
+                                    offset={CHROMA_OFFSET}
+                                />
+                            ) : (
+                                <React.Fragment key="chroma-placeholder" />
+                            )}
+                        </EffectComposer>
+                    )}
                 </Canvas>
             </div>
         </div>

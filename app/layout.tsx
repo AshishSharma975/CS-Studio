@@ -85,6 +85,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning className="overflow-x-hidden max-w-full">
+      <head>
+        <link rel="preload" href="/models/gothic_ring.glb" as="fetch" crossOrigin="anonymous" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${cinzel.variable} ${instrumentSerif.variable} font-sans antialiased overflow-x-hidden max-w-full`}
       >
