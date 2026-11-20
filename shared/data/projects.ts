@@ -189,46 +189,52 @@ export const projects: Project[] = [
         size: "medium",
     },
 
-    // Monsters - Chapter II (17 items)
+    // Heritage Couture - Chapter II (17 items)
     {
         id: "m-1",
-        title: "Asaktra",
+        title: "Gothic Bridal Silhouette",
         category: "monster",
+        displayCategory: "Calcutta Studio",
         src: "/assets/projects/monsters/asaktra.png",
         size: "large",
     },
     {
         id: "m-5",
-        title: "Chimera",
+        title: "Midnight Velvet Portrait",
         category: "monster",
+        displayCategory: "Calcutta Studio",
         src: "/assets/projects/monsters/chimera.jpg",
         size: "medium",
     },
     {
         id: "m-6",
-        title: "Coeden",
+        title: "Ethereal Obsidian Veil",
         category: "monster",
+        displayCategory: "Calcutta Studio",
         src: "/assets/projects/monsters/coeden.png",
         size: "large",
     },
     {
         id: "m-10",
-        title: "Qixiao",
+        title: "Chiaroscuro Heritage",
         category: "monster",
+        displayCategory: "Calcutta Studio",
         src: "/assets/projects/monsters/qixiao.png",
         size: "small",
     },
     {
         id: "m-11",
-        title: "Tekina",
+        title: "Sacred Royal Arch",
         category: "monster",
+        displayCategory: "Calcutta Studio",
         src: "/assets/projects/monsters/tekina.png",
         size: "large",
     },
     {
         id: "m-13",
-        title: "Zueh",
+        title: "Dark Velvet Shringar",
         category: "monster",
+        displayCategory: "Calcutta Studio",
         src: "/assets/projects/monsters/zueh.png",
         size: "medium",
     },
@@ -321,11 +327,12 @@ export const projects: Project[] = [
         size: "medium",
     },
 
-    // Visuals & Character - Chapter III (10 items)
+    // Cinematic Frames - Chapter III (10 items)
     {
         id: "vc-1",
-        title: "Kantel Board",
+        title: "Regal Bridal Composition",
         category: "visual-char",
+        displayCategory: "Calcutta Studio",
         src: "/assets/projects/visuals/kantel-board.png",
         size: "large",
     },

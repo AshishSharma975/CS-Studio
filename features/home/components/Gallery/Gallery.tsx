@@ -265,16 +265,16 @@ export default function Gallery() {
 
             <GalleryRow
                 id="gallery-row-2"
-                title="Monsters"
-                subtitle="Chapter II"
+                title="Heritage Couture"
+                subtitle="Chapter II — Calcutta Studio"
                 items={monsterProjects}
                 isReverse={true}
             />
 
             <GalleryRow
                 id="gallery-row-3"
-                title="Visuals & Char"
-                subtitle="Chapter III"
+                title="Cinematic Frames"
+                subtitle="Chapter III — Calcutta Studio"
                 items={visualCharProjects}
             />
 
