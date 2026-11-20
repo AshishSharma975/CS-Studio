@@ -29,10 +29,13 @@ export default function BehindTheScenes() {
   const unmuteIfAllowed = () => {
     if (userMutedRef.current) return;
     const video = videoRef.current;
-    if (video && video.muted) {
+    if (video) {
       video.muted = false;
       video.volume = 1;
       setIsMuted(false);
+      if (video.paused) {
+        video.play().catch(() => {});
+      }
     }
   };
 
@@ -43,16 +46,22 @@ export default function BehindTheScenes() {
     if (!userMutedRef.current) {
       video.muted = false;
       video.volume = 1;
-      setIsMuted(false);
       const playPromise = video.play();
       if (playPromise !== undefined) {
-        playPromise.catch(() => {
-          video.muted = true;
-          video.play().catch(() => {});
-        });
+        playPromise
+          .then(() => {
+            setIsMuted(false);
+          })
+          .catch(() => {
+            // Autoplay policy: if unmuted autoplay is rejected on fresh reload, play muted
+            video.muted = true;
+            setIsMuted(true);
+            video.play().catch(() => {});
+          });
       }
     } else {
       video.muted = true;
+      setIsMuted(true);
       video.play().catch(() => {});
     }
   };
@@ -75,7 +84,7 @@ export default function BehindTheScenes() {
     setIsMuted(nextMuted);
     userMutedRef.current = nextMuted;
 
-    if (video.paused) {
+    if (!nextMuted && video.paused) {
       video.play().catch(() => {});
     }
   };
@@ -195,8 +204,29 @@ export default function BehindTheScenes() {
   );
 
   useEffect(() => {
+    const handleGlobalInteraction = () => {
+      if (!userMutedRef.current && videoRef.current && videoRef.current.muted) {
+        const isVisible = sectionRef.current
+          ? sectionRef.current.getBoundingClientRect().top < window.innerHeight &&
+            sectionRef.current.getBoundingClientRect().bottom > 0
+          : false;
+
+        if (isVisible) {
+          unmuteIfAllowed();
+        }
+      }
+    };
+
+    window.addEventListener("click", handleGlobalInteraction, { passive: true });
+    window.addEventListener("touchstart", handleGlobalInteraction, { passive: true });
+
     const section = sectionRef.current;
-    if (!section) return;
+    if (!section) {
+      return () => {
+        window.removeEventListener("click", handleGlobalInteraction);
+        window.removeEventListener("touchstart", handleGlobalInteraction);
+      };
+    }
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -213,6 +243,8 @@ export default function BehindTheScenes() {
     return () => {
       observer.disconnect();
       pauseVideo();
+      window.removeEventListener("click", handleGlobalInteraction);
+      window.removeEventListener("touchstart", handleGlobalInteraction);
     };
   }, []);
 
