@@ -41,7 +41,7 @@ export default function About() {
     { scope: containerRef }
   );
 
-  // Auto-reveal real color when brother's photo enters screen center on mobile (zero-reflow IntersectionObserver)
+  // Reveal color when centered on mobile viewport
   useEffect(() => {
     if (typeof window === "undefined" || window.innerWidth >= 1024 || !leftColRef.current) return;
     const el = leftColRef.current;

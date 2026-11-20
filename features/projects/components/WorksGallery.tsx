@@ -393,7 +393,7 @@ const GalleryContent = () => {
     }
   }, [selectedReel, modalMuted]);
 
-  // Auto color center cards on mobile scroll in /works via zero-reflow IntersectionObserver
+  // Color center cards on mobile scroll
   useEffect(() => {
     if (typeof window === "undefined" || window.innerWidth >= 1024) return;
     const cards = document.querySelectorAll<HTMLElement>(".project-card");
@@ -521,7 +521,6 @@ const GalleryContent = () => {
       {/* Active Tab Content */}
       <div ref={gridRef} className="relative z-20">
         {activeCategory === "all" ? (
-          /* All Works (Photos) Grid */
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-x-12 md:gap-y-16">
             {projects.map((project, i) => (
               <div
@@ -554,7 +553,6 @@ const GalleryContent = () => {
             ))}
           </div>
         ) : (
-          /* Cinematic Reels Section: Exact Editorial Expanding Accordion List from Reference Video */
           <div className="w-full max-w-4xl mx-auto flex flex-col border-t border-white/10">
             {reelsData.map((reel) => (
               <EditorialReelRow

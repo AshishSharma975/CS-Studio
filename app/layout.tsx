@@ -1,3 +1,4 @@
+
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Cinzel, Instrument_Serif } from "next/font/google";
 import { ThemeProvider } from "@/shared/components/providers";
@@ -40,6 +41,12 @@ export const metadata: Metadata = {
   keywords: siteConfig.keywords,
   authors: siteConfig.authors,
   creator: siteConfig.creator,
+
+  // Google Search Console Verification
+  verification: {
+    google: "Cup2jMupTe9zsCKGgTqk-DnWapbD77rW4fDm8UOZItY",
+  },
+
   metadataBase: new URL(siteConfig.url),
   openGraph: {
     type: "website",

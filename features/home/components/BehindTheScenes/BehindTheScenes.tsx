@@ -93,7 +93,6 @@ export default function BehindTheScenes() {
         },
       });
 
-      // 1. Header slides up and fades out cleanly
       if (headerRef.current) {
         tl.to(
           headerRef.current,
@@ -107,7 +106,6 @@ export default function BehindTheScenes() {
         );
       }
 
-      // 2. Video deck expands smoothly and glides forward into view
       tl.fromTo(
         videoContainerRef.current,
         {
@@ -125,7 +123,6 @@ export default function BehindTheScenes() {
         0
       );
 
-      // 3. Border, shadows and frame morph seamlessly
       if (videoFrameRef.current) {
         tl.fromTo(
           videoFrameRef.current,
@@ -143,7 +140,6 @@ export default function BehindTheScenes() {
         );
       }
 
-      // 4. Cinema watermark overlay fades in once expanded
       if (cinemaBadgeRef.current) {
         tl.fromTo(
           cinemaBadgeRef.current,
@@ -153,7 +149,6 @@ export default function BehindTheScenes() {
         );
       }
 
-      // 5. Left and right wings fade in smoothly
       if (leftWingRef.current) {
         tl.fromTo(
           leftWingRef.current,
@@ -175,7 +170,6 @@ export default function BehindTheScenes() {
   );
 
   useEffect(() => {
-    // Start playback immediately on mount with browser-compliant muted audio
     const video = videoRef.current;
     if (video) {
       video.muted = true;
