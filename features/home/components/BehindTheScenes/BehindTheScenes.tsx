@@ -187,7 +187,7 @@ export default function BehindTheScenes() {
       style={{ perspective: 1200 }}
       className="relative w-full h-screen bg-[#050505] text-white overflow-hidden flex flex-col items-center justify-center select-none"
     >
-      {/* Subtle cinematic ambient glow behind video card */}
+      {/* Ambient glow */}
       <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,rgba(138,3,3,0.15)_0%,transparent_70%)]" />
 
      

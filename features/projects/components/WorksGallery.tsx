@@ -629,7 +629,7 @@ const GalleryContent = () => {
         )}
       </AnimatePresence>
 
-      {/* Cinematic Reel Lightbox Modal */}
+      {/* Reel Modal */}
       <AnimatePresence>
         {selectedReel && (
           <motion.div
