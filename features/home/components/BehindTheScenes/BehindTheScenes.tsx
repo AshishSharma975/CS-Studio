@@ -24,21 +24,34 @@ export default function BehindTheScenes() {
 
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
+  const userMutedRef = useRef(false);
 
   const playVideo = () => {
     const video = videoRef.current;
     if (!video) return;
-    video.muted = isMuted;
-    video.play().catch(() => {
-      // Browser autoplay policy guarantee: fallback to muted
+
+    if (!userMutedRef.current) {
+      video.muted = false;
+      video.volume = 1;
+      setIsMuted(false);
+      video.play().catch(() => {
+        video.muted = true;
+        setIsMuted(true);
+        video.play().catch(() => {});
+      });
+    } else {
       video.muted = true;
       setIsMuted(true);
       video.play().catch(() => {});
-    });
+    }
   };
 
   const pauseVideo = () => {
-    videoRef.current?.pause();
+    const video = videoRef.current;
+    if (!video) return;
+    video.pause();
+    video.muted = true;
+    setIsMuted(true);
   };
 
   const toggleSound = (e?: React.MouseEvent) => {
@@ -50,6 +63,7 @@ export default function BehindTheScenes() {
     video.muted = nextMuted;
     video.volume = 1;
     setIsMuted(nextMuted);
+    userMutedRef.current = nextMuted;
 
     if (video.paused) {
       video.play().catch(() => {});
@@ -170,11 +184,6 @@ export default function BehindTheScenes() {
   );
 
   useEffect(() => {
-    const video = videoRef.current;
-    if (video) {
-      video.muted = true;
-      video.play().catch(() => {});
-    }
     return () => {
       pauseVideo();
     };
@@ -260,11 +269,10 @@ export default function BehindTheScenes() {
           <video
             ref={videoRef}
             src="/assets/videos/bts-reel.mp4"
-            autoPlay
             muted
             playsInline
             loop
-            preload="auto"
+            preload="metadata"
             onPlay={() => setIsPlaying(true)}
             onPause={() => setIsPlaying(false)}
             className="w-full h-full object-cover object-center bg-black"
