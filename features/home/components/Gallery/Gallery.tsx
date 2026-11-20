@@ -208,8 +208,9 @@ function GalleryRow({
                                         src={project.src}
                                         alt={project.title}
                                         fill
-                                        sizes="(max-width: 768px) 80vw, 50vw"
-                                        priority={i < 2}
+                                        sizes="(max-width: 768px) 75vw, (max-width: 1200px) 50vw, 500px"
+                                        priority={i < 4}
+                                        loading={i < 4 ? "eager" : "lazy"}
                                         className="photo-bw-reveal object-contain group-hover:scale-[1.02]"
                                     />
                                 </div>

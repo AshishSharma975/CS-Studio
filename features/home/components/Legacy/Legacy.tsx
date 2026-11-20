@@ -34,7 +34,6 @@ export default function Legacy() {
 
       if (!section || !canvas || !title || !card1 || !card2 || !card3 || !closingCard) return;
 
-      /* ── Dynamic SVG stroke lengths for accurate scroll drawing ── */
       const sigPaths = gsap.utils.toArray<SVGPathElement>(".lc-sig-path");
       sigPaths.forEach((p) => {
         const len = p.getTotalLength ? p.getTotalLength() : 750;
@@ -47,7 +46,6 @@ export default function Legacy() {
         gsap.set(p, { strokeDasharray: len + 2, strokeDashoffset: len + 2 });
       });
 
-      /* ── Accurate Camera Centering on Element (Desktop & Mobile Unified) ── */
       const getTargetPos = (el: HTMLElement | null) => {
         if (!el || !canvas) return { x: 0, y: 0 };
         let cur: HTMLElement | null = el;
@@ -66,11 +64,9 @@ export default function Legacy() {
         };
       };
 
-      // Set initial camera view centered on the Intro Title
       const pTitle = getTargetPos(title);
       gsap.set(canvas, { x: pTitle.x, y: pTitle.y });
 
-      /* ── Main GSAP 2D Canvas Scrub Timeline ── */
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: section,
@@ -95,10 +91,8 @@ export default function Legacy() {
         },
       });
 
-      // Title fades/slides up quickly as soon as user begins scrolling
       tl.to(title, { opacity: 0, y: -40, ease: "power1.out", duration: 1 }, 0);
 
-      // Step 1: Snappy pan to Card 1 (Papa)
       tl.to(
         canvas,
         {
@@ -110,13 +104,9 @@ export default function Legacy() {
         0
       );
 
-      // Papa's signature draws during Card 1 view
       tl.to(".lc-sig-path", { strokeDashoffset: 0, ease: "power1.inOut", duration: 1.5 }, 0.4);
-
-      // Arrow 1 draws as we transition toward Card 2
       tl.to(".arrow-1-path", { strokeDashoffset: 0, ease: "power1.out", duration: 1.5 }, 1.5);
 
-      // Step 2: Diagonal swoosh down along Arrow to Card 2 (HERITAGE)
       tl.to(
         canvas,
         {
@@ -128,10 +118,8 @@ export default function Legacy() {
         2.2
       );
 
-      // Arrow 2 draws as we transition toward Card 3
       tl.to(".arrow-2-path", { strokeDashoffset: 0, ease: "power1.out", duration: 1.5 }, 4.5);
 
-      // Step 3: Diagonal swoosh up along Arrow to Card 3 (CINEMA)
       tl.to(
         canvas,
         {
@@ -143,7 +131,6 @@ export default function Legacy() {
         5.1
       );
 
-      // Step 4: Glide to Closing Panel
       tl.to(
         canvas,
         {
@@ -460,6 +447,7 @@ export default function Legacy() {
                   src="/assets/images/my.jpeg"
                   alt="Subham Sharma (Sinu) — Creative Director"
                   fill
+                  priority
                   className="photo-bw-reveal object-cover object-top group-hover:scale-105"
                   style={{
                     filter: sinuHover ? "grayscale(0%) contrast(100%)" : undefined,

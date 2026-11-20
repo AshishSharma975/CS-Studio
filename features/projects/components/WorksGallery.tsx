@@ -109,7 +109,6 @@ const filters: { label: string; value: FilterType }[] = [
   { label: "Reels", value: "reels" },
 ];
 
-/* Exact Reference Video Accordion Reel Item: Hover-to-expand, Zero-Reflow CSS Grid Transition */
 function EditorialReelRow({
   reel,
   isActive,
@@ -127,7 +126,6 @@ function EditorialReelRow({
   const [isMuted, setIsMuted] = useState(true);
   const hoverTimer = useRef<NodeJS.Timeout | null>(null);
 
-  // Play video smoothly when active, pause when inactive (no DOM remounting)
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
@@ -147,7 +145,6 @@ function EditorialReelRow({
   }, [isActive, isMuted]);
 
   const handleMouseEnter = () => {
-    // Only expand on hover on desktop devices with mouse pointer (prevents mobile touch conflict)
     if (typeof window !== "undefined") {
       const isTouchOrMobile =
         window.innerWidth < 1024 ||
@@ -155,7 +152,6 @@ function EditorialReelRow({
       if (isTouchOrMobile) return;
     }
     if (hoverTimer.current) clearTimeout(hoverTimer.current);
-    // 45ms hover intent debounce: snappy response, zero stutter during rapid scroll
     hoverTimer.current = setTimeout(() => {
       onHover();
     }, 45);
@@ -188,7 +184,6 @@ function EditorialReelRow({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      {/* Header Row: Refined luxury proportions, opens on hover (desktop) and instant click (mobile) */}
       <div
         role="button"
         tabIndex={0}
@@ -213,7 +208,6 @@ function EditorialReelRow({
             {reel.title}
           </h3>
 
-          {/* Tags in Pill Badges */}
           <div className="flex items-center gap-1.5 flex-wrap">
             {reel.tags.map((tag, i) => (
               <span
@@ -244,7 +238,6 @@ function EditorialReelRow({
         </div>
       </div>
 
-      {/* Buttery-Smooth Zero-Reflow CSS Grid Accordion */}
       <div
         className={`grid transition-[grid-template-rows,opacity] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
           isActive ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0 pointer-events-none"
@@ -252,9 +245,7 @@ function EditorialReelRow({
       >
         <div className="overflow-hidden min-h-0">
           <div className="px-2 sm:px-4 pb-8 pt-1">
-            {/* Window Container with Compact Reference Scale */}
             <div className="relative w-full max-w-xl mx-auto rounded-xl overflow-hidden border border-white/10 bg-[#080808] shadow-[0_0_35px_rgba(180,20,20,0.25)]">
-              {/* Window Header Bar with 3 Dots */}
               <div className="flex items-center justify-between px-3.5 py-2 border-b border-white/10 bg-white/[0.03]">
                 <div className="flex items-center gap-1.5">
                   <span className="w-2.5 h-2.5 rounded-full bg-red-600/90" />
@@ -294,15 +285,12 @@ function EditorialReelRow({
                 </div>
               </div>
 
-              {/* Video Player Display: Centered 9:16 vertical reel inside cinema stage */}
               <div
                 className="relative w-full h-[320px] sm:h-[370px] md:h-[400px] bg-black flex items-center justify-center cursor-pointer group overflow-hidden"
                 onClick={() => onOpenModal(reel)}
               >
-                {/* Pure CSS Radial Gradient (Replaces heavy blurred video for 120 FPS smoothness) */}
                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(180,20,20,0.22)_0%,rgba(5,5,5,0.92)_72%,#000000_100%)] pointer-events-none" />
 
-                {/* Main Centered Reel Video */}
                 <video
                   ref={videoRef}
                   src={reel.src}
@@ -313,14 +301,12 @@ function EditorialReelRow({
                   className="relative z-10 h-full w-auto aspect-[9/16] object-cover rounded-md shadow-2xl"
                 />
 
-                {/* Subtle Hover Play Badge */}
                 <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
                   <div className="w-11 h-11 rounded-full bg-black/75 border border-white/30 flex items-center justify-center text-white backdrop-blur-md shadow-2xl">
                     <IconPlayerPlay size={18} className="fill-white translate-x-0.5" />
                   </div>
                 </div>
 
-                {/* Bottom Details Overlay */}
                 <div className="absolute inset-x-0 bottom-0 z-20 p-3 sm:p-3.5 bg-gradient-to-t from-black via-black/85 to-transparent flex items-end justify-between gap-2 pointer-events-none">
                   <div>
                     <p className="text-xs text-neutral-300 font-sans max-w-sm leading-snug line-clamp-1">
@@ -537,7 +523,7 @@ const GalleryContent = () => {
         {activeCategory === "all" ? (
           /* All Works (Photos) Grid */
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-x-12 md:gap-y-16">
-            {projects.map((project) => (
+            {projects.map((project, i) => (
               <div
                 key={project.id}
                 className="project-card card-glow group w-full flex flex-col cursor-pointer select-none"
@@ -549,6 +535,8 @@ const GalleryContent = () => {
                     alt={project.title}
                     fill
                     sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+                    priority={i < 8}
+                    loading={i < 8 ? "eager" : "lazy"}
                     className="photo-bw-reveal object-cover group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-60 group-hover:opacity-10 transition-opacity duration-500" />

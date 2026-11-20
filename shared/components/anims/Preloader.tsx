@@ -6,23 +6,23 @@ import { motion, AnimatePresence } from "framer-motion";
 
 export const Preloader = () => {
   const [progress, setProgress] = useState(0);
-  const [isComplete, setIsComplete] = useState(false);
+  const [isComplete, setIsComplete] = useState(true);
   const [statusText, setStatusText] = useState("CALIBRATING LIGHT");
 
   useEffect(() => {
-    // Disable scrolling while preloader is active
-    document.body.style.overflowY = "hidden";
-    document.body.style.overflowX = "hidden";
+    // Show only once per browser session
+    if (sessionStorage.getItem("cs_visited")) return;
+    setIsComplete(false);
 
-    const duration = 1400; // 1.4 seconds total count-up
+    document.body.style.overflow = "hidden";
+
+    const duration = 650;
     const startTime = performance.now();
     let completeTimer: ReturnType<typeof setTimeout> | null = null;
 
     const updateCounter = (currentTime: number) => {
       const elapsed = currentTime - startTime;
       const progressFraction = Math.min(elapsed / duration, 1);
-
-      // Smooth custom easing curve (easeOutCubic)
       const easedProgress = Math.round((1 - Math.pow(1 - progressFraction, 3)) * 100);
       setProgress(easedProgress);
 
@@ -39,9 +39,9 @@ export const Preloader = () => {
       } else {
         completeTimer = setTimeout(() => {
           setIsComplete(true);
-          document.body.style.overflowY = "";
-          document.body.style.overflowX = "hidden";
-        }, 220);
+          sessionStorage.setItem("cs_visited", "1");
+          document.body.style.overflow = "";
+        }, 120);
       }
     };
 
@@ -50,8 +50,7 @@ export const Preloader = () => {
     return () => {
       cancelAnimationFrame(animFrame);
       if (completeTimer) clearTimeout(completeTimer);
-      document.body.style.overflowY = "";
-      document.body.style.overflowX = "hidden";
+      document.body.style.overflow = "";
     };
   }, []);
 
@@ -63,26 +62,12 @@ export const Preloader = () => {
           initial={{ y: 0 }}
           exit={{
             y: "-100%",
-            transition: {
-              duration: 0.8,
-              ease: [0.76, 0, 0.24, 1],
-            },
+            transition: { duration: 0.6, ease: [0.76, 0, 0.24, 1] },
           }}
           className="fixed inset-0 z-[9999] bg-[#050505] text-white flex flex-col justify-between p-6 sm:p-10 md:p-14 select-none pointer-events-auto"
         >
-          {/* Subtle Film Grain Noise */}
-          <div
-            className="pointer-events-none absolute inset-0 z-0 opacity-[0.035] mix-blend-overlay"
-            style={{
-              backgroundImage:
-                "url('https://upload.wikimedia.org/wikipedia/commons/7/76/1k_Dissolve_Noise_Texture.png')",
-            }}
-          />
-
-          {/* Atmospheric Dark Crimson Ambient Glow */}
           <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_center,rgba(180,10,10,0.12)_0%,transparent_70%)]" />
 
-          {/* Top Header Bar */}
           <div className="relative z-10 flex justify-between items-center text-[10px] sm:text-xs font-sans tracking-[0.25em] uppercase text-neutral-500">
             <div className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-red-600 animate-pulse" />
@@ -93,13 +78,11 @@ export const Preloader = () => {
             </div>
           </div>
 
-          {/* Center Brand Showcase */}
           <div className="relative z-10 flex flex-col items-center justify-center my-auto">
-            {/* Calcutta Signature Mark */}
             <motion.div
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, ease: "easeOut" }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
               className="flex flex-col items-center gap-3"
             >
               <Image
@@ -115,17 +98,14 @@ export const Preloader = () => {
               </span>
             </motion.div>
 
-            {/* Ultra-Minimal 1px Hairline Progress Bar */}
             <div className="w-44 sm:w-60 md:w-72 h-[1px] bg-neutral-900 mt-8 relative overflow-hidden">
-              <motion.div
-                className="absolute top-0 left-0 h-full bg-gradient-to-r from-red-950 via-red-500 to-white"
+              <div
+                className="absolute top-0 left-0 h-full bg-gradient-to-r from-red-950 via-red-500 to-white transition-all duration-75"
                 style={{ width: `${progress}%` }}
-                transition={{ ease: "linear" }}
               />
             </div>
           </div>
 
-          {/* Bottom Status & Numeric Counter */}
           <div className="relative z-10 flex justify-between items-end text-[10px] sm:text-xs font-mono tracking-widest text-neutral-500">
             <div className="flex items-center gap-2 font-sans tracking-[0.2em] text-neutral-400">
               <span className="text-red-600 font-serif italic text-xs sm:text-sm">§</span>
