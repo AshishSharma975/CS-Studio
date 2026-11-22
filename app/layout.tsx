@@ -1,14 +1,24 @@
 
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Cinzel, Instrument_Serif } from "next/font/google";
+import {
+  Geist,
+  Geist_Mono,
+  Cinzel,
+  Instrument_Serif,
+} from "next/font/google";
+
 import { ThemeProvider } from "@/shared/components/providers";
 import "./globals.css";
+
 import { LenisScroll, Preloader } from "@/shared/components/anims";
 import { Header } from "../shared/components/layout/Header";
 import { SocialSidebar } from "../shared/components/layout/SocialSidebar";
 import { Footer } from "../shared/components/layout/Footer";
+
 import { siteConfig } from "@/config/site-config";
 import { Analytics } from "@vercel/analytics/next";
+
+const BRAND_NAME = "Calcutta Studio";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,44 +43,71 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteConfig.url),
+
+  applicationName: BRAND_NAME,
+
   title: {
-    default: siteConfig.name,
-    template: `%s | ${siteConfig.name}`,
+    default: BRAND_NAME,
+    template: `%s | ${BRAND_NAME}`,
   },
+
   description: siteConfig.description,
-  keywords: siteConfig.keywords,
+
+  keywords: [
+    BRAND_NAME,
+    ...siteConfig.keywords,
+  ],
+
   authors: siteConfig.authors,
-  creator: siteConfig.creator,
+  creator: BRAND_NAME,
+  publisher: BRAND_NAME,
+
+  alternates: {
+    canonical: "/",
+  },
+
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 
   // Google Search Console Verification
   verification: {
     google: "Cup2jMupTe9zsCKGgTqk-DnWapbD77rW4fDm8UOZItY",
   },
 
-  metadataBase: new URL(siteConfig.url),
   openGraph: {
     type: "website",
-    locale: "en_US",
+    locale: "en_IN",
     url: siteConfig.url,
-    title: siteConfig.name,
+    title: BRAND_NAME,
     description: siteConfig.description,
-    siteName: siteConfig.name,
+    siteName: BRAND_NAME,
     images: [
       {
         url: siteConfig.ogImage,
         width: 1200,
         height: 630,
-        alt: siteConfig.name,
+        alt: `${BRAND_NAME} - Official Website`,
       },
     ],
   },
+
   twitter: {
     card: "summary_large_image",
-    title: siteConfig.name,
+    title: BRAND_NAME,
     description: siteConfig.description,
     images: [siteConfig.ogImage],
-    creator: "@trhgatu",
   },
+
   icons: {
     icon: "/favicon.ico",
     shortcut: "/favicon-16x16.png",
@@ -84,10 +121,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className="overflow-x-hidden max-w-full">
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className="overflow-x-hidden max-w-full"
+    >
       <head>
-        <link rel="preload" href="/models/gothic_ring.glb" as="fetch" crossOrigin="anonymous" />
+        <link
+          rel="preload"
+          href="/models/gothic_ring.glb"
+          as="fetch"
+          crossOrigin="anonymous"
+        />
       </head>
+
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${cinzel.variable} ${instrumentSerif.variable} font-sans antialiased overflow-x-hidden max-w-full`}
       >
@@ -100,10 +147,16 @@ export default function RootLayout({
           <div className="min-h-screen flex flex-col overflow-x-hidden max-w-full">
             <Preloader />
             <LenisScroll />
+
             <Header />
             <SocialSidebar />
-            <main className="flex-1 overflow-x-hidden max-w-full">{children}</main>
+
+            <main className="flex-1 overflow-x-hidden max-w-full">
+              {children}
+            </main>
+
             <Footer />
+
             <Analytics />
           </div>
         </ThemeProvider>
