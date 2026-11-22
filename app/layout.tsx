@@ -1,5 +1,6 @@
 
 import type { Metadata } from "next";
+
 import {
   Geist,
   Geist_Mono,
@@ -10,16 +11,20 @@ import {
 import { ThemeProvider } from "@/shared/components/providers";
 import "./globals.css";
 
-import { LenisScroll, Preloader } from "@/shared/components/anims";
-import { Header } from "../shared/components/layout/Header";
-import { SocialSidebar } from "../shared/components/layout/SocialSidebar";
-import { Footer } from "../shared/components/layout/Footer";
+import {
+  LenisScroll,
+  Preloader,
+} from "@/shared/components/anims";
 
-import { siteConfig } from "@/config/site-config";
+import { Header } from "@/shared/components/layout/Header";
+import { SocialSidebar } from "@/shared/components/layout/SocialSidebar";
+import { Footer } from "@/shared/components/layout/Footer";
+
+import { siteConfig } from "@/config/site";
+
 import { Analytics } from "@vercel/analytics/next";
 
-const BRAND_NAME = "Calcutta Studio";
-
+// Fonts
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -42,26 +47,26 @@ const instrumentSerif = Instrument_Serif({
   subsets: ["latin"],
 });
 
+// SEO Metadata
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
 
-  applicationName: BRAND_NAME,
+  applicationName: siteConfig.name,
 
   title: {
-    default: BRAND_NAME,
-    template: `%s | ${BRAND_NAME}`,
+    default: "Calcutta Studio | Digital Art & Horror Design",
+    template: `%s | ${siteConfig.name}`,
   },
 
   description: siteConfig.description,
 
-  keywords: [
-    BRAND_NAME,
-    ...siteConfig.keywords,
-  ],
+  keywords: siteConfig.keywords,
 
   authors: siteConfig.authors,
-  creator: BRAND_NAME,
-  publisher: BRAND_NAME,
+
+  creator: siteConfig.creator,
+
+  publisher: siteConfig.name,
 
   alternates: {
     canonical: "/",
@@ -84,34 +89,38 @@ export const metadata: Metadata = {
     google: "Cup2jMupTe9zsCKGgTqk-DnWapbD77rW4fDm8UOZItY",
   },
 
+  // Open Graph
   openGraph: {
     type: "website",
     locale: "en_IN",
     url: siteConfig.url,
-    title: BRAND_NAME,
+    siteName: siteConfig.name,
+    title: "Calcutta Studio | Digital Art & Horror Design",
     description: siteConfig.description,
-    siteName: BRAND_NAME,
+
     images: [
       {
         url: siteConfig.ogImage,
         width: 1200,
         height: 630,
-        alt: `${BRAND_NAME} - Official Website`,
+        alt: "Calcutta Studio - Digital Art & Horror Design",
       },
     ],
   },
 
+  // Twitter / X
   twitter: {
     card: "summary_large_image",
-    title: BRAND_NAME,
+    title: "Calcutta Studio | Digital Art & Horror Design",
     description: siteConfig.description,
     images: [siteConfig.ogImage],
   },
 
+  // Website Icons
   icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon-16x16.png",
-    apple: "/apple-touch-icon.png",
+    icon: siteConfig.icons.icon,
+    shortcut: siteConfig.icons.shortcut,
+    apple: siteConfig.icons.apple,
   },
 };
 
@@ -146,9 +155,11 @@ export default function RootLayout({
         >
           <div className="min-h-screen flex flex-col overflow-x-hidden max-w-full">
             <Preloader />
+
             <LenisScroll />
 
             <Header />
+
             <SocialSidebar />
 
             <main className="flex-1 overflow-x-hidden max-w-full">
