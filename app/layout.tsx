@@ -20,11 +20,11 @@ import { Header } from "@/shared/components/layout/Header";
 import { SocialSidebar } from "@/shared/components/layout/SocialSidebar";
 import { Footer } from "@/shared/components/layout/Footer";
 
-import { siteConfig } from "@/config/site";
+import { siteConfig } from "@/config/site-config";
 
 import { Analytics } from "@vercel/analytics/next";
 
-// Fonts
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -47,18 +47,135 @@ const instrumentSerif = Instrument_Serif({
   subsets: ["latin"],
 });
 
-// SEO Metadata
-export const metadata: Metadata = {
-  metadataBase: new URL(siteConfig.url),
+// ==========================================
+// BRAND INFORMATION
+// ==========================================
 
-  applicationName: siteConfig.name,
+const BRAND_NAME = "Calcutta Studio";
+
+const BRAND_DESCRIPTION = siteConfig.description;
+
+const WEBSITE_URL = siteConfig.url;
+
+// ==========================================
+// STRUCTURED DATA - GOOGLE SEO
+// ==========================================
+
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    // WEBSITE
+    {
+      "@type": "WebSite",
+
+      "@id": `${WEBSITE_URL}/#website`,
+
+      url: `${WEBSITE_URL}/`,
+
+      name: BRAND_NAME,
+
+      alternateName: "CS Studio",
+
+      description: BRAND_DESCRIPTION,
+
+      creator: {
+        "@id": `${WEBSITE_URL}/#ashish`,
+      },
+
+      publisher: {
+        "@id": `${WEBSITE_URL}/#organization`,
+      },
+    },
+
+    // ORGANIZATION
+    {
+      "@type": "Organization",
+
+      "@id": `${WEBSITE_URL}/#organization`,
+
+      name: BRAND_NAME,
+
+      url: `${WEBSITE_URL}/`,
+
+      description: BRAND_DESCRIPTION,
+
+      sameAs: [
+        siteConfig.links.instagramStudio,
+        siteConfig.links.facebook,
+        siteConfig.links.behance,
+      ],
+
+      employee: {
+        "@id": `${WEBSITE_URL}/#creative-director`,
+      },
+
+      contactPoint: {
+        "@type": "ContactPoint",
+        telephone: siteConfig.links.phone,
+        contactType: "customer service",
+        contactOption: "TollFree",
+        availableLanguage: ["English", "Hindi"],
+      },
+    },
+
+    // CREATIVE DIRECTOR
+    {
+      "@type": "Person",
+
+      "@id": `${WEBSITE_URL}/#creative-director`,
+
+      name: "Subham Sharma",
+
+      alternateName: "Sinu",
+
+      jobTitle: "Creative Director",
+
+      worksFor: {
+        "@id": `${WEBSITE_URL}/#organization`,
+      },
+
+      sameAs: [
+        siteConfig.links.instagramOwner,
+      ],
+    },
+
+    // WEBSITE DEVELOPER
+    {
+      "@type": "Person",
+
+      "@id": `${WEBSITE_URL}/#ashish`,
+
+      name: "Ashish Sharma",
+
+      jobTitle: "Website Designer and Developer",
+
+      description:
+        "Ashish Sharma designed and developed the official Calcutta Studio website.",
+
+      sameAs: [
+        siteConfig.links.linkedin,
+      ],
+    },
+  ],
+};
+
+// ==========================================
+// SEO METADATA
+// ==========================================
+
+export const metadata: Metadata = {
+  metadataBase: new URL(WEBSITE_URL),
+
+  applicationName: BRAND_NAME,
 
   title: {
-    default: "Calcutta Studio | Digital Art & Horror Design",
-    template: `%s | ${siteConfig.name}`,
+    default:
+      "Calcutta Studio | Wedding Cinematography & Bridal Films",
+
+    template: `%s | ${BRAND_NAME}`,
   },
 
-  description: siteConfig.description,
+  description: BRAND_DESCRIPTION,
 
   keywords: siteConfig.keywords,
 
@@ -66,7 +183,7 @@ export const metadata: Metadata = {
 
   creator: siteConfig.creator,
 
-  publisher: siteConfig.name,
+  publisher: BRAND_NAME,
 
   alternates: {
     canonical: "/",
@@ -75,6 +192,7 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
+
     googleBot: {
       index: true,
       follow: true,
@@ -84,45 +202,66 @@ export const metadata: Metadata = {
     },
   },
 
-  // Google Search Console Verification
+  // GOOGLE SEARCH CONSOLE
   verification: {
-    google: "Cup2jMupTe9zsCKGgTqk-DnWapbD77rW4fDm8UOZItY",
+    google:
+      "Cup2jMupTe9zsCKGgTqk-DnWapbD77rW4fDm8UOZItY",
   },
 
-  // Open Graph
+  // OPEN GRAPH
   openGraph: {
     type: "website",
+
     locale: "en_IN",
-    url: siteConfig.url,
-    siteName: siteConfig.name,
-    title: "Calcutta Studio | Digital Art & Horror Design",
-    description: siteConfig.description,
+
+    url: WEBSITE_URL,
+
+    siteName: BRAND_NAME,
+
+    title:
+      "Calcutta Studio | Wedding Cinematography & Bridal Films",
+
+    description: BRAND_DESCRIPTION,
 
     images: [
       {
         url: siteConfig.ogImage,
+
         width: 1200,
+
         height: 630,
-        alt: "Calcutta Studio - Digital Art & Horror Design",
+
+        alt:
+          "Calcutta Studio - Wedding Cinematography & Bridal Films",
       },
     ],
   },
 
-  // Twitter / X
+  // TWITTER / X
   twitter: {
     card: "summary_large_image",
-    title: "Calcutta Studio | Digital Art & Horror Design",
-    description: siteConfig.description,
+
+    title:
+      "Calcutta Studio | Wedding Cinematography & Bridal Films",
+
+    description: BRAND_DESCRIPTION,
+
     images: [siteConfig.ogImage],
   },
 
-  // Website Icons
+  // FAVICONS
   icons: {
     icon: siteConfig.icons.icon,
+
     shortcut: siteConfig.icons.shortcut,
+
     apple: siteConfig.icons.apple,
   },
 };
+
+// ==========================================
+// ROOT LAYOUT
+// ==========================================
 
 export default function RootLayout({
   children,
@@ -136,11 +275,23 @@ export default function RootLayout({
       className="overflow-x-hidden max-w-full"
     >
       <head>
+        {/* PRELOAD 3D MODEL */}
         <link
           rel="preload"
           href="/models/gothic_ring.glb"
           as="fetch"
           crossOrigin="anonymous"
+        />
+
+        {/* GOOGLE STRUCTURED DATA */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(websiteSchema).replace(
+              /</g,
+              "\\u003c"
+            ),
+          }}
         />
       </head>
 
