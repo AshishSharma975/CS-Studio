@@ -6,17 +6,13 @@ import { motion, AnimatePresence } from "framer-motion";
 
 export const Preloader = () => {
   const [progress, setProgress] = useState(0);
-  const [isComplete, setIsComplete] = useState(true);
+  const [isComplete, setIsComplete] = useState(false);
   const [statusText, setStatusText] = useState("CALIBRATING LIGHT");
 
   useEffect(() => {
-    // Show only once per browser session
-    if (sessionStorage.getItem("cs_visited")) return;
-    setIsComplete(false);
-
     document.body.style.overflow = "hidden";
 
-    const duration = 650;
+    const duration = 700;
     const startTime = performance.now();
     let completeTimer: ReturnType<typeof setTimeout> | null = null;
 
@@ -39,7 +35,6 @@ export const Preloader = () => {
       } else {
         completeTimer = setTimeout(() => {
           setIsComplete(true);
-          sessionStorage.setItem("cs_visited", "1");
           document.body.style.overflow = "";
         }, 120);
       }
@@ -120,4 +115,3 @@ export const Preloader = () => {
     </AnimatePresence>
   );
 };
-
