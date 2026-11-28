@@ -93,7 +93,7 @@ function GalleryRow({
                             end: () => `+=${getScrollDistance()}`,
                             pin: true,
                             anticipatePin: 1,
-                            scrub: 1.2,
+                            scrub: 0.5,
                             invalidateOnRefresh: true,
                             onUpdate: updateMobileCenterColor,
                         },
@@ -113,7 +113,7 @@ function GalleryRow({
                             end: () => `+=${getScrollDistance()}`,
                             pin: true,
                             anticipatePin: 1,
-                            scrub: 1.2,
+                            scrub: 0.5,
                             invalidateOnRefresh: true,
                             onUpdate: updateMobileCenterColor,
                         },
@@ -209,7 +209,8 @@ function GalleryRow({
                                         alt={project.title}
                                         fill
                                         sizes="(max-width: 768px) 75vw, (max-width: 1200px) 50vw, 500px"
-                                        loading="lazy"
+                                        priority={i < 2}
+                                        loading={i < 2 ? "eager" : "lazy"}
                                         className="photo-bw-reveal object-contain group-hover:scale-[1.02]"
                                     />
                                 </div>
