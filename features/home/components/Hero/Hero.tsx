@@ -15,23 +15,11 @@ export default function Hero() {
         if (!title || !container) return;
 
         // Initial heading animation
-        const tl = gsap.timeline();
-
-        tl.fromTo(
-            title,
-            {
-                opacity: 0,
-                scale: 0.9,
-                filter: "blur(10px)",
-            },
-            {
-                opacity: 1,
-                scale: 1,
-                filter: "blur(0px)",
-                duration: 2,
-                ease: "power3.out",
-            }
-        );
+        gsap.from(title, {
+            scale: 0.98,
+            duration: 1,
+            ease: "power2.out",
+        });
 
         // Smooth 3D mouse movement
         const qX = gsap.quickTo(title, "x", {
@@ -77,8 +65,7 @@ export default function Hero() {
         return () => {
             container.removeEventListener("mousemove", handleMouseMove);
             container.removeEventListener("mouseleave", handleMouseLeave);
-            tl.kill();
-            gsap.killTweensOf(title);
+                        gsap.killTweensOf(title);
         };
     }, []);
 

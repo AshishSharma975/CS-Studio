@@ -11,10 +11,7 @@ import {
 import { ThemeProvider } from "@/shared/components/providers";
 import "./globals.css";
 
-import {
-  LenisScroll,
-  Preloader,
-} from "@/shared/components/anims";
+import { LenisScroll } from "@/shared/components/anims";
 
 import { Header } from "@/shared/components/layout/Header";
 import { SocialSidebar } from "@/shared/components/layout/SocialSidebar";
@@ -305,8 +302,6 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <div className="min-h-screen flex flex-col overflow-x-hidden max-w-full">
-            <Preloader />
-
             <LenisScroll />
 
             <Header />

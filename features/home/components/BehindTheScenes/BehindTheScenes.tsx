@@ -338,7 +338,7 @@ export default function BehindTheScenes() {
             muted
             playsInline
             loop
-            preload="metadata"
+            preload="none"
             onPlay={() => setIsPlaying(true)}
             onPause={() => setIsPlaying(false)}
             className="w-full h-full object-cover object-center bg-black"

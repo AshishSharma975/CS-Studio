@@ -296,7 +296,7 @@ function EditorialReelRow({
                   src={reel.src}
                   loop
                   playsInline
-                  preload="metadata"
+                  preload="none"
                   muted={isMuted}
                   className="relative z-10 h-full w-auto aspect-[9/16] object-cover rounded-md shadow-2xl"
                 />
@@ -440,19 +440,14 @@ const GalleryContent = () => {
     () => {
       if (!gridRef.current) return;
       if (activeCategory === "all") {
-        gsap.fromTo(
-          ".project-card",
-          { y: 45, opacity: 0, scale: 0.95 },
-          {
-            y: 0,
-            opacity: 1,
-            scale: 1,
-            duration: 0.8,
-            stagger: 0.05,
-            ease: "back.out(1.2)",
-            overwrite: "auto",
-          }
-        );
+        gsap.from(".project-card:nth-child(-n+8)", {
+          y: 20,
+          opacity: 0.85,
+          duration: 0.5,
+          stagger: 0.03,
+          ease: "power2.out",
+          overwrite: "auto",
+        });
       }
     },
     { scope: gridRef, dependencies: [activeCategory] }
@@ -534,8 +529,8 @@ const GalleryContent = () => {
                     alt={project.title}
                     fill
                     sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
-                    priority={i < 8}
-                    loading={i < 8 ? "eager" : "lazy"}
+                    priority={i < 4}
+                    loading={i < 4 ? "eager" : "lazy"}
                     className="photo-bw-reveal object-cover group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-60 group-hover:opacity-10 transition-opacity duration-500" />
